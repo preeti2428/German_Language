@@ -28,7 +28,7 @@ export default function LandingPage() {
             Log In
           </Link>
           <Link 
-            href="/auth/signup" 
+            href="/onboarding" 
             className="px-5 py-2.5 font-bold bg-[#D9A441] hover:bg-[#c49033] text-white rounded-xl shadow-lg shadow-[#D9A441]/20 transition-all"
           >
             Start Learning
@@ -50,7 +50,7 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
             <Link 
-              href="/auth/signup" 
+              href="/onboarding" 
               className="px-8 py-4 text-lg font-bold bg-[#26408B] hover:bg-[#2C3E7A] text-white rounded-2xl shadow-xl shadow-[#26408B]/20 transition-all text-center flex justify-center items-center gap-2"
             >
               Start for free <TrendingUp size={20} />

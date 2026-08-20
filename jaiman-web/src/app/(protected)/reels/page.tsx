@@ -1,151 +1,366 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { Heart, MessageCircle, Share2, Bookmark, Volume2, ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useCallback } from "react";
+import { Heart, MessageCircle, Share2, Volume2, VolumeX, Play, Pause, Flame, Loader2 } from "lucide-react";
+import { motion, AnimatePresence, PanInfo } from "framer-motion";
+import { useRef } from "react";
+import { useAuth } from "@/context/AuthContext";
 
-// Mock data for the reels
-const MOCK_REELS = [
-  {
-    id: 1,
-    title: "Ordering Coffee in Berlin ☕",
-    german: "Ich hätte gerne einen Kaffee, bitte.",
-    english: "I would like a coffee, please.",
-    level: "A1",
-    likes: 1205,
-    comments: 45,
-    bgColor: "#FF4B4B", // Red
-  },
-  {
-    id: 2,
-    title: "Train Station Basics 🚂",
-    german: "Wo ist der Bahnhof?",
-    english: "Where is the train station?",
-    level: "A1",
-    likes: 892,
-    comments: 12,
-    bgColor: "#FF9600", // Orange
-  },
-  {
-    id: 3,
-    title: "Casual Greeting 👋",
-    german: "Wie geht's dir heute?",
-    english: "How are you doing today?",
-    level: "A2",
-    likes: 2341,
-    comments: 89,
-    bgColor: "#CE82FF", // Purple
-  }
+// Helper to assign colors to reels dynamically
+const REEL_COLORS = [
+  { bgGradient: "bg-gradient-to-br from-[#4361EE] to-[#3046B2]", dotColor: "#4361EE" },
+  { bgGradient: "bg-gradient-to-br from-[#F7B731] to-[#D99C2A]", dotColor: "#F7B731" },
+  { bgGradient: "bg-gradient-to-br from-[#20BF6B] to-[#178B4E]", dotColor: "#20BF6B" },
+  { bgGradient: "bg-gradient-to-br from-[#8E44AD] to-[#9B59B6]", dotColor: "#9B59B6" },
+  { bgGradient: "bg-gradient-to-br from-[#FF9F43] to-[#FF7B00]", dotColor: "#FF9F43" },
 ];
 
-export default function ReelsPage() {
-  const [currentReelIndex, setCurrentReelIndex] = useState(0);
+const ROMAN_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV"];
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const { scrollTop, clientHeight } = e.currentTarget;
-    const index = Math.round(scrollTop / clientHeight);
-    if (index !== currentReelIndex && index >= 0 && index < MOCK_REELS.length) {
-      setCurrentReelIndex(index);
+export default function ReelsPage() {
+  const [reels, setReels] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [error, setError] = useState("");
+  const [isMuted, setIsMuted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+
+  // Fetch reels from Backend API
+  useEffect(() => {
+    const fetchReels = async () => {
+      try {
+        const token = localStorage.getItem("token"); // Optional: if auth required to view
+        const res = await fetch("http://localhost:5000/api/reels", {
+          headers: {
+            ...(token ? { "Authorization": `Bearer ${token}` } : {})
+          }
+        });
+        if (!res.ok) throw new Error("Failed to fetch reels");
+        const data = await res.json();
+        
+        // Map backend data to UI format adding colors
+        const formattedReels = data.map((reel: any, idx: number) => ({
+          ...reel,
+          id: reel._id,
+          // Extract title/subtitle if needed, or use as is
+          german: reel.title,
+          english: reel.description,
+          bgGradient: REEL_COLORS[idx % REEL_COLORS.length].bgGradient,
+          dotColor: REEL_COLORS[idx % REEL_COLORS.length].dotColor,
+        }));
+        
+        setReels(formattedReels);
+      } catch (err: any) {
+        console.error(err);
+        setError("Could not load reels.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchReels();
+  }, []);
+
+  const { token, refreshUser } = useAuth();
+
+  // Track when a user watches a reel (stays on it for 5 seconds)
+  useEffect(() => {
+    if (reels.length === 0) return;
+
+    const timer = setTimeout(async () => {
+      try {
+        if (!token) return;
+        const res = await fetch("http://localhost:5000/api/users/reels/watch", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        if (res.ok) {
+          // Call refreshUser so that if they go back to dashboard, it shows updated count
+          refreshUser();
+        }
+      } catch (err) {
+        console.error("Error logging reel watch:", err);
+      }
+    }, 5000); // 5 seconds of watching
+
+    return () => clearTimeout(timer);
+  }, [currentIndex, reels.length, token, refreshUser]);
+
+  const paginate = useCallback((newDirection: number) => {
+    let nextIndex = currentIndex + newDirection;
+    if (nextIndex < 0) nextIndex = 0;
+    if (nextIndex >= reels.length) nextIndex = reels.length - 1;
+    setCurrentIndex(nextIndex);
+    setIsPlaying(true); // Reset play state when changing reel
+  }, [currentIndex, reels.length]);
+
+  // Keyboard support
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        paginate(1);
+      } else if (e.key === "ArrowLeft") {
+        paginate(-1);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [paginate]);
+
+  const swipeConfidenceThreshold = 10000;
+  const swipePower = (offset: number, velocity: number) => {
+    return Math.abs(offset) * velocity;
+  };
+
+  const handleDragEnd = (e: any, { offset, velocity }: PanInfo) => {
+    const swipe = swipePower(offset.x, velocity.x);
+    if (swipe < -swipeConfidenceThreshold) {
+      paginate(1);
+    } else if (swipe > swipeConfidenceThreshold) {
+      paginate(-1);
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="h-full w-full flex items-center justify-center">
+        <Loader2 className="w-12 h-12 text-[#20BF6B] animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="h-full w-full flex flex-col items-center justify-center">
+        <p className="text-xl font-bold text-gray-500 mb-4">{error}</p>
+        <button onClick={() => window.location.reload()} className="duo-btn duo-btn-blue px-6 py-2">Retry</button>
+      </div>
+    );
+  }
+
+  if (reels.length === 0) {
+    return (
+      <div className="h-full w-full flex flex-col items-center justify-center">
+        <div className="text-6xl mb-4">🎥</div>
+        <h2 className="text-2xl font-black text-gray-800">No Reels Yet!</h2>
+        <p className="text-gray-500 font-bold mb-6">Upload some reels from the admin panel.</p>
+        <a href="/admin/upload" className="duo-btn duo-btn-green px-6 py-3">Go to Uploads</a>
+      </div>
+    );
+  }
+
   return (
-    <div 
-      className="h-full w-full bg-[#111315] overflow-y-scroll snap-y snap-mandatory hide-scrollbar relative"
-      onScroll={handleScroll}
-      style={{ scrollBehavior: 'smooth' }}
-    >
-      {/* Subtle dark pattern background */}
-      <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at center, white 2px, transparent 2px)', backgroundSize: '32px 32px' }}></div>
+    <div className="h-full w-full bg-transparent overflow-hidden relative flex flex-col items-center justify-center pb-12">
+      {/* Gamified Header */}
+      <div className="absolute top-6 left-0 right-0 flex justify-center z-30 pointer-events-none">
+        <motion.div 
+          key={currentIndex}
+          initial={{ opacity: 0, y: -20, scale: 0.8 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          className="bg-white px-4 py-2 rounded-2xl shadow-[0_4px_0_#e2e8f0] border-2 border-gray-100 flex items-center gap-2"
+        >
+          <Flame size={20} className="text-[#FF9F43] fill-[#FF9F43]" />
+          <span className="text-sm font-black text-[#FF9F43]">+20 XP Earned</span>
+        </motion.div>
+      </div>
 
-      {MOCK_REELS.map((reel, index) => {
-        const isActive = index === currentReelIndex;
-        
-        return (
-          <div 
-            key={reel.id} 
-            className="h-full w-full snap-start snap-always relative flex items-center justify-center py-6 px-4 z-10"
-          >
-            <motion.div 
-              initial={{ scale: 0.8, opacity: 0, y: 50 }}
-              animate={{ 
-                scale: isActive ? 1 : 0.85, 
-                opacity: isActive ? 1 : 0.4,
-                y: isActive ? 0 : 20 
-              }}
-              transition={{ type: "spring", stiffness: 260, damping: 20 }}
-              className="relative w-full max-w-md h-[95%] rounded-[3rem] overflow-hidden flex flex-col justify-between"
-              style={{ 
-                backgroundColor: reel.bgColor,
-                border: '8px solid white',
-                boxShadow: '10px 10px 0px rgba(0,0,0,0.1)'
-              }}
-            >
-              
-              {/* Header */}
-              <div className="flex justify-between items-center p-6 z-20">
-                <div className="bg-white/30 backdrop-blur-md px-4 py-2 rounded-full border-2 border-white/50 text-white font-black tracking-widest uppercase text-xs shadow-sm">
-                  Level {reel.level}
-                </div>
-                <button className="bg-white/30 backdrop-blur-md p-3 rounded-full border-2 border-white/50 text-white hover:bg-white hover:text-black transition-all active:scale-90">
-                  <Volume2 size={24} strokeWidth={3} />
-                </button>
-              </div>
+      {/* 3D Carousel Container */}
+      <div className="relative w-full h-[75%] max-w-6xl mx-auto flex items-center justify-center z-10 perspective-[1200px]">
+        <AnimatePresence initial={false} custom={currentIndex}>
+          {reels.map((reel, index) => {
+            const offset = index - currentIndex;
+            const isActive = offset === 0;
+            const isVisible = Math.abs(offset) <= 2; 
 
-              {/* Center Content (The Lesson) */}
-              <div className="flex-1 flex flex-col items-center justify-center px-8 text-center z-20">
-                <motion.div 
-                  initial={{ scale: 0.8, rotate: -5 }}
-                  animate={{ scale: isActive ? 1 : 0.8, rotate: isActive ? 0 : -5 }}
-                  transition={{ delay: 0.2, type: "spring", bounce: 0.5 }}
-                  className="bg-white text-black p-8 rounded-[2.5rem] border-b-[8px] border-black/10 shadow-2xl relative w-full"
+            if (!isVisible) return null;
+
+            // Calculate 3D transforms
+            const scale = isActive ? 1 : Math.max(1 - Math.abs(offset) * 0.15, 0.6);
+            const xOffset = offset * 320; 
+            const zIndex = 10 - Math.abs(offset);
+            const opacity = isActive ? 1 : Math.max(1 - Math.abs(offset) * 0.4, 0);
+            const blur = isActive ? "blur(0px)" : `blur(${Math.abs(offset) * 2}px)`;
+
+            return (
+              <motion.div
+                key={reel.id}
+                initial={false}
+                animate={{
+                  x: xOffset,
+                  scale: scale,
+                  opacity: opacity,
+                  zIndex: zIndex,
+                  filter: blur,
+                }}
+                transition={{ type: "spring", stiffness: 260, damping: 25 }}
+                className={`absolute top-0 bottom-0 m-auto flex flex-col items-center ${isActive ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'}`}
+                style={{ width: '380px', height: '100%' }}
+                drag={isActive ? "x" : false}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={isActive ? handleDragEnd : undefined}
+                onClick={() => !isActive && setCurrentIndex(index)}
+              >
+                {/* Gamified Reel Frame */}
+                <div 
+                  className={`relative w-full h-full rounded-[2.5rem] overflow-hidden transition-all duration-300 ${isActive ? 'border-[4px] border-white shadow-[0_12px_24px_rgba(0,0,0,0.15)] bg-black' : 'shadow-lg border-2 border-white/20 ' + reel.bgGradient}`}
                 >
-                  {/* Decorative speech bubble tail */}
-                  <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-white rotate-45 border-r-[8px] border-b-[8px] border-black/10"></div>
+                  {isActive && reel.videoUrl ? (
+                    <div 
+                      className="absolute inset-0 w-full h-full cursor-pointer z-0" 
+                      onClick={() => setIsPlaying(!isPlaying)}
+                    >
+                      <ReelVideo 
+                        src={reel.videoUrl} 
+                        isMuted={isMuted} 
+                        isPlaying={isPlaying} 
+                      />
+                    </div>
+                  ) : (
+                    <div className="absolute inset-0 bg-black/5 mix-blend-overlay"></div>
+                  )}
                   
-                  <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">Listen & Repeat</h3>
-                  <p className="text-4xl font-black text-gray-800 mb-6 leading-tight">
-                    {reel.german}
-                  </p>
+                  {/* Overlay shadow for text readability over video */}
+                  {isActive && <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none"></div>}
                   
-                  <div className="h-1 w-16 bg-gray-200 rounded-full mx-auto mb-6"></div>
-                  
-                  <p className="text-xl font-bold text-gray-500">
-                    "{reel.english}"
-                  </p>
+                  {/* Reel Content */}
+                  <div className="relative z-10 h-full p-6 flex flex-col justify-between text-white pointer-events-none">
+                    
+                    {/* Header */}
+                    <div className="flex justify-between items-center pointer-events-none">
+                      <div className="bg-white text-gray-900 px-3 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase shadow-sm">
+                        Level {reel.level}
+                      </div>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); setIsMuted(!isMuted); }}
+                        className="bg-black/20 backdrop-blur-md p-2.5 rounded-full hover:bg-black/30 transition-colors pointer-events-auto"
+                      >
+                        {isMuted ? <VolumeX size={18} strokeWidth={2.5} /> : <Volume2 size={18} strokeWidth={2.5} />}
+                      </button>
+                    </div>
+
+                    {/* Play/Pause indicator center screen */}
+                    <AnimatePresence>
+                      {!isPlaying && (
+                        <motion.div 
+                          initial={{ opacity: 0, scale: 0.5 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.5 }}
+                          className="absolute inset-0 m-auto w-20 h-20 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center pointer-events-none"
+                        >
+                          <Play size={40} className="text-white fill-white ml-2" />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    {/* Center Text (Only show if video isn't loaded or to act as subtitles) */}
+                    <div className="flex-1 flex flex-col items-center justify-end text-center space-y-4 px-2 pointer-events-none pb-4">
+                      <h2 className="text-2xl font-black leading-tight drop-shadow-md text-left w-full">
+                        {reel.german}
+                      </h2>
+                      {reel.english && (
+                        <p className="text-sm font-bold text-white/90 drop-shadow-sm text-left w-full">
+                          "{reel.english}"
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Footer: Gamified Action */}
+                    <div className="w-full pointer-events-auto flex flex-col gap-4">
+                      <button className="duo-btn w-full bg-[#20BF6B] text-white border-[#178B4E] py-3 text-xs flex items-center justify-center gap-2 hover:bg-[#1ca65d] active:border-b-0 shadow-[0_4px_0_#178B4E]">
+                        <Play size={16} className="fill-white" /> Practice It
+                      </button>
+                    </div>
+
+                  </div>
+
+                  {/* Right Side Floating Actions (Only on active) */}
+                  {isActive && (
+                    <motion.div 
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 }}
+                      className="absolute right-[-10px] top-1/2 -translate-y-1/2 flex flex-col items-center space-y-4 z-20 pointer-events-auto translate-x-full pr-4"
+                    >
+                      <ActionBtn icon={<Heart size={20} className="fill-[#FF4757] text-[#FF4757]" />} label={reel.likes || 0} />
+                      <ActionBtn icon={<MessageCircle size={20} className="text-gray-500" />} label={reel.views || 0} />
+                      <ActionBtn icon={<Share2 size={20} className="text-gray-500" />} label="Share" />
+                    </motion.div>
+                  )}
+                </div>
+
+                {/* Title below the frame */}
+                <motion.div 
+                  className={`mt-4 text-center transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-40'}`}
+                >
+                  <h3 className="text-lg font-black text-gray-800 bg-white px-4 py-2 rounded-xl shadow-[0_4px_0_#e2e8f0] border-2 border-gray-100 inline-block">
+                    {reel.tags?.length ? `#${reel.tags[0]}` : 'Reel'}
+                  </h3>
                 </motion.div>
-              </div>
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+      </div>
 
-              {/* Bottom Actions & Title */}
-              <div className="p-6 z-20 flex justify-between items-end">
-                <div className="bg-black/20 backdrop-blur-md p-4 rounded-3xl border-2 border-white/20 text-white max-w-[70%] shadow-lg">
-                  <p className="font-black text-lg leading-tight drop-shadow-sm">{reel.title}</p>
-                </div>
-
-                {/* Vertical Action Buttons */}
-                <div className="flex flex-col items-center space-y-4">
-                  <ActionBtn icon={<Heart size={24} className={isActive && index === 0 ? "fill-red-500 text-red-500" : ""} />} label={reel.likes} color="text-red-500" />
-                  <ActionBtn icon={<MessageCircle size={24} />} label={reel.comments} color="text-blue-500" />
-                  <ActionBtn icon={<Bookmark size={24} />} label="Save" color="text-green-500" />
-                  <ActionBtn icon={<Share2 size={24} />} label="Share" color="text-yellow-500" />
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        );
-      })}
+      {/* Bottom Pagination Roman Numerals */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 z-20">
+        <span className="text-xs font-black text-gray-400 mr-2 flex items-center gap-1"><kbd className="bg-gray-100 px-1.5 rounded border-b-2 border-gray-200">←</kbd> Swipe/Use Arrows <kbd className="bg-gray-100 px-1.5 rounded border-b-2 border-gray-200">→</kbd></span>
+        {reels.map((reel, index) => {
+          const isActive = index === currentIndex;
+          return (
+            <button
+              key={reel.id}
+              onClick={() => setCurrentIndex(index)}
+              className={`transition-all duration-300 flex items-center justify-center font-black ${isActive ? 'text-2xl text-gray-900 scale-125' : 'text-sm text-gray-400 hover:text-gray-600'}`}
+              style={{ color: isActive ? reel.dotColor : undefined }}
+            >
+              {ROMAN_NUMERALS[index] || index + 1}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
 
-// Helper component for chunky gamified buttons
-function ActionBtn({ icon, label, color }: { icon: React.ReactNode, label: string | number, color: string }) {
+function ActionBtn({ icon, label }: { icon: React.ReactNode, label: string | number }) {
   return (
-    <button className={`group flex flex-col items-center text-white transition-all active:scale-90 ${color}`}>
-      <div className="p-4 bg-white rounded-full shadow-[0_5px_0_rgba(0,0,0,0.1)] group-hover:-translate-y-1 group-active:translate-y-1 group-active:shadow-none transition-all text-gray-800 group-hover:text-current">
+    <button className="group flex flex-col items-center transition-all hover:-translate-y-1 active:translate-y-0" onPointerDown={(e) => e.stopPropagation()}>
+      <div className="w-12 h-12 bg-white rounded-[1.25rem] flex items-center justify-center shadow-[0_4px_0_#e2e8f0] border-2 border-gray-100 group-hover:bg-gray-50 group-active:shadow-none group-active:border-t-[6px] transition-all">
         {icon}
       </div>
-      <span className="text-xs font-black mt-2 drop-shadow-md bg-black/40 px-2 py-1 rounded-full">{label}</span>
+      <span className="text-[10px] font-black text-gray-500 mt-2 bg-white px-2 py-0.5 rounded-md shadow-sm border border-gray-100">{label}</span>
     </button>
+  );
+}
+
+// Sub-component to handle video playback programmatically
+function ReelVideo({ src, isMuted, isPlaying }: { src: string, isMuted: boolean, isPlaying: boolean }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        // Need to catch promise to prevent uncaught exceptions if browser blocks autoplay
+        videoRef.current.play().catch(e => console.log("Autoplay prevented:", e));
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [isPlaying, src]);
+
+  return (
+    <video 
+      ref={videoRef}
+      src={src} 
+      className="w-full h-full object-cover" 
+      autoPlay 
+      loop 
+      muted={isMuted}
+      playsInline
+    />
   );
 }

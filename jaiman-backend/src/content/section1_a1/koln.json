@@ -1,0 +1,662 @@
+{
+  "stop": "Köln",
+  "section": "Section 1 - A1 - Deutschland Reise",
+  "theme": "Greetings, Introducing Yourself & The Cologne Cathedral",
+  "total_xp": 150,
+  "total_questions": 60,
+  "sessions": [
+    {
+      "session_number": 1,
+      "session_title": "Vocab Intro",
+      "skill_type": "vocab",
+      "questions": [
+        {
+          "id": "koln_v01",
+          "type": "mcq",
+          "question_text": "Was bedeutet 'Hallo'?",
+          "options": [
+            "Hi",
+            "Tschüss",
+            "Danke",
+            "Bitte"
+          ],
+          "correct_answer": "Hi",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v02",
+          "type": "mcq",
+          "question_text": "Was bedeutet 'Tschüss'?",
+          "options": [
+            "Hello",
+            "Bye",
+            "Please",
+            "Sorry"
+          ],
+          "correct_answer": "Bye",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v03",
+          "type": "mcq",
+          "question_text": "Was bedeutet 'Danke'?",
+          "options": [
+            "Thank you",
+            "Sorry",
+            "Yes",
+            "No"
+          ],
+          "correct_answer": "Thank you",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v04",
+          "type": "matching",
+          "question_text": "Match kariye: Wort ↔ Meaning",
+          "options": {
+            "Guten Morgen": "Good morning",
+            "Guten Tag": "Good day",
+            "Guten Abend": "Good evening",
+            "Gute Nacht": "Good night"
+          },
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v05",
+          "type": "mcq",
+          "question_text": "Was bedeutet 'der Name'?",
+          "options": [
+            "Name",
+            "City",
+            "Word",
+            "Friend"
+          ],
+          "correct_answer": "Name",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v06",
+          "type": "mcq",
+          "question_text": "Was bedeutet 'die Stadt'?",
+          "options": [
+            "Country",
+            "City",
+            "Street",
+            "House"
+          ],
+          "correct_answer": "City",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v07",
+          "type": "flashcard_recall",
+          "question_text": "Ich, du, er, sie, es — inka meaning select karo: 'du'",
+          "options": [
+            "I",
+            "you (informal)",
+            "he",
+            "she"
+          ],
+          "correct_answer": "you (informal)",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v08",
+          "type": "mcq",
+          "question_text": "Was bedeutet 'kommen'?",
+          "options": [
+            "to come",
+            "to go",
+            "to speak",
+            "to live"
+          ],
+          "correct_answer": "to come",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v09",
+          "type": "mcq",
+          "question_text": "Was bedeutet 'wohnen'?",
+          "options": [
+            "to live/reside",
+            "to work",
+            "to eat",
+            "to travel"
+          ],
+          "correct_answer": "to live/reside",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v10",
+          "type": "mcq",
+          "question_text": "Was bedeutet 'sprechen'?",
+          "options": [
+            "to speak",
+            "to read",
+            "to write",
+            "to listen"
+          ],
+          "correct_answer": "to speak",
+          "xp_value": 5
+        }
+      ]
+    },
+    {
+      "session_number": 2,
+      "session_title": "Vocab Practice (SRS repeat, harder format)",
+      "skill_type": "vocab",
+      "questions": [
+        {
+          "id": "koln_v11",
+          "type": "fill_blank",
+          "question_text": "___! Wie geht's? (Hello!)",
+          "correct_answer": "Hallo",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v12",
+          "type": "fill_blank",
+          "question_text": "___ schön! (Very nice / How nice)",
+          "correct_answer": "Wie",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v13",
+          "type": "reverse_mcq",
+          "question_text": "'Thank you' German mein kya hoga?",
+          "options": [
+            "Bitte",
+            "Danke",
+            "Tschüss",
+            "Hallo"
+          ],
+          "correct_answer": "Danke",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v14",
+          "type": "reverse_mcq",
+          "question_text": "'City' German mein kya hoga?",
+          "options": [
+            "das Land",
+            "die Stadt",
+            "das Dorf",
+            "der Ort"
+          ],
+          "correct_answer": "die Stadt",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v15",
+          "type": "matching",
+          "question_text": "Match kariye: Pronoun ↔ Meaning",
+          "options": {
+            "ich": "I",
+            "du": "you",
+            "er": "he",
+            "sie": "she"
+          },
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v16",
+          "type": "word_gender",
+          "question_text": "'Dom' (cathedral) ka article kya hai?",
+          "options": [
+            "der",
+            "die",
+            "das"
+          ],
+          "correct_answer": "der",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v17",
+          "type": "word_gender",
+          "question_text": "'Stadt' ka article kya hai?",
+          "options": [
+            "der",
+            "die",
+            "das"
+          ],
+          "correct_answer": "die",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v18",
+          "type": "mcq",
+          "question_text": "'Der Kölner Dom' famous kis liye hai?",
+          "options": [
+            "Cathedral in Köln",
+            "River in Köln",
+            "Museum in Köln",
+            "Park in Köln"
+          ],
+          "correct_answer": "Cathedral in Köln",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v19",
+          "type": "fill_blank",
+          "question_text": "Ich ___ aus Indien. (come)",
+          "correct_answer": "komme",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_v20",
+          "type": "fill_blank",
+          "question_text": "Ich ___ in Delhi. (live)",
+          "correct_answer": "wohne",
+          "xp_value": 5
+        }
+      ]
+    },
+    {
+      "session_number": 3,
+      "session_title": "Grammar Intro — 'sein' + basic sentence structure",
+      "skill_type": "grammar",
+      "grammar_note": "'sein' (to be): ich bin, du bist, er/sie/es ist. Basic pattern: Subject + Verb + rest of sentence.",
+      "questions": [
+        {
+          "id": "koln_g01",
+          "type": "mcq",
+          "question_text": "Ich ___ Preeti. (bin/bist/ist)",
+          "options": [
+            "bin",
+            "bist",
+            "ist"
+          ],
+          "correct_answer": "bin",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_g02",
+          "type": "mcq",
+          "question_text": "Du ___ nett. (bin/bist/ist)",
+          "options": [
+            "bin",
+            "bist",
+            "ist"
+          ],
+          "correct_answer": "bist",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_g03",
+          "type": "mcq",
+          "question_text": "Er ___ aus Köln. (bin/bist/ist)",
+          "options": [
+            "bin",
+            "bist",
+            "ist"
+          ],
+          "correct_answer": "ist",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_g04",
+          "type": "sentence_build",
+          "question_text": "In sahi order lagao: [heiße / ich / Preeti]",
+          "correct_answer": "Ich heiße Preeti",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_g05",
+          "type": "sentence_build",
+          "question_text": "In sahi order lagao: [komme / ich / aus Indien]",
+          "correct_answer": "Ich komme aus Indien",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_g06",
+          "type": "fill_blank",
+          "question_text": "Wie ___ du? (heißt/heiße)",
+          "correct_answer": "heißt",
+          "xp_value": 5
+        }
+      ]
+    },
+    {
+      "session_number": 4,
+      "session_title": "Grammar Practice — self-intro sentences",
+      "skill_type": "grammar",
+      "questions": [
+        {
+          "id": "koln_g07",
+          "type": "error_spot",
+          "question_text": "Galti dhoondo: 'Ich bist Preeti.'",
+          "correct_answer": "bist → bin",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_g08",
+          "type": "error_spot",
+          "question_text": "Galti dhoondo: 'Du ist nett.'",
+          "correct_answer": "ist → bist",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_g09",
+          "type": "fill_blank",
+          "question_text": "Ich ___ in Köln. (wohnen verb, ich-form)",
+          "correct_answer": "wohne",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_g10",
+          "type": "fill_blank",
+          "question_text": "Woher ___ du? (kommen verb, du-form)",
+          "correct_answer": "kommst",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_g11",
+          "type": "sentence_build",
+          "question_text": "Order lagao: [Deutsch / ich / spreche / ein bisschen]",
+          "correct_answer": "Ich spreche ein bisschen Deutsch",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_g12",
+          "type": "translate",
+          "question_text": "Translate: 'My name is Preeti, and I come from India.'",
+          "correct_answer": "Ich heiße Preeti, und ich komme aus Indien.",
+          "xp_value": 5
+        }
+      ]
+    },
+    {
+      "session_number": 5,
+      "session_title": "Listening",
+      "skill_type": "listening",
+      "questions": [
+        {
+          "id": "koln_l01",
+          "type": "listening_mcq",
+          "question_text": "Audio suno: sahi greeting choose karo",
+          "audio_url": "audio/koln_hallo.mp3",
+          "options": [
+            "Hallo",
+            "Tschüss",
+            "Danke"
+          ],
+          "correct_answer": "Hallo",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_l02",
+          "type": "listening_mcq",
+          "question_text": "Audio suno: speaker apna naam kya bata raha hai?",
+          "audio_url": "audio/koln_ich_heisse.mp3",
+          "options": [
+            "Max",
+            "Anna",
+            "Peter"
+          ],
+          "correct_answer": "Anna",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_l03",
+          "type": "dictation",
+          "question_text": "Audio suno aur type karo jo suna",
+          "audio_url": "audio/koln_wo_wohnst_du.mp3",
+          "correct_answer": "Wo wohnst du?",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_l04",
+          "type": "listening_mcq",
+          "question_text": "Audio suno: speaker kaha se hai?",
+          "audio_url": "audio/koln_woher_kommst_du.mp3",
+          "options": [
+            "Köln",
+            "Berlin",
+            "Hamburg"
+          ],
+          "correct_answer": "Köln",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_l05",
+          "type": "listening_match",
+          "question_text": "Audio sunke sahi picture se match karo (Guten Morgen/Tag/Abend)",
+          "audio_url": "audio/koln_greetings_set.mp3",
+          "correct_answer": "Guten Morgen = sunrise icon",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_l06",
+          "type": "listening_mcq",
+          "question_text": "Audio suno: yeh kaunsa sawaal hai?",
+          "audio_url": "audio/koln_wie_heisst_du.mp3",
+          "options": [
+            "What's your name?",
+            "Where do you live?",
+            "How are you?"
+          ],
+          "correct_answer": "What's your name?",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_l07",
+          "type": "true_false_audio",
+          "question_text": "Audio suno: kya speaker Köln mein rehta hai?",
+          "audio_url": "audio/koln_true_false_1.mp3",
+          "correct_answer": "True",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_l08",
+          "type": "dictation",
+          "question_text": "Audio suno aur type karo",
+          "audio_url": "audio/koln_short_intro.mp3",
+          "correct_answer": "Ich heiße Anna und ich wohne in Köln.",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_l09",
+          "type": "listening_mcq",
+          "question_text": "Audio suno: cathedral ka naam kya bataya?",
+          "audio_url": "audio/koln_dom_mention.mp3",
+          "options": [
+            "Kölner Dom",
+            "Berliner Dom",
+            "Aachener Dom"
+          ],
+          "correct_answer": "Kölner Dom",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_l10",
+          "type": "listening_mcq",
+          "question_text": "Audio suno: sahi response choose karo 'Wie geht's?' ka",
+          "audio_url": "audio/koln_wie_gehts.mp3",
+          "options": [
+            "Gut, danke!",
+            "Tschüss!",
+            "Ja bitte."
+          ],
+          "correct_answer": "Gut, danke!",
+          "xp_value": 5
+        }
+      ]
+    },
+    {
+      "session_number": 6,
+      "session_title": "Speaking",
+      "skill_type": "speaking",
+      "questions": [
+        {
+          "id": "koln_s01",
+          "type": "shadowing",
+          "question_text": "Record karo: 'Hallo! Wie geht's?'",
+          "reference_audio": "audio/ref_hallo_wie_gehts.mp3",
+          "xp_value": 8
+        },
+        {
+          "id": "koln_s02",
+          "type": "shadowing",
+          "question_text": "Record karo: 'Ich heiße Preeti.'",
+          "reference_audio": "audio/ref_ich_heisse.mp3",
+          "xp_value": 8
+        },
+        {
+          "id": "koln_s03",
+          "type": "shadowing",
+          "question_text": "Record karo: 'Ich komme aus Indien.'",
+          "reference_audio": "audio/ref_ich_komme.mp3",
+          "xp_value": 8
+        },
+        {
+          "id": "koln_s04",
+          "type": "pronunciation_focus",
+          "question_text": "'ö' sound practice karo: 'Köln' bolo",
+          "reference_audio": "audio/ref_koln_pronunciation.mp3",
+          "xp_value": 8
+        },
+        {
+          "id": "koln_s05",
+          "type": "open_response",
+          "question_text": "Bolo: apna naam aur city batao (2 sentences)",
+          "prompt_hint": "Ich heiße... Ich wohne in...",
+          "xp_value": 8
+        },
+        {
+          "id": "koln_s06",
+          "type": "roleplay",
+          "question_text": "AI ko greet karo jaise tum kisi naye friend se mil rahe ho",
+          "xp_value": 8
+        },
+        {
+          "id": "koln_s07",
+          "type": "shadowing",
+          "question_text": "Record karo: 'Wie geht es dir?'",
+          "reference_audio": "audio/ref_wie_geht_es_dir.mp3",
+          "xp_value": 8
+        },
+        {
+          "id": "koln_s08",
+          "type": "open_response",
+          "question_text": "Bolo: 'Guten Tag' se conversation shuru karo AI se",
+          "xp_value": 8
+        }
+      ]
+    },
+    {
+      "session_number": 7,
+      "session_title": "Reading",
+      "skill_type": "reading",
+      "passage": "Hallo! Ich heiße Anna. Ich komme aus Deutschland und ich wohne in Köln. Köln ist eine schöne Stadt. Der Kölner Dom ist sehr berühmt. Ich spreche Deutsch und ein bisschen Englisch.",
+      "questions": [
+        {
+          "id": "koln_r01",
+          "type": "comprehension_mcq",
+          "question_text": "Anna kahan se aati hai?",
+          "options": [
+            "Deutschland",
+            "Indien",
+            "Frankreich"
+          ],
+          "correct_answer": "Deutschland",
+          "xp_value": 6
+        },
+        {
+          "id": "koln_r02",
+          "type": "comprehension_mcq",
+          "question_text": "Anna kahan rehti hai?",
+          "options": [
+            "Berlin",
+            "Köln",
+            "München"
+          ],
+          "correct_answer": "Köln",
+          "xp_value": 6
+        },
+        {
+          "id": "koln_r03",
+          "type": "comprehension_mcq",
+          "question_text": "Köln mein kya famous hai?",
+          "options": [
+            "Der Kölner Dom",
+            "Der Fernsehturm",
+            "Das Schloss"
+          ],
+          "correct_answer": "Der Kölner Dom",
+          "xp_value": 6
+        },
+        {
+          "id": "koln_r04",
+          "type": "comprehension_mcq",
+          "question_text": "Anna kaun si languages bolti hai?",
+          "options": [
+            "Deutsch und Englisch",
+            "Nur Deutsch",
+            "Deutsch und Französisch"
+          ],
+          "correct_answer": "Deutsch und Englisch",
+          "xp_value": 6
+        },
+        {
+          "id": "koln_r05",
+          "type": "vocab_in_context",
+          "question_text": "Passage mein 'schön' ka matlab kya hai?",
+          "options": [
+            "beautiful",
+            "big",
+            "old"
+          ],
+          "correct_answer": "beautiful",
+          "xp_value": 6
+        }
+      ]
+    },
+    {
+      "session_number": 8,
+      "session_title": "Writing",
+      "skill_type": "writing",
+      "questions": [
+        {
+          "id": "koln_w01",
+          "type": "fill_blank",
+          "question_text": "Complete karo: 'Ich ___ Preeti.' (heiße)",
+          "correct_answer": "heiße",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_w02",
+          "type": "fill_blank",
+          "question_text": "Complete karo: 'Ich ___ aus Indien.' (komme)",
+          "correct_answer": "komme",
+          "xp_value": 5
+        },
+        {
+          "id": "koln_w03",
+          "type": "sentence_construction",
+          "question_text": "Ek sentence likho apni city ke baare mein 'Ich wohne in...' use karke",
+          "xp_value": 6
+        },
+        {
+          "id": "koln_w04",
+          "type": "guided_paragraph",
+          "question_text": "3 sentences likho apna intro dete hue (naam, city, language)",
+          "template_hint": "Ich heiße... Ich wohne in... Ich spreche...",
+          "xp_value": 7
+        },
+        {
+          "id": "koln_w05",
+          "type": "guided_paragraph",
+          "question_text": "Chhota message likho ek naye German friend ko greet karte hue (2-3 sentences)",
+          "xp_value": 7
+        }
+      ]
+    }
+  ],
+  "boss_test": {
+    "title": "Köln Boss Battle — Mini Conversation",
+    "format": "roleplay_chat",
+    "description": "User ko AI ke saath ek chhoti conversation complete karni hai jisme greeting, self-intro (naam, city, language) cover ho. Pass threshold: 80%.",
+    "xp_value": 20,
+    "unlocks": "Frankfurt stop"
+  }
+}

@@ -5,6 +5,9 @@ import dotenv from 'dotenv';
 import connectDB from './src/config/db';
 import authRoutes from './src/routes/auth.routes';
 import userRoutes from './src/routes/user.routes';
+import reelRoutes from './src/routes/reel.routes';
+import stageRoutes from './src/routes/stage.routes';
+import progressRoutes from './src/routes/progress.routes';
 
 dotenv.config();
 
@@ -20,6 +23,9 @@ app.use(express.json());
 // Mount Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/reels', reelRoutes);
+app.use('/api/stages', stageRoutes);
+app.use('/api/progress', progressRoutes);
 
 // Health Check Endpoint
 app.get('/api/health', (req: Request, res: Response) => {

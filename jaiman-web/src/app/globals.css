@@ -1,10 +1,19 @@
 @import "tailwindcss";
 
-@import "tailwindcss";
-
 :root {
-  --background: #FAF9F6;
+  --background: #E8ECEF;
   --foreground: #1F2328;
+  --card-bg: white;
+  --card-border: #e5e5e5;
+  --text-muted: #6b7280;
+}
+
+.dark {
+  --background: #0B1120;
+  --foreground: #F8FAFC;
+  --card-bg: #1E293B;
+  --card-border: #334155;
+  --text-muted: #94A3B8;
 }
 
 @theme inline {
@@ -55,4 +64,137 @@ body {
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* --- DUOLINGO-INSPIRED GAMIFIED STYLES --- */
+
+/* Base Gamified Card */
+.duo-card {
+  background-color: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-bottom-width: 4px;
+  border-radius: 1.5rem;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  color: var(--foreground);
+}
+.duo-card:hover {
+  transform: translateY(-2px);
+  border-bottom-width: 6px;
+}
+.duo-card:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+/* Base Gamified Button */
+.duo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 1rem;
+  transition: all 0.15s ease;
+  border-bottom-width: 4px;
+}
+.duo-btn:active:not(:disabled) {
+  transform: translateY(4px);
+  border-bottom-width: 0px;
+  margin-top: 4px;
+}
+.duo-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-bottom-width: 0px;
+  transform: translateY(4px);
+  margin-top: 4px;
+}
+
+/* Specific Button Colors */
+.duo-btn-blue {
+  background-color: #4361EE;
+  color: white;
+  border-color: #3046B2;
+}
+.duo-btn-blue:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.duo-btn-green {
+  background-color: #20BF6B;
+  color: white;
+  border-color: #178B4E;
+}
+.duo-btn-green:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.duo-btn-danger {
+  background-color: #FF4757;
+  color: white;
+  border-color: #CC3946;
+}
+.duo-btn-danger:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.duo-btn-outline {
+  background-color: white;
+  color: #a0aec0;
+  border: 2px solid #e2e8f0;
+  border-bottom-width: 4px;
+}
+.duo-btn-outline:hover:not(:disabled) {
+  background-color: #f7fafc;
+  color: #718096;
+}
+
+/* Gamified Stat Cards */
+.stat-card-orange {
+  background-color: white;
+  border: 2px solid #FF9F43;
+  border-bottom-width: 6px;
+  border-radius: 1.5rem;
+}
+.stat-card-blue {
+  background-color: white;
+  border: 2px solid #4361EE;
+  border-bottom-width: 6px;
+  border-radius: 1.5rem;
+}
+.stat-card-gold {
+  background-color: white;
+  border: 2px solid #F7B731;
+  border-bottom-width: 6px;
+  border-radius: 1.5rem;
+}
+.stat-card-green {
+  background-color: white;
+  border: 2px solid #20BF6B;
+  border-bottom-width: 6px;
+  border-radius: 1.5rem;
+}
+
+/* Progress Bar Track */
+.duo-progress-track {
+  background-color: #e2e8f0;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.duo-progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+.duo-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 5%;
+  right: 5%;
+  height: 25%;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 9999px;
 }

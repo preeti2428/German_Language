@@ -11,11 +11,17 @@ export interface IUser extends Document {
   learningLanguage?: string;
   level?: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
   xp: number;
+  reelsWatched: number;
   streak: {
     current: number;
     longest: number;
     lastActiveDate: Date;
   };
+  activityHistory: {
+    date: string;
+    xpEarned: number;
+    reelsWatched: number;
+  }[];
   achievements: mongoose.Types.ObjectId[];
   preferences: {
     darkMode: boolean;
@@ -42,11 +48,17 @@ const userSchema = new mongoose.Schema({
     default: 'A1'
   },
   xp: { type: Number, default: 0 },
+  reelsWatched: { type: Number, default: 0 },
   streak: {
     current: { type: Number, default: 0 },
     longest: { type: Number, default: 0 },
     lastActiveDate: { type: Date, default: Date.now }
   },
+  activityHistory: [{
+    date: { type: String, required: true },
+    xpEarned: { type: Number, default: 0 },
+    reelsWatched: { type: Number, default: 0 }
+  }],
   achievements: [{ type: Schema.Types.ObjectId, ref: 'Achievement' }],
   preferences: {
     darkMode: { type: Boolean, default: true },

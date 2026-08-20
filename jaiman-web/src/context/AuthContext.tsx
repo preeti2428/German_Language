@@ -7,6 +7,18 @@ interface User {
   name: string;
   email: string;
   role: string;
+  xp?: number;
+  level?: string;
+  reelsWatched?: number;
+  streak?: {
+    current: number;
+    longest: number;
+  };
+  activityHistory?: {
+    date: string;
+    xpEarned: number;
+    reelsWatched: number;
+  }[];
 }
 
 interface AuthContextType {
@@ -14,6 +26,7 @@ interface AuthContextType {
   token: string | null;
   login: (userData: User, token: string) => void;
   logout: () => void;
+  refreshUser: () => Promise<void>;
   isLoading: boolean;
 }
 
@@ -36,6 +49,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false);
   }, []);
 
+  // Global Dark Mode side-effect
+  useEffect(() => {
+    if (user?.preferences?.darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [user?.preferences?.darkMode]);
+
   const login = (userData: User, newToken: string) => {
     setUser(userData);
     setToken(newToken);
@@ -50,8 +72,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("token");
   };
 
+  const refreshUser = async () => {
+    try {
+      if (!token) return;
+      const res = await fetch("http://localhost:5000/api/users/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (res.ok) {
+        const userData = await res.json();
+        setUser(userData);
+        localStorage.setItem("user", JSON.stringify(userData));
+      }
+    } catch (err) {
+      console.error("Failed to refresh user", err);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, token, login, logout, refreshUser, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
