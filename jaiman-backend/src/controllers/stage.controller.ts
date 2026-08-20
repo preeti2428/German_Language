@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import fs from 'fs';
+import path from 'path';
 import Stage from '../models/Stage';
 import Question from '../models/Question.model';
 
@@ -155,7 +157,39 @@ export const seedInitialStage = async (req: Request, res: Response): Promise<voi
     }));
 
     const createdStages = await Stage.insertMany(stagesToInsert);
-    res.status(201).json({ message: "Seeded 8 cities for A1", count: createdStages.length });
+    
+    // --- Seed the Questions from koln.json ---
+    const kolnStage = createdStages[0]; // Cologne is the first one
+    await Question.deleteMany({}); // clear all old questions
+    
+    const jsonPath = path.join(__dirname, '../content/section1_a1/koln.json');
+    if (fs.existsSync(jsonPath)) {
+      const fileContent = fs.readFileSync(jsonPath, 'utf-8');
+      const questionsData = JSON.parse(fileContent);
+      const questionsToInsert: any[] = [];
+      
+      questionsData.sessions.forEach((session: any) => {
+        session.questions.forEach((q: any, index: number) => {
+          questionsToInsert.push({
+            questionId: q.id,
+            stopId: kolnStage._id,
+            sessionNumber: session.session_number,
+            skillType: session.skill_type,
+            questionType: q.type,
+            questionText: q.question_text,
+            options: q.options,
+            correctAnswer: q.correct_answer,
+            audioUrl: q.audio_url || q.reference_audio,
+            xpValue: q.xp_value || 5,
+            orderInSession: index + 1
+          });
+        });
+      });
+      await Question.insertMany(questionsToInsert);
+    }
+    // ----------------------------------------
+
+    res.status(201).json({ message: "Seeded 8 cities for A1 and updated Koln questions", count: createdStages.length });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
