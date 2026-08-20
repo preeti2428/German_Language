@@ -110,7 +110,7 @@ export const completeSession = async (req: Request, res: Response): Promise<void
     }
 
     // Add session to completed if not already there
-    if (!stageProg.completedSessions.includes(Number(sessionNumber))) {
+    if (stageProg && !stageProg.completedSessions.includes(Number(sessionNumber))) {
       stageProg.completedSessions.push(Number(sessionNumber));
       progress.totalXp += Number(xpEarned) || 0;
       

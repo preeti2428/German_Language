@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 import Reel from '../models/Reel';
 
-// Extend Express Request to include the file object provided by multer-storage-cloudinary
-interface CloudinaryFile extends Express.Multer.File {
+interface CloudinaryFile {
   path: string; // The URL returned by cloudinary
 }
 
 export const uploadReel = async (req: Request, res: Response) => {
   try {
-    const file = req.file as CloudinaryFile;
+    const reqAny = req as any;
+    const file = reqAny.file as CloudinaryFile;
     if (!file) {
       return res.status(400).json({ message: 'No video file provided' });
     }
@@ -16,7 +16,7 @@ export const uploadReel = async (req: Request, res: Response) => {
     const { title, description, language, level, tags } = req.body;
 
     const newReel = new Reel({
-      creator: req.user?.id, // Assuming authMiddleware sets req.user
+      creator: reqAny.user?.id, // Assuming authMiddleware sets req.user
       videoUrl: file.path, // This is the Cloudinary URL
       title: title || 'Untitled Reel',
       description: description || '',

@@ -15,7 +15,8 @@ export const protect = async (req: AuthRequest, res: Response, next: NextFunctio
   ) {
     try {
       token = req.headers.authorization.split(' ')[1];
-      const decoded: any = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret_for_dev');
+      const secret = process.env.JWT_SECRET || 'fallback_secret_for_dev';
+      const decoded: any = jwt.verify(token, secret);
 
       req.user = await User.findById(decoded.id).select('-password') || undefined;
 

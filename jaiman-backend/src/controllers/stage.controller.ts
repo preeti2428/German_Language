@@ -7,7 +7,7 @@ import Stage from '../models/Stage';
 export const getStage = async (req: Request, res: Response): Promise<void> => {
   try {
     const { tier, number } = req.params;
-    const stage = await Stage.findOne({ tier, stageNumber: Number(number) });
+    const stage = await Stage.findOne({ tier, stageNumber: Number(number) } as any);
     
     if (stage) {
       res.json(stage);
@@ -25,7 +25,7 @@ export const getStage = async (req: Request, res: Response): Promise<void> => {
 export const getSession = async (req: Request, res: Response): Promise<void> => {
   try {
     const { tier, stageNumber, sessionNumber } = req.params;
-    const stage = await Stage.findOne({ tier, stageNumber: Number(stageNumber) });
+    const stage = await Stage.findOne({ tier, stageNumber: Number(stageNumber) } as any);
     
     if (!stage) {
       res.status(404).json({ message: 'Stage not found' });
@@ -39,7 +39,7 @@ export const getSession = async (req: Request, res: Response): Promise<void> => 
 
     const session = stage.sessions.find(s => s.sessionNumber === Number(sessionNumber));
     if (session) {
-      res.json({ stageId: stage._id, ...session.toObject() });
+      res.json({ stageId: stage._id, ...(session as any).toObject() });
     } else {
       res.status(404).json({ message: 'Session not found' });
     }
@@ -54,7 +54,7 @@ export const getSession = async (req: Request, res: Response): Promise<void> => 
 export const getStagesBySection = async (req: Request, res: Response): Promise<void> => {
   try {
     const { tier } = req.params;
-    const stages = await Stage.find({ tier }).sort({ stageNumber: 1 });
+    const stages = await Stage.find({ tier } as any).sort({ stageNumber: 1 });
     res.json(stages);
   } catch (error: any) {
     res.status(500).json({ message: error.message });

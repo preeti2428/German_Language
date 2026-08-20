@@ -92,13 +92,13 @@ export const watchReel = async (req: AuthRequest, res: Response): Promise<void> 
       user.xp = (user.xp || 0) + 10; // Give 10 XP for watching a reel
       
       // Update activity history
-      const today = new Date().toISOString().split('T')[0];
-      const activityIndex = user.activityHistory.findIndex(a => a.date === today);
+      const today = new Date().toISOString().split('T')[0] as string;
+      const activityIndex = user.activityHistory ? user.activityHistory.findIndex(a => a.date === today) : -1;
       
-      if (activityIndex > -1) {
+      if (user.activityHistory && activityIndex > -1) {
         user.activityHistory[activityIndex].reelsWatched += 1;
         user.activityHistory[activityIndex].xpEarned += 10;
-      } else {
+      } else if (user.activityHistory) {
         user.activityHistory.push({
           date: today,
           xpEarned: 10,
