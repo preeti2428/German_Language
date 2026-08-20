@@ -172,7 +172,7 @@ export const seedInitialStage = async (req: Request, res: Response): Promise<voi
         session.questions.forEach((q: any, index: number) => {
           questionsToInsert.push({
             questionId: q.id,
-            stopId: kolnStage._id,
+            stopId: kolnStage?._id, // Add optional chaining
             sessionNumber: session.session_number,
             skillType: session.skill_type,
             questionType: q.type,
