@@ -13,7 +13,7 @@ router.get('/:tier/:number', getStage);
 // Protected route to get a specific session
 router.get('/:tier/:stageNumber/:sessionNumber', protect, getSession);
 
-// Admin route to seed initial content
-router.post('/seed', protect, admin, seedInitialStage);
+// Admin route to seed initial content (temporarily public for setup)
+router.post('/seed', protect, seedInitialStage);
 
 export default router;
