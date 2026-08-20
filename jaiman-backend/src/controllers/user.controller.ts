@@ -96,8 +96,8 @@ export const watchReel = async (req: AuthRequest, res: Response): Promise<void> 
       const activityIndex = user.activityHistory ? user.activityHistory.findIndex(a => a.date === today) : -1;
       
       if (user.activityHistory && activityIndex > -1) {
-        user.activityHistory![activityIndex].reelsWatched += 1;
-        user.activityHistory![activityIndex].xpEarned += 10;
+        user.activityHistory![activityIndex]!.reelsWatched += 1;
+        user.activityHistory![activityIndex]!.xpEarned += 10;
       } else if (user.activityHistory) {
         user.activityHistory.push({
           date: today,
