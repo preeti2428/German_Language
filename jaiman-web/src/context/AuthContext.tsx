@@ -19,6 +19,10 @@ interface User {
     xpEarned: number;
     reelsWatched: number;
   }[];
+  preferences?: {
+    darkMode?: boolean;
+    [key: string]: any;
+  };
 }
 
 interface AuthContextType {

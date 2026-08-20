@@ -13,11 +13,15 @@ export interface Exercise {
   type: string;
   prompt?: string;
   questionText?: string;
+  question_text?: string;
   options?: any;
   correctAnswer?: any;
+  correct_answer?: any;
   audioUrl?: string;
+  audio_url?: string;
   points?: number;
   xpValue?: number;
+  xp_value?: number;
 }
 
 // ─── 3D Castle Parts ─────────────────────────────────────
@@ -407,7 +411,7 @@ export default function CastleBuilder({ exercises = [], onComplete }: { exercise
                 {isMcq ? (
                   <div className="grid grid-cols-2 gap-3">
                     {options.map((option: string) => {
-                      const actualCorrect = (currentLevel.correctAnswer || "").toString().trim().toLowerCase();
+                      const actualCorrect = (currentLevel?.correctAnswer || currentLevel?.correct_answer || "").toString().trim().toLowerCase();
                       const isThisCorrect = option.toLowerCase() === actualCorrect;
                       
                       let style = "duo-card p-4 text-center font-black text-sm border-2 border-gray-200 shadow-[0_3px_0_#CBD5E0] hover:border-[#4361EE] hover:bg-[#F0F3FF] cursor-pointer transition-all active:shadow-none active:translate-y-[3px]";

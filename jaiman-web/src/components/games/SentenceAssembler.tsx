@@ -19,7 +19,7 @@ export default function SentenceAssembler({ exercises = [], onComplete }: { exer
   useEffect(() => {
     if (currentLevel) {
       const correctStr = (currentLevel.correctAnswer || currentLevel.correct_answer || "").toString().trim();
-      const words = correctStr.split(/\s+/).filter(w => w.length > 0);
+      const words = correctStr.split(/\s+/).filter((w: string) => w.length > 0);
       
       // Shuffle the words
       const shuffled = [...words];
@@ -31,7 +31,7 @@ export default function SentenceAssembler({ exercises = [], onComplete }: { exer
     }
   }, [currentLevel]);
 
-  const availableWords = shuffledWords.filter((w, index) => {
+  const availableWords = shuffledWords.filter((w: string, index: number) => {
     // We need to handle duplicate words correctly by tracking indices instead of just string values,
     // but for simplicity, we'll just filter out the first occurrence of the selected word.
     // A better approach is to map shuffledWords to objects with IDs.
@@ -44,9 +44,9 @@ export default function SentenceAssembler({ exercises = [], onComplete }: { exer
   useEffect(() => {
     if (currentLevel) {
       const correctStr = (currentLevel.correctAnswer || currentLevel.correct_answer || "").toString().trim();
-      const words = correctStr.split(/\s+/).filter(w => w.length > 0);
+      const words = correctStr.split(/\s+/).filter((w: string) => w.length > 0);
       
-      const items = words.map((w, i) => ({ id: `word-${i}`, word: w }));
+      const items = words.map((w: string, i: number) => ({ id: `word-${i}`, word: w }));
       for (let i = items.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [items[i], items[j]] = [items[j], items[i]];
