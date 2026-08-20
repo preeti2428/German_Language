@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Stage from '../models/Stage';
+import Question from '../models/Question.model';
 
 // @desc    Get stage by tier and number
 // @route   GET /api/stages/:tier/:number
@@ -39,7 +40,25 @@ export const getSession = async (req: Request, res: Response): Promise<void> => 
 
     const session = stage.sessions.find(s => s.sessionNumber === Number(sessionNumber));
     if (session) {
-      res.json({ stageId: stage._id, ...(session as any).toObject() });
+      const sessionData = (session as any).toObject();
+      
+      // Fetch actual questions from the Question collection
+      const realQuestions = await Question.find({ stopId: stage._id, sessionNumber: Number(sessionNumber) }).sort({ orderInSession: 1 });
+      
+      if (realQuestions && realQuestions.length > 0) {
+        sessionData.exercises = realQuestions.map(q => ({
+          id: q.questionId,
+          type: q.questionType, // frontend handles 'vocab', 'grammar', 'matching', etc.
+          prompt: q.questionText,
+          options: q.options,
+          correctAnswer: q.correctAnswer,
+          audioUrl: q.audioUrl,
+          imageUrl: q.imageUrl,
+          points: q.xpValue
+        }));
+      }
+      
+      res.json({ stageId: stage._id, ...sessionData });
     } else {
       res.status(404).json({ message: 'Session not found' });
     }
