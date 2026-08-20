@@ -162,7 +162,7 @@ export const seedInitialStage = async (req: Request, res: Response): Promise<voi
     const kolnStage = createdStages[0]; // Cologne is the first one
     await Question.deleteMany({}); // clear all old questions
     
-    const jsonPath = path.join(__dirname, '../content/section1_a1/koln.json');
+    const jsonPath = path.join(process.cwd(), 'src/content/section1_a1/koln.json');
     if (fs.existsSync(jsonPath)) {
       const fileContent = fs.readFileSync(jsonPath, 'utf-8');
       const questionsData = JSON.parse(fileContent);
@@ -186,6 +186,8 @@ export const seedInitialStage = async (req: Request, res: Response): Promise<voi
         });
       });
       await Question.insertMany(questionsToInsert);
+    } else {
+      throw new Error(`Seed file not found at path: ${jsonPath}`);
     }
     // ----------------------------------------
 
