@@ -67,7 +67,8 @@ export default function ProfilePage() {
     const fetchProfile = async () => {
       try {
         if (!token) return;
-        const res = await fetch("https://german-language-mwmn.onrender.com/api/users/profile", {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+        const res = await fetch(`${API_URL}/users/profile`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();
@@ -102,7 +103,8 @@ export default function ProfilePage() {
       // Map "A1 (Beginner)" back to "A1" for backend if needed
       const levelToSend = formData.level.split(" ")[0];
       
-      const res = await fetch("https://german-language-mwmn.onrender.com/api/users/profile", {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const res = await fetch(`${API_URL}/users/profile`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

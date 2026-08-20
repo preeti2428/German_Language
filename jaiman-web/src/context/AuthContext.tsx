@@ -79,7 +79,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const refreshUser = async () => {
     try {
       if (!token) return;
-      const res = await fetch("https://german-language-mwmn.onrender.com/api/users/profile", {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const res = await fetch(`${API_URL}/users/profile`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

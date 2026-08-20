@@ -30,7 +30,8 @@ export default function ReelsPage() {
     const fetchReels = async () => {
       try {
         const token = localStorage.getItem("token"); // Optional: if auth required to view
-        const res = await fetch("https://german-language-mwmn.onrender.com/api/reels", {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+        const res = await fetch(`${API_URL}/reels`, {
           headers: {
             ...(token ? { "Authorization": `Bearer ${token}` } : {})
           }
@@ -70,7 +71,8 @@ export default function ReelsPage() {
     const timer = setTimeout(async () => {
       try {
         if (!token) return;
-        const res = await fetch("https://german-language-mwmn.onrender.com/api/users/reels/watch", {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+        const res = await fetch(`${API_URL}/users/reels/watch`, {
           method: "POST",
           headers: {
             "Authorization": `Bearer ${token}`
