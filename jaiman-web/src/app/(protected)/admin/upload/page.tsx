@@ -46,7 +46,7 @@ export default function UploadReelPage() {
       // Fetch user token from local storage (assuming AuthContext stores it here or cookie)
       const token = localStorage.getItem("token"); // Note: Update according to auth setup
       
-      const response = await fetch("http://localhost:5000/api/reels/upload", {
+      const response = await fetch("https://german-language-mwmn.onrender.com/api/reels/upload", {
         method: "POST",
         headers: {
           ...(token ? { "Authorization": `Bearer ${token}` } : {})

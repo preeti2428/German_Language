@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://german-language-mwmn.onrender.com/api',
 });
 
 // Request interceptor to automatically add the JWT token to every request
