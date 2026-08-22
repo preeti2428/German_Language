@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, Schema } from 'mongoose';
+import mongoose, { Document, Model } from 'mongoose';
 
 export interface IVocabSet {
   word: string;
@@ -8,7 +8,7 @@ export interface IVocabSet {
 }
 
 export interface IExercise {
-  type: 'vocab' | 'grammar' | 'listening' | 'speaking' | 'reading' | 'writing' | 'boss_test';
+  type: string;
   prompt: string;
   options?: string[];
   correctAnswer?: string;
@@ -34,24 +34,24 @@ export interface IStage extends Document {
   grammarNote?: string;
   sessions: ISession[];
   bossTest: IExercise[];
+  /** Precomputed sum of all question + boss XP, shown on the map. */
+  totalXp?: number;
 }
 
 const exerciseSchema = new mongoose.Schema({
-  type: { 
-    type: String, 
-    enum: ['vocab', 'grammar', 'listening', 'speaking', 'reading', 'writing', 'boss_test'],
-    required: true
-  },
+  // No enum: generated content uses the full question-type vocabulary
+  // (translate, sentence_build, error_spot, …) and the frontend dispatches on it.
+  type: { type: String, required: true },
   prompt: { type: String, required: true },
-  options: [{ type: String }],
+  options: { type: mongoose.Schema.Types.Mixed },
   correctAnswer: { type: String },
   audioUrl: { type: String },
   points: { type: Number, default: 10 }
 });
 
 const stageSchema = new mongoose.Schema({
-  tier: { 
-    type: String, 
+  tier: {
+    type: String,
     enum: ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'],
     required: true
   },
@@ -73,7 +73,8 @@ const stageSchema = new mongoose.Schema({
     skillType: { type: String, required: true },
     exercises: [exerciseSchema]
   }],
-  bossTest: [exerciseSchema]
+  bossTest: [exerciseSchema],
+  totalXp: { type: Number, default: 0 }
 }, { timestamps: true });
 
 const Stage: Model<IStage> = mongoose.model<IStage>('Stage', stageSchema);

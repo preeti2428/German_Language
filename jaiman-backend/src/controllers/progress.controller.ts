@@ -3,6 +3,51 @@ import UserProgress from '../models/UserProgress';
 import Stage from '../models/Stage';
 import User from '../models/User';
 
+/** Local calendar date as YYYY-MM-DD. */
+function dayString(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+/**
+ * The one place XP, streak, and daily activity are recorded.
+ *
+ * The User schema always had streak.current/longest and activityHistory —
+ * nothing ever wrote to them, so every device showed a different streak from
+ * localStorage. Now every completed session updates the account itself:
+ * streak extends on consecutive days, resets after a gap, and today's XP
+ * accumulates in activityHistory (which the dashboard's week strip and daily
+ * goal ring read after login).
+ */
+async function recordDailyActivity(userId: string, xpEarned: number): Promise<void> {
+  const user = await User.findById(userId);
+  if (!user) return;
+
+  const now = new Date();
+  const today = dayString(now);
+  const lastStr = user.streak?.lastActiveDate ? dayString(new Date(user.streak.lastActiveDate)) : null;
+
+  if (lastStr !== today) {
+    const yesterday = dayString(new Date(now.getTime() - 86400000));
+    user.streak.current = lastStr === yesterday ? (user.streak.current || 0) + 1 : 1;
+    user.streak.longest = Math.max(user.streak.longest || 0, user.streak.current);
+    user.streak.lastActiveDate = now;
+  }
+
+  const entry = user.activityHistory.find((a) => a.date === today);
+  if (entry) entry.xpEarned += xpEarned;
+  else user.activityHistory.push({ date: today, xpEarned, reelsWatched: 0 });
+  if (user.activityHistory.length > 90) {
+    user.activityHistory = user.activityHistory.slice(-90);
+  }
+
+  user.xp = (user.xp || 0) + xpEarned;
+  await user.save();
+}
+
+
 // @desc    Get user progress
 // @route   GET /api/progress
 // @access  Private
@@ -61,10 +106,10 @@ export const completeStage = async (req: Request, res: Response): Promise<void> 
     if (!progress.completedStages.includes(stageId as any)) {
       progress.completedStages.push(stageId as any);
       progress.totalXp += Number(xpEarned) || 0;
-      
-      // Update User global XP for leaderboard
-      await User.findByIdAndUpdate(userId, { $inc: { xp: Number(xpEarned) || 0 } });
-      
+
+      // XP + streak + daily activity, recorded on the account itself
+      await recordDailyActivity(String(userId), Number(xpEarned) || 0);
+
       await progress.save();
     }
 
@@ -113,10 +158,10 @@ export const completeSession = async (req: Request, res: Response): Promise<void
     if (stageProg && !stageProg.completedSessions.includes(Number(sessionNumber))) {
       stageProg.completedSessions.push(Number(sessionNumber));
       progress.totalXp += Number(xpEarned) || 0;
-      
-      // Update User global XP for leaderboard
-      await User.findByIdAndUpdate(userId, { $inc: { xp: Number(xpEarned) || 0 } });
-      
+
+      // XP + streak + daily activity, recorded on the account itself
+      await recordDailyActivity(String(userId), Number(xpEarned) || 0);
+
       await progress.save();
     }
 

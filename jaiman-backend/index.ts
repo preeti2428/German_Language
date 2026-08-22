@@ -8,6 +8,8 @@ import userRoutes from './src/routes/user.routes';
 import reelRoutes from './src/routes/reel.routes';
 import stageRoutes from './src/routes/stage.routes';
 import progressRoutes from './src/routes/progress.routes';
+import chatRoutes from './src/routes/chat.routes';
+import classRoutes from './src/routes/class.routes';
 
 dotenv.config();
 
@@ -26,6 +28,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/reels', reelRoutes);
 app.use('/api/stages', stageRoutes);
 app.use('/api/progress', progressRoutes);
+app.use('/api/chat', chatRoutes);
+app.use('/api/classes', classRoutes);
 
 // Health Check Endpoint
 app.get('/api/health', (req: Request, res: Response) => {

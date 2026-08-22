@@ -8,7 +8,7 @@ export default function ProtectedLayout({
 }) {
   return (
     <AuthGuard>
-      <div className="flex h-screen bg-[var(--background)] text-[var(--foreground)] overflow-hidden relative">
+      <div className="flex h-screen bg-[#E8ECEF] text-[#1F2328] overflow-hidden relative">
         {/* Subtle Background Pattern */}
         <div className="absolute inset-0 pointer-events-none z-0 opacity-[0.03]">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">

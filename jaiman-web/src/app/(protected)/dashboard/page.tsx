@@ -1,276 +1,325 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import {
-  Flame, Zap, Trophy, BookOpen,
-  Play, Volume2, Star, TrendingUp, Clock,
-  Video, Map, Layers, Award, Sparkles, ChevronRight
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+  Award, BookOpen, Check, Flame, Landmark, ListChecks,
+  MessageCircle, Mic, Play, Star, Trophy, Zap,
+} from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import api from '@/lib/api';
+import { readStreak, readTutorTurns, today } from '@/lib/streak';
+import { speakGerman } from '@/lib/speech';
 
-// ─── Mock Data ──────────────────────────────────────────────
-const WORD_OF_THE_DAY = {
-  word: "die Sehnsucht",
-  pronunciation: "/ˈzeːnˌzʊxt/",
-  translation: "The deep longing or yearning",
-  example: "Ich habe Sehnsucht nach Hause.",
-  exampleTranslation: "I have a longing for home.",
-  partOfSpeech: "noun (feminine)",
-};
+/**
+ * Dashboard, rebuilt to the "Gamified App" design canvas and wired to real
+ * data: the hero week strip and daily-goal ring read the local streak history,
+ * quests track today's actual XP, and badges unlock from real stats. The old
+ * dashboard was a dark theme with hardcoded numbers — this replaces it.
+ */
 
-const UPCOMING_CLASSES = [
-  { topic: "German Articles: Der, Die, Das", level: "A1", instructor: "Jai", time: "7:00 PM" },
+const DAILY_GOAL = 50;
+
+const WORDS_OF_DAY = [
+  { de: 'die Sehnsucht', ipa: '/ˈzeːnˌzʊxt/', pos: 'Substantiv, feminin', en: 'a deep longing', ex: 'Ich habe Sehnsucht nach Hause.', exEn: 'I have a longing for home.' },
+  { de: 'das Fernweh', ipa: '/ˈfɛʁnveː/', pos: 'Substantiv, neutrum', en: 'wanderlust', ex: 'Im Sommer habe ich Fernweh.', exEn: 'In summer I long to travel.' },
+  { de: 'gemütlich', ipa: '/ɡəˈmyːtlɪç/', pos: 'Adjektiv', en: 'cosy, snug', ex: 'Das Café ist sehr gemütlich.', exEn: 'The café is very cosy.' },
+  { de: 'der Feierabend', ipa: '/ˈfaɪ̯ɐˌʔaːbn̩t/', pos: 'Substantiv, maskulin', en: 'end of the workday', ex: 'Endlich Feierabend!', exEn: 'Finally, the workday is over!' },
+  { de: 'doch', ipa: '/dɔx/', pos: 'Partikel', en: 'yes it is! (contradicting)', ex: 'Das stimmt nicht! — Doch!', exEn: "That's not true! — Yes it is!" },
+  { de: 'die Geborgenheit', ipa: '/ɡəˈbɔʁɡn̩haɪ̯t/', pos: 'Substantiv, feminin', en: 'safe cosiness', ex: 'Zu Hause fühle ich Geborgenheit.', exEn: 'At home I feel safe and warm.' },
+  { de: 'quatschen', ipa: '/ˈkvatʃn̩/', pos: 'Verb, umgangssprachlich', en: 'to chat, natter', ex: 'Wir quatschen den ganzen Abend.', exEn: 'We chat the whole evening.' },
 ];
 
-const QUICK_LINKS = [
-  { name: "Reels", href: "/reels", icon: Video, color: "from-pink-500 to-rose-500" },
-  { name: "Map", href: "/learn", icon: Map, color: "from-blue-500 to-cyan-500" },
-  { name: "Cards", href: "/flashcards", icon: Layers, color: "from-emerald-400 to-teal-500" },
-  { name: "Classes", href: "/classes", icon: Clock, color: "from-amber-400 to-orange-500" },
-];
-
-// ─── Animations ──────────────────────────────────────────────
-const containerVariants = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.1 } }
-};
-
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  show: { y: 0, opacity: 1, transition: { type: "spring" as const, stiffness: 100, damping: 15 } }
-};
-
-function getGreeting() {
+function greeting() {
   const h = new Date().getHours();
-  if (h < 12) return "Guten Morgen";
-  if (h < 17) return "Guten Tag";
-  return "Guten Abend";
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
 }
 
-// ─── Glass Container Utility ─────────────────────────────────
-function GlassCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return (
-    <motion.div variants={itemVariants} className={`bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.05)] rounded-[2rem] overflow-hidden ${className}`}>
-      {children}
-    </motion.div>
-  );
+interface ProgressData {
+  totalXp: number;
+  completedStages: unknown[];
+  stageProgress?: { stageId: string; completedSessions: number[] }[];
 }
 
-// ─── Components ──────────────────────────────────────────────
-
-function HeroSection({ name, xp = 0, streak = 0 }: { name: string; xp?: number; streak?: number }) {
-  const goalXP = 500;
-  const pct = Math.min(Math.round((xp / goalXP) * 100), 100);
-
-  return (
-    <GlassCard className="relative p-8 md:p-10 flex flex-col md:flex-row justify-between items-center gap-8 bg-gradient-to-br from-white/60 to-white/20">
-      <div className="absolute -top-32 -left-32 w-64 h-64 bg-blue-400/30 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-purple-400/30 rounded-full blur-3xl pointer-events-none" />
-      
-      <div className="flex-1 relative z-10 w-full">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="flex items-center gap-2 bg-white/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/50 shadow-sm">
-            <Flame size={16} className="text-orange-500 fill-orange-500" />
-            <span className="text-xs font-black text-gray-800 uppercase tracking-widest">{streak} Day Streak</span>
-          </div>
-          <div className="flex items-center gap-2 bg-white/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/50 shadow-sm">
-            <Sparkles size={16} className="text-indigo-500" />
-            <span className="text-xs font-black text-gray-800 uppercase tracking-widest">{xp} Total XP</span>
-          </div>
-        </div>
-
-        <h1 className="text-5xl md:text-6xl font-black text-gray-900 leading-tight tracking-tight mb-4">
-          {getGreeting()}, <br/>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{name?.split(" ")[0]}</span>
-        </h1>
-        <p className="text-gray-600 font-medium text-lg max-w-md">Your German is improving every day. Keep up the fantastic work!</p>
-
-        <div className="mt-8 max-w-md">
-          <div className="flex justify-between text-xs font-black uppercase tracking-widest text-gray-500 mb-2">
-            <span>Daily Goal</span>
-            <span className="text-indigo-600">{pct}%</span>
-          </div>
-          <div className="h-4 bg-white/50 rounded-full overflow-hidden border border-white/50 shadow-inner">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${pct}%` }}
-              transition={{ delay: 0.5, duration: 1.5, ease: "easeOut" }}
-              className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 relative"
-            >
-              <div className="absolute inset-0 bg-white/20" style={{ backgroundSize: "200% 100%", animation: "shimmer 2s infinite linear" }} />
-            </motion.div>
-          </div>
-        </div>
-      </div>
-
-      <div className="w-full md:w-auto relative z-10 shrink-0">
-        <Link href="/learn" className="group block bg-white/80 backdrop-blur-md p-6 rounded-[2rem] border border-white shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white mb-6 shadow-lg group-hover:scale-110 transition-transform">
-            <Play size={24} fill="currentColor" className="ml-1" />
-          </div>
-          <p className="text-[10px] font-black uppercase tracking-widest text-indigo-500 mb-1">Continue Learning</p>
-          <p className="text-xl font-black text-gray-900">A1 Core Verbs</p>
-        </Link>
-      </div>
-    </GlassCard>
-  );
-}
-
-function StatCards({ user }: { user: any }) {
-  const stats = [
-    { icon: <Flame size={24} className="text-orange-500 fill-orange-500" />, label: "Streak", value: user?.streak?.current ?? 0 },
-    { icon: <Zap size={24} className="text-indigo-500 fill-indigo-500" />, label: "Total XP", value: user?.xp ?? 0 },
-    { icon: <Video size={24} className="text-pink-500 fill-pink-500" />, label: "Reels", value: user?.reelsWatched ?? 0 },
-    { icon: <Trophy size={24} className="text-amber-500 fill-amber-500" />, label: "Level", value: user?.level || "A1" },
-  ];
-
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-      {stats.map((s, i) => (
-        <GlassCard key={i} className="p-6 flex flex-col items-center justify-center text-center hover:-translate-y-1 transition-transform cursor-pointer">
-          <div className="w-16 h-16 rounded-full bg-white/60 shadow-inner flex items-center justify-center mb-4">
-            {s.icon}
-          </div>
-          <p className="text-4xl font-black text-gray-900 mb-1">{s.value}</p>
-          <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">{s.label}</p>
-        </GlassCard>
-      ))}
-    </div>
-  );
-}
-
-function QuickAccess() {
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-      {QUICK_LINKS.map((link) => (
-        <GlassCard key={link.name} className="hover:-translate-y-2 transition-transform">
-          <Link href={link.href} className="flex flex-col items-center justify-center p-8 gap-4">
-            <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${link.color} flex items-center justify-center text-white shadow-lg`}>
-              <link.icon size={28} strokeWidth={2.5} />
-            </div>
-            <span className="text-sm font-black text-gray-800 uppercase tracking-widest">{link.name}</span>
-          </Link>
-        </GlassCard>
-      ))}
-    </div>
-  );
-}
-
-function WordAndClasses() {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [flipped, setFlipped] = useState(false);
-
-  const handleListen = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!window.speechSynthesis) return;
-    setIsPlaying(true);
-    const utterance = new SpeechSynthesisUtterance(WORD_OF_THE_DAY.word);
-    utterance.lang = "de-DE";
-    utterance.onend = () => setIsPlaying(false);
-    window.speechSynthesis.speak(utterance);
-  };
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {/* Word of the Day */}
-      <GlassCard className="p-8 relative cursor-pointer min-h-[300px] flex flex-col bg-gradient-to-br from-indigo-500/10 to-purple-500/10">
-        <div onClick={() => setFlipped(!flipped)} className="h-full flex flex-col">
-          <div className="flex items-center gap-2 mb-8">
-            <div className="p-2 bg-amber-400/20 rounded-lg"><Star size={16} className="text-amber-500 fill-amber-500" /></div>
-            <span className="text-xs font-black text-gray-800 uppercase tracking-widest">Word of the Day</span>
-          </div>
-
-          <AnimatePresence mode="wait">
-            {!flipped ? (
-              <motion.div key="front" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="flex-1 flex flex-col justify-center items-center text-center">
-                <h2 className="text-5xl font-black text-gray-900 mb-3">{WORD_OF_THE_DAY.word}</h2>
-                <p className="text-gray-500 font-bold mb-8">{WORD_OF_THE_DAY.pronunciation}</p>
-                <button onClick={handleListen} className="w-16 h-16 rounded-full bg-white shadow-xl flex items-center justify-center text-indigo-600 hover:scale-110 transition-transform">
-                  <Volume2 size={24} className={isPlaying ? "animate-pulse" : ""} strokeWidth={3} />
-                </button>
-              </motion.div>
-            ) : (
-              <motion.div key="back" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex-1 flex flex-col justify-center">
-                <div className="bg-white/60 p-6 rounded-2xl mb-4">
-                  <p className="text-2xl font-black text-gray-900">{WORD_OF_THE_DAY.translation}</p>
-                </div>
-                <p className="text-gray-800 font-medium text-lg italic mb-2">"{WORD_OF_THE_DAY.example}"</p>
-                <p className="text-gray-500 font-medium">{WORD_OF_THE_DAY.exampleTranslation}</p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </GlassCard>
-
-      {/* Upcoming Class */}
-      <GlassCard className="p-8 flex flex-col">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-2">
-            <div className="p-2 bg-blue-500/20 rounded-lg"><Clock size={16} className="text-blue-600" /></div>
-            <span className="text-xs font-black text-gray-800 uppercase tracking-widest">Upcoming Class</span>
-          </div>
-          <Link href="/classes" className="text-xs font-black text-blue-600 uppercase tracking-widest hover:underline">View All</Link>
-        </div>
-
-        <div className="flex-1 flex flex-col justify-center items-center text-center bg-white/50 rounded-3xl p-8 border border-white">
-          <span className="px-4 py-1 bg-rose-100 text-rose-600 font-black text-[10px] uppercase tracking-widest rounded-full mb-4 animate-pulse">
-            Starts at {UPCOMING_CLASSES[0].time}
-          </span>
-          <h3 className="text-2xl font-black text-gray-900 mb-2">{UPCOMING_CLASSES[0].topic}</h3>
-          <p className="text-gray-500 font-bold flex items-center gap-2">
-            <Award size={16} /> with Instructor {UPCOMING_CLASSES[0].instructor}
-          </p>
-        </div>
-      </GlassCard>
-    </div>
-  );
-}
-
-// ─── Main Dashboard Page ──────────────────────────────────────
 export default function DashboardPage() {
   const { user, refreshUser } = useAuth();
-  const [mounted, setMounted] = useState(false);
+  const router = useRouter();
+  const [progress, setProgress] = useState<ProgressData | null>(null);
+  const [wordFlipped, setWordFlipped] = useState(false);
+  const [streakState, setStreakState] = useState(() => ({ current: 0, history: {} as Record<string, number> }));
+  const [tutor, setTutor] = useState({ total: 0, today: 0 });
 
   useEffect(() => {
-    setMounted(true);
     refreshUser();
+    const s = readStreak();
+    setStreakState({ current: s.current, history: s.history });
+    setTutor(readTutorTurns());
+    api.get('/progress').then((r) => setProgress(r.data)).catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!mounted) {
-    return (
-      <div className="h-full flex items-center justify-center min-h-screen bg-[#F0F4F8]">
-        <div className="w-16 h-16 rounded-full border-4 border-blue-200 border-t-blue-600 animate-spin" />
-      </div>
-    );
-  }
+  const xpToday = streakState.history[today()] ?? 0;
+  const goalPct = Math.min(1, xpToday / DAILY_GOAL);
+  const ringOffset = 527.8 * (1 - goalPct);
+
+  const sessionsDone = useMemo(
+    () => progress?.stageProgress?.reduce((a, s) => a + s.completedSessions.length, 0) ?? 0,
+    [progress]
+  );
+  const stagesDone = progress?.completedStages?.length ?? 0;
+  const wordsSeen = sessionsDone * 8; // ~8 new/reviewed words per session
+
+  // Last 7 days for the hero week strip, today last.
+  const week = useMemo(() => {
+    const out: { label: string; active: boolean; isToday: boolean }[] = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const key = today(d);
+      out.push({
+        label: d.toLocaleDateString('en', { weekday: 'short' }).slice(0, 2),
+        active: (streakState.history[key] ?? 0) > 0,
+        isToday: i === 0,
+      });
+    }
+    return out;
+  }, [streakState]);
+
+  const word = WORDS_OF_DAY[new Date().getDate() % WORDS_OF_DAY.length];
+
+  const quests = [
+    { title: `Earn ${DAILY_GOAL} XP today`, now: Math.min(xpToday, DAILY_GOAL), max: DAILY_GOAL, color: '#4361EE', bg: '#EEF2FF', border: '#D6DEFF', icon: Zap },
+    { title: 'Finish 2 sessions', now: Math.min(sessionsDone % 13, 2), max: 2, color: '#20BF6B', bg: '#E8FBF0', border: '#CBEFDC', icon: ListChecks },
+    { title: 'Talk to Jai (AI Tutor)', now: Math.min(tutor.today, 1), max: 1, color: '#CE82FF', bg: '#F7EDFF', border: '#EBD6FA', icon: MessageCircle },
+  ];
+
+  const xp = user?.xp ?? 0;
+  const badges = [
+    { name: 'First Step', icon: Play, unlocked: sessionsDone >= 1, color: '#20BF6B', bg: '#E8FBF0', bd: '#CBEFDC' },
+    { name: '3-Day Flame', icon: Flame, unlocked: streakState.current >= 3, color: '#FF9F43', bg: '#FFF4E6', bd: '#FFE2C4' },
+    { name: '100 Club', icon: Zap, unlocked: xp >= 100, color: '#4361EE', bg: '#EEF2FF', bd: '#D6DEFF' },
+    { name: 'City Boss', icon: Landmark, unlocked: stagesDone >= 1, color: '#CE82FF', bg: '#F7EDFF', bd: '#EBD6FA' },
+    { name: 'Week Streak', icon: Trophy, unlocked: streakState.current >= 7, color: '#F7B731', bg: '#FDF6E4', bd: '#FDE9BC' },
+    { name: 'Word Bank', icon: BookOpen, unlocked: wordsSeen >= 100, color: '#20BF6B', bg: '#E8FBF0', bd: '#CBEFDC' },
+    { name: '500 Club', icon: Star, unlocked: xp >= 500, color: '#FF9F43', bg: '#FFF4E6', bd: '#FFE2C4' },
+    { name: 'Speaker', icon: Mic, unlocked: tutor.total >= 10, color: '#FF4757', bg: '#FFF0F0', bd: '#FFD3D8' },
+  ];
+  const unlockedCount = badges.filter((b) => b.unlocked).length;
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-[#F0F4F8]">
-      {/* ── Background Abstract Shapes ── */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-gradient-to-br from-blue-300/40 to-indigo-300/40 blur-3xl animate-[spin_20s_linear_infinite]" />
-        <div className="absolute top-[20%] right-[-10%] w-[40%] h-[40%] rounded-full bg-gradient-to-br from-purple-300/40 to-pink-300/40 blur-3xl animate-[spin_15s_linear_infinite_reverse]" />
-        <div className="absolute bottom-[-10%] left-[20%] w-[60%] h-[60%] rounded-full bg-gradient-to-tr from-emerald-200/40 to-cyan-300/40 blur-3xl animate-[spin_25s_linear_infinite]" />
+    <div className="p-6 md:p-8 max-w-[1440px] mx-auto flex flex-col gap-6 w-full pb-20">
+      {/* ── Hero + Daily Goal ─────────────────────────────────────── */}
+      <div className="grid items-stretch gap-5 lg:grid-cols-[1.55fr_1fr]">
+        <section className="relative overflow-hidden rounded-[2rem] bg-[#1B2A4A] p-9 text-white shadow-[0_20px_40px_rgba(27,42,74,0.25)]">
+          <div className="pointer-events-none absolute -right-24 -top-36 h-[340px] w-[340px] rounded-full bg-[radial-gradient(circle,rgba(67,97,238,0.55),transparent_68%)]" />
+          <div className="pointer-events-none absolute -bottom-40 -left-20 h-[320px] w-[320px] rounded-full bg-[radial-gradient(circle,rgba(247,183,49,0.28),transparent_68%)]" />
+
+          <div className="relative flex flex-col gap-6">
+            <div className="inline-flex items-center gap-2 self-start rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5">
+              <span className="h-[7px] w-[7px] rounded-full bg-[#20BF6B] shadow-[0_0_0_4px_rgba(32,191,107,0.25)]" />
+              <span className="text-[10px] font-black uppercase tracking-[0.16em] text-[#C7D3EA]">
+                Germany Journey · A1
+              </span>
+            </div>
+
+            <div>
+              <h2 className="text-[clamp(30px,3.4vw,46px)] font-black leading-[1.05] tracking-[-0.035em]">
+                {greeting()},<br />
+                <span className="text-[#F7B731]">{user?.name?.split(' ')[0] ?? 'Learner'}</span>
+              </h2>
+              <p className="mt-3.5 max-w-[400px] text-base font-medium text-[#9FB0CD]">
+                {stagesDone >= 8
+                  ? 'All cities complete! Keep the streak alive with a review run.'
+                  : `You're ${8 - stagesDone} ${8 - stagesDone === 1 ? 'stop' : 'stops'} from Berlin. Finish today's run to keep your ${streakState.current}-day streak alive.`}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <button type="button" onClick={() => router.push('/learn')} className="duo-btn duo-btn-green relative overflow-hidden px-6 py-4 text-sm">
+                <Play size={17} className="mr-2 fill-white" />
+                Continue Journey
+                <span className="pointer-events-none absolute inset-y-0 w-9 animate-[shine_3.4s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push('/tutor')}
+                className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-6 py-4 text-sm font-black uppercase tracking-[0.06em] text-white transition-colors hover:bg-white/15"
+              >
+                Talk to Jai
+              </button>
+            </div>
+
+            <div className="mt-1 flex gap-2">
+              {week.map((d, i) => (
+                <div key={i} className="flex flex-1 flex-col items-center gap-1.5">
+                  <div
+                    className={`flex aspect-square w-full max-w-[44px] items-center justify-center rounded-[14px] border-2 text-[13px] font-black ${
+                      d.active
+                        ? 'border-[#20BF6B] bg-[#20BF6B] text-white'
+                        : d.isToday
+                          ? 'border-dashed border-[#F7B731] bg-transparent text-[#F7B731]'
+                          : 'border-[#2A3F6C] bg-[#16223E] text-[#4A5B7E]'
+                    }`}
+                  >
+                    {d.active ? <Check size={16} strokeWidth={4} /> : d.isToday ? '?' : ''}
+                  </div>
+                  <span className="text-[9px] font-black uppercase tracking-[0.1em] text-[#7D8FAE]">{d.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="duo-card flex flex-col items-center justify-center gap-4 p-8">
+          <p className="self-start text-[10px] font-black uppercase tracking-[0.2em] text-[#9AA6B4]">Daily Goal</p>
+          <div className="relative flex h-[200px] w-[200px] items-center justify-center">
+            <svg width="200" height="200" viewBox="0 0 200 200" className="absolute inset-0 -rotate-90">
+              <circle cx="100" cy="100" r="84" fill="none" stroke="#EEF1F5" strokeWidth="18" />
+              <motion.circle
+                cx="100" cy="100" r="84" fill="none" stroke="#4361EE" strokeWidth="18" strokeLinecap="round"
+                strokeDasharray="527.8"
+                initial={{ strokeDashoffset: 527.8 }}
+                animate={{ strokeDashoffset: ringOffset }}
+                transition={{ duration: 1.1, ease: 'easeOut' }}
+              />
+            </svg>
+            <div className="text-center">
+              <p className="text-[52px] font-black tracking-[-0.04em] text-[#1F2328] tabular-nums">{xpToday}</p>
+              <p className="text-[11px] font-black uppercase tracking-[0.14em] text-[#9AA6B4]">of {DAILY_GOAL} XP</p>
+            </div>
+          </div>
+          <div className="flex w-full gap-2.5">
+            {[
+              { v: sessionsDone, label: 'Sessions', color: '#20BF6B' },
+              { v: stagesDone, label: 'Cities', color: '#CE82FF' },
+              { v: wordsSeen, label: 'Words', color: '#FF9F43' },
+            ].map((s) => (
+              <div key={s.label} className="flex-1 rounded-2xl bg-[#F6F8FA] px-2 py-3 text-center">
+                <p className="text-[19px] font-black tabular-nums" style={{ color: s.color }}>{s.v}</p>
+                <p className="mt-0.5 text-[9px] font-black uppercase tracking-[0.1em] text-[#9AA6B4]">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
 
-      {/* ── Main Content ── */}
-      <div className="relative z-10 max-w-[1200px] mx-auto p-6 md:p-10 space-y-8 pb-32">
-        <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-8">
-          <HeroSection name={user?.name || "Learner"} xp={user?.xp} streak={user?.streak?.current} />
-          <StatCards user={user} />
-          <QuickAccess />
-          <WordAndClasses />
-        </motion.div>
+      {/* ── Quests + Word of the Day ──────────────────────────────── */}
+      <div className="grid items-start gap-5 lg:grid-cols-[1.25fr_1fr]">
+        <section className="duo-card p-7">
+          <div className="mb-5 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#EEF2FF]">
+                <ListChecks size={19} className="text-[#4361EE]" />
+              </div>
+              <h3 className="text-sm font-black uppercase tracking-[0.14em] text-[#1F2328]">Daily Quests</h3>
+            </div>
+            <span className="text-[11px] font-black uppercase tracking-[0.1em] text-[#9AA6B4]">Resets at midnight</span>
+          </div>
+
+          <div className="flex flex-col gap-3.5">
+            {quests.map((q) => {
+              const done = q.now >= q.max;
+              const Icon = q.icon;
+              return (
+                <div
+                  key={q.title}
+                  className="flex items-center gap-4 rounded-[22px] border-2 border-b-4 px-4 py-4"
+                  style={{ borderColor: q.border, background: done ? q.bg : '#fff' }}
+                >
+                  <div className="flex h-12 w-12 flex-none items-center justify-center rounded-2xl border-2 bg-white" style={{ borderColor: q.border, color: q.color }}>
+                    <Icon size={22} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="mb-2 text-[15px] font-black text-[#1F2328]">{q.title}</p>
+                    <div className="flex items-center gap-2.5">
+                      <div className="h-3 flex-1 overflow-hidden rounded-full bg-[#E9EDF2]">
+                        <div
+                          className="relative h-full rounded-full transition-[width] duration-700"
+                          style={{ width: `${(q.now / q.max) * 100}%`, background: q.color }}
+                        >
+                          <div className="absolute left-1 right-1 top-[2px] h-[3px] rounded-full bg-white/40" />
+                        </div>
+                      </div>
+                      <span className="text-[11px] font-black tabular-nums text-[#8A94A2]">{q.now}/{q.max}</span>
+                    </div>
+                  </div>
+                  {done && (
+                    <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full text-white" style={{ background: q.color }}>
+                      <Check size={16} strokeWidth={4} />
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        <section
+          onClick={() => {
+            setWordFlipped((f) => !f);
+            if (!wordFlipped && word) void speakGerman(word.de);
+          }}
+          className="relative flex min-h-[250px] cursor-pointer flex-col overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#26408B] to-[#4361EE] p-7 text-white shadow-[0_14px_30px_rgba(38,64,139,0.28)]"
+        >
+          <div className="pointer-events-none absolute -right-12 -top-16 h-[220px] w-[220px] rounded-full bg-white/10" />
+          <div className="relative flex items-center gap-2">
+            <Star size={16} className="fill-[#F7B731] text-[#F7B731]" />
+            <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#C7D3EA]">Word of the Day</span>
+            <span className="ml-auto text-[10px] font-extrabold text-[#9FB0CD]">tap to flip</span>
+          </div>
+          <div className="relative flex flex-1 flex-col items-center justify-center text-center">
+            {word && !wordFlipped && (
+              <div>
+                <h3 className="text-[38px] font-black tracking-[-0.03em]">{word.de}</h3>
+                <p className="mt-2 text-sm font-semibold text-[#9FB0CD]">{word.ipa} · {word.pos}</p>
+              </div>
+            )}
+            {word && wordFlipped && (
+              <div>
+                <h3 className="text-[26px] font-black tracking-[-0.02em]">{word.en}</h3>
+                <p className="mt-3.5 text-[15px] font-semibold italic text-[#DCE4F2]">„{word.ex}"</p>
+                <p className="mt-1.5 text-[13px] font-semibold text-[#9FB0CD]">{word.exEn}</p>
+              </div>
+            )}
+          </div>
+        </section>
       </div>
 
-      <style jsx global>{`
-        @keyframes shimmer {
-          0% { background-position: -200% 0; }
-          100% { background-position: 200% 0; }
-        }
-      `}</style>
+      {/* ── Badges ────────────────────────────────────────────────── */}
+      <section className="duo-card p-7">
+        <div className="mb-5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#F7EDFF]">
+              <Award size={19} className="text-[#CE82FF]" />
+            </div>
+            <h3 className="text-sm font-black uppercase tracking-[0.14em] text-[#1F2328]">Badges</h3>
+          </div>
+          <span className="text-[11px] font-black text-[#4361EE]">{unlockedCount} / {badges.length}</span>
+        </div>
+        <div className="grid grid-cols-4 gap-3.5 sm:grid-cols-8">
+          {badges.map((b) => {
+            const Icon = b.icon;
+            return (
+              <div key={b.name} className="flex flex-col items-center gap-2" style={{ opacity: b.unlocked ? 1 : 0.35 }}>
+                <div
+                  className="flex aspect-square w-full items-center justify-center rounded-[20px] border-2 border-b-4 transition-transform hover:-translate-y-1"
+                  style={{ background: b.unlocked ? b.bg : '#F4F6F8', borderColor: b.unlocked ? b.bd : '#E4E9EF', color: b.unlocked ? b.color : '#B4BDC8' }}
+                >
+                  <Icon size={24} />
+                </div>
+                <span className="text-center text-[9px] font-black uppercase tracking-[0.06em] text-[#8A94A2]">{b.name}</span>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      <p className="px-1 text-center text-[11px] font-bold text-[#B4BDC8]">
+        Tip: finishing any session records today on the week strip and fills the goal ring.
+      </p>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { syncStreakFromServer } from "@/lib/streak";
 
 interface User {
   id: string;
@@ -65,6 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = (userData: User, newToken: string) => {
     setUser(userData);
     setToken(newToken);
+    syncStreakFromServer(userData);
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("token", newToken);
   };
@@ -88,6 +90,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (res.ok) {
         const userData = await res.json();
         setUser(userData);
+        syncStreakFromServer(userData);
         localStorage.setItem("user", JSON.stringify(userData));
       }
     } catch (err) {

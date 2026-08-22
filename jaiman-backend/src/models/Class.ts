@@ -7,6 +7,7 @@ export interface IClass extends Document {
   type: 'live' | 'vod';
   level: string;
   scheduledAt?: Date;
+  meetingUrl?: string;
   videoUrl?: string;
   duration?: number;
   transcript?: string;
@@ -23,6 +24,7 @@ const classSchema = new mongoose.Schema({
   type: { type: String, enum: ['live', 'vod'], required: true },
   level: { type: String, required: true },
   scheduledAt: { type: Date },
+  meetingUrl: { type: String },
   videoUrl: { type: String },
   duration: { type: Number },
   transcript: { type: String },

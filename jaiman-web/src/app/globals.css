@@ -1,19 +1,11 @@
 @import "tailwindcss";
 
-:root {
+:root, .dark {
   --background: #E8ECEF;
   --foreground: #1F2328;
-  --card-bg: white;
+  --card-bg: #ffffff;
   --card-border: #e5e5e5;
   --text-muted: #6b7280;
-}
-
-.dark {
-  --background: #0B1120;
-  --foreground: #F8FAFC;
-  --card-bg: #1E293B;
-  --card-border: #334155;
-  --text-muted: #94A3B8;
 }
 
 @theme inline {
@@ -68,12 +60,12 @@ body {
 
 /* --- DUOLINGO-INSPIRED GAMIFIED STYLES --- */
 
-/* Base Gamified Card */
+/* Base Gamified Card — 32px radius + 5px base edge, per the design canvas */
 .duo-card {
   background-color: var(--card-bg);
   border: 2px solid var(--card-border);
-  border-bottom-width: 4px;
-  border-radius: 1.5rem;
+  border-bottom-width: 5px;
+  border-radius: 2rem;
   transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   color: var(--foreground);
 }
@@ -93,10 +85,10 @@ body {
   justify-content: center;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-radius: 1rem;
+  letter-spacing: 0.07em;
+  border-radius: 16px;
   transition: all 0.15s ease;
-  border-bottom-width: 4px;
+  border-bottom-width: 5px;
 }
 .duo-btn:active:not(:disabled) {
   transform: translateY(4px);
@@ -197,4 +189,63 @@ body {
   height: 25%;
   background-color: rgba(255, 255, 255, 0.3);
   border-radius: 9999px;
+}
+
+
+/* --- DESIGN-CANVAS HEADER PRIMITIVES --- */
+
+.dj-crumb {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #9AA6B4;
+  margin: 0;
+}
+
+.dj-title {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--foreground);
+  margin: 4px 0 0;
+}
+
+/* Stat chip: white pill with a tinted 2px border and thicker base edge */
+.dj-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card-bg);
+  border: 2px solid #E4E9EF;
+  border-bottom-width: 4px;
+  border-radius: 16px;
+  padding: 9px 15px;
+  font-size: 16px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.dj-chip-streak { border-color: #FFE2C4; color: #FF9F43; }
+.dj-chip-xp { border-color: #D6DEFF; color: #4361EE; }
+.dj-chip-gem { border-color: #FDE9BC; color: #F7B731; }
+.dj-chip-muted { color: #8A94A2; }
+
+@keyframes dj-bob {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-6px) rotate(2deg); }
+}
+
+
+/* --- DESIGN-CANVAS ANIMATIONS --- */
+@keyframes pulsering {
+  0% { transform: translateX(-50%) scale(1); opacity: 0.5; }
+  100% { transform: translateX(-50%) scale(1.7); opacity: 0; }
+}
+@keyframes drift {
+  from { transform: translateX(-15vw); }
+  to { transform: translateX(115vw); }
+}
+@keyframes shine {
+  0% { transform: translateX(-120%) skewX(-20deg); }
+  60%, 100% { transform: translateX(320%) skewX(-20deg); }
 }
