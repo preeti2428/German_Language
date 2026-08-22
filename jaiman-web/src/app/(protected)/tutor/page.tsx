@@ -147,7 +147,7 @@ export default function TutorPage() {
     }
 
     setListening(true);
-    const { transcript, supported, error: recError } = await listenGerman(10000);
+    const { transcript, supported, error: recError } = await listenGerman(15000);
     setListening(false);
     if (!supported) {
       void recordAndTranscribe();
@@ -165,7 +165,7 @@ export default function TutorPage() {
       return;
     }
     if (!transcript) {
-      setError("I didn't hear anything. Tap the mic and start speaking right away — you have about 4 seconds to begin.");
+      setError("I didn't hear anything. Tap the mic and speak clearly into your microphone.");
       return;
     }
     void send(transcript);

@@ -201,7 +201,7 @@ export function hasSpeechRecognition() {
  *     4s if you never start, hard cap at timeoutMs).
  *  3. The error code is returned so the UI can say what went wrong.
  */
-export async function listenGerman(timeoutMs = 9000): Promise<RecognitionResult> {
+export async function listenGerman(timeoutMs = 15000): Promise<RecognitionResult> {
   if (!hasSpeechRecognition()) return { transcript: '', supported: false };
 
   // Force the permission prompt and surface denial explicitly.
@@ -258,8 +258,8 @@ export async function listenGerman(timeoutMs = 9000): Promise<RecognitionResult>
       }
       finalText = f;
       interim = it;
-      // You spoke — allow 1.6s of quiet before we consider you finished.
-      armSilence(1600);
+      // You spoke — allow 2.5s of quiet before we consider you finished.
+      armSilence(2500);
     };
     rec.onerror = (e) => {
       // 'no-speech' just means silence; not a real failure.
@@ -274,7 +274,7 @@ export async function listenGerman(timeoutMs = 9000): Promise<RecognitionResult>
       resolve({ transcript: '', supported: false });
       return;
     }
-    armSilence(4000); // 4s grace to start talking
+    armSilence(8000); // 8s generous grace to start talking
     overallTimer = setTimeout(finish, timeoutMs);
   });
 }
