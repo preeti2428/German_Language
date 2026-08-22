@@ -64,10 +64,9 @@ export const createClass = async (req: AuthRequest, res: Response): Promise<void
         ? meetingUrl.trim()
         : `https://meet.jit.si/GermanJai-${slugify(title)}-${Math.random().toString(36).slice(2, 8)}`;
 
-    const created = await ClassModel.create({
+    const classData: Record<string, any> = {
       teacher: req.user!._id,
       title: String(title).slice(0, 120),
-      description: description ? String(description).slice(0, 500) : undefined,
       type: 'live',
       level: level || 'A1',
       scheduledAt: when,
@@ -75,9 +74,14 @@ export const createClass = async (req: AuthRequest, res: Response): Promise<void
       meetingUrl: url,
       participants: [],
       tags: [],
-    });
+    };
+    if (description) {
+      classData.description = String(description).slice(0, 500);
+    }
 
-    res.status(201).json({ id: created._id, meetingUrl: url });
+    const created = await ClassModel.create(classData);
+
+    res.status(201).json({ id: (created as any)._id, meetingUrl: url });
   } catch (error: unknown) {
     res.status(500).json({ message: (error as Error).message });
   }
