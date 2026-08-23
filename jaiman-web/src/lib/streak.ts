@@ -129,14 +129,39 @@ export function daysSinceActive(now = new Date()): number | null {
  */
 
 export interface ServerActivity {
+  email?: string;
+  id?: string;
+  _id?: string;
   streak?: { current?: number; longest?: number; lastActiveDate?: string | Date };
   activityHistory?: { date: string; xpEarned: number }[];
 }
 
 export function syncStreakFromServer(server: ServerActivity | null | undefined): void {
   if (!server || typeof window === 'undefined') return;
-  const local = readStreak();
 
+  const currentEmail = server.email || (server as any)._id || '';
+  const lastAccount = window.localStorage.getItem('jaiman.last_account') || '';
+
+  // If user switched accounts or new user signed in, reset cached streak to match server directly
+  if (currentEmail && lastAccount !== currentEmail) {
+    window.localStorage.setItem('jaiman.last_account', currentEmail);
+    const fresh: StreakState = {
+      current: server.streak?.current ?? 0,
+      longest: server.streak?.longest ?? 0,
+      lastActiveDate: server.streak?.lastActiveDate ? today(new Date(server.streak.lastActiveDate)) : '',
+      history: {},
+    };
+    for (const a of server.activityHistory ?? []) {
+      fresh.history[a.date] = a.xpEarned;
+    }
+    try {
+      window.localStorage.setItem(KEY, JSON.stringify(fresh));
+      window.localStorage.removeItem(TUTOR_KEY);
+    } catch {}
+    return;
+  }
+
+  const local = readStreak();
   const serverLast = server.streak?.lastActiveDate ? today(new Date(server.streak.lastActiveDate)) : '';
   const serverCurrent = server.streak?.current ?? 0;
 

@@ -76,6 +76,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(null);
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    localStorage.removeItem("jaiman.streak");
+    localStorage.removeItem("jaiman.last_account");
+    localStorage.removeItem("jaiman.tutor");
   };
 
   const refreshUser = async () => {

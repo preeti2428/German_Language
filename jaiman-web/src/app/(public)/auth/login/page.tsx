@@ -88,7 +88,13 @@ export default function LoginPage() {
               />
             </div>
 
-            <button
+            
+            <div className="text-right -mt-2">
+              <Link href="/auth/forgot" className="text-sm font-bold text-[#4361EE] hover:underline">
+                Forgot password?
+              </Link>
+            </div>
+<button
               type="submit"
               disabled={isLoading}
               className="w-full bg-[#26408B] hover:bg-[#2C3E7A] text-white font-semibold py-3 rounded-xl shadow-lg shadow-[#26408B]/20 hover:shadow-xl hover:shadow-[#26408B]/30 transition-all duration-300 mt-4 disabled:opacity-50"

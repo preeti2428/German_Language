@@ -27,6 +27,8 @@ export interface IUser extends Document {
     darkMode: boolean;
     notifications: Record<string, any>;
   };
+  resetPasswordToken?: string;
+  resetPasswordExpires?: Date;
   matchPassword(enteredPassword: string): Promise<boolean>;
 }
 
@@ -63,7 +65,9 @@ const userSchema = new mongoose.Schema({
   preferences: {
     darkMode: { type: Boolean, default: true },
     notifications: { type: Object, default: {} }
-  }
+  },
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date }
 }, {
   timestamps: true
 });
