@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Heart, MessageCircle, Share2, Volume2, VolumeX, Play, Pause, Flame, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { Heart, MessageCircle, Share2, Volume2, VolumeX, Play, Pause, Flame, Loader2, Upload } from "lucide-react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
@@ -181,8 +182,9 @@ export default function ReelsPage() {
 
   return (
     <div className="h-full w-full bg-transparent overflow-hidden relative flex flex-col items-center justify-center pb-8">
-      {/* Top XP Pill */}
-      <div className="absolute top-4 left-0 right-0 flex justify-center z-30 pointer-events-none">
+      {/* Top Header Controls */}
+      <div className="absolute top-4 left-6 right-6 flex items-center justify-between z-30 pointer-events-none">
+        <div className="w-36 hidden md:block" />
         <motion.div 
           key={currentIndex}
           initial={{ opacity: 0, y: -20, scale: 0.8 }}
@@ -193,6 +195,13 @@ export default function ReelsPage() {
           <span className="text-sm font-black text-[#FF9F43]">+20 XP Earned</span>
           <span className="text-xs font-black text-gray-400 ml-1">({currentIndex + 1} / {reels.length})</span>
         </motion.div>
+        <Link 
+          href="/admin/upload"
+          className="pointer-events-auto flex items-center gap-2 bg-[#20BF6B] hover:bg-[#1CA65D] text-white border-2 border-b-[4px] border-[#178B4E] px-4 py-2.5 rounded-2xl font-black text-xs uppercase tracking-wider shadow-[0_6px_16px_rgba(32,191,107,0.3)] active:translate-y-1 active:border-b-2 transition-all hover:scale-105"
+        >
+          <Upload size={16} strokeWidth={2.8} />
+          <span>Upload Reel</span>
+        </Link>
       </div>
 
       {/* Vertical TikTok Feed Container */}

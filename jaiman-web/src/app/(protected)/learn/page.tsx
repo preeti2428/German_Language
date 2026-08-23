@@ -2,10 +2,11 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { BookMarked, BookOpen, Check, Cloud, Crown, Flame, Headphones, Landmark, Lock, Mic, PenLine, Play, Puzzle, Train, X, Zap } from 'lucide-react';
+import { BookMarked, BookOpen, Check, Cloud, Crown, Flame, Headphones, Landmark, Lock, Mic, PenLine, Play, Puzzle, ShieldCheck, Train, X, Zap } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
 import { daysSinceActive, readStreak } from '@/lib/streak';
+import { useAuth } from '@/context/AuthContext';
 
 /**
  * The Deutschland Reise map, rebuilt to the "Gamified App" design canvas:
@@ -158,11 +159,13 @@ function CityNode({ city, onClick }: { city: City; onClick: () => void }) {
 
 function CityPanel({
   city,
+  isAdmin = false,
   onStart,
   onOpenSession,
   onClose,
 }: {
   city: City;
+  isAdmin?: boolean;
   onStart: () => void;
   onOpenSession: (n: number | 'boss') => void;
   onClose: () => void;
@@ -227,7 +230,7 @@ function CityPanel({
             const Icon = skill.icon;
             const done = city.completedList.includes(ss.n);
             const isCurrent = city.status !== 'completed' && city.nextSession === ss.n;
-            const locked = !done && !isCurrent && city.status !== 'completed';
+            const locked = !isAdmin && !done && !isCurrent && city.status !== 'completed';
             return (
               <button
                 key={ss.n}
@@ -235,13 +238,13 @@ function CityPanel({
                 disabled={locked}
                 onClick={() => onOpenSession(ss.n)}
                 className={`flex items-center gap-3 rounded-2xl border-2 px-3 py-2.5 text-left transition-colors ${
-                  isCurrent
+                  isCurrent || (isAdmin && !done)
                     ? 'border-current bg-white'
                     : done
                       ? 'border-transparent bg-[#F6F8FA] hover:border-[#E4E9EF]'
                       : 'border-transparent bg-[#F6F8FA] opacity-55'
                 }`}
-                style={isCurrent ? { borderColor: city.color } : undefined}
+                style={isCurrent || (isAdmin && !done) ? { borderColor: city.color } : undefined}
               >
                 <span
                   className="flex h-9 w-9 flex-none items-center justify-center rounded-xl"
@@ -260,7 +263,7 @@ function CityPanel({
                 <span className="flex-none">
                   {done ? (
                     <Check size={16} strokeWidth={4} className="text-[#20BF6B]" />
-                  ) : isCurrent ? (
+                  ) : isCurrent || isAdmin ? (
                     <Play size={15} className="fill-current" style={{ color: city.color }} />
                   ) : (
                     <Lock size={14} className="text-[#B4BDC8]" />
@@ -272,7 +275,7 @@ function CityPanel({
 
           {/* Boss test row */}
           {(() => {
-            const bossUnlocked = city.status === 'completed' || city.nextSession === 'boss';
+            const bossUnlocked = isAdmin || city.status === 'completed' || city.nextSession === 'boss';
             return (
               <button
                 type="button"
@@ -315,7 +318,7 @@ function CityPanel({
           className="rounded-[18px] py-4 text-center text-sm font-black uppercase tracking-[0.07em] text-white transition-transform active:translate-y-[5px]"
           style={{ background: city.color, boxShadow: `0 5px 0 ${city.shadow}` }}
         >
-          {city.status === 'completed' ? 'Review City' : 'Continue Journey'}
+          {city.status === 'completed' ? 'Review City' : isAdmin ? 'Play Next Session (Admin Unlocked)' : 'Continue Journey'}
         </button>
       </div>
     </motion.div>
@@ -323,6 +326,8 @@ function CityPanel({
 }
 
 export default function LearnPage() {
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
   const [cities, setCities] = useState<City[]>([]);
   const [pendingCity, setPendingCity] = useState<City | null>(null);
   const [totalXp, setTotalXp] = useState(0);
@@ -357,6 +362,7 @@ export default function LearnPage() {
 
           let status: NodeStatus = 'locked';
           if (isCompleted) status = 'completed';
+          else if (isAdmin) status = 'active';
           else if (!foundActive) {
             status = nextSession === 'boss' ? 'boss' : 'active';
             foundActive = true;
@@ -431,6 +437,12 @@ export default function LearnPage() {
           <h1 className="dj-title flex items-center gap-2">Germany Journey 🗺️</h1>
         </div>
         <div className="flex items-center gap-3">
+          {isAdmin && (
+            <div className="dj-chip border-[#CE82FF] text-[#9B51E0] bg-[#F7EDFF]" title="Admin Mode: All levels and sessions unlocked">
+              <Crown size={18} className="fill-[#CE82FF] text-[#CE82FF]" />
+              <span className="text-xs font-black uppercase">All Unlocked (Admin)</span>
+            </div>
+          )}
           <div className="dj-chip dj-chip-streak" title={streakAtRisk ? 'Practise today to keep your streak' : `${streak}-day streak`}>
             <Flame size={19} className={streak > 0 ? 'fill-[#FF9F43] text-[#FF9F43]' : 'text-gray-300'} />
             <span>{streak}</span>
@@ -484,6 +496,7 @@ export default function LearnPage() {
           {pendingCity && (
             <CityPanel
               city={pendingCity}
+              isAdmin={isAdmin}
               onStart={() =>
                 router.push(
                   `/lesson/${pendingCity.tier}/${pendingCity.stageNumber}/${pendingCity.status === 'completed' ? 1 : pendingCity.nextSession}`

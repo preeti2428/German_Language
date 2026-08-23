@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, User as UserIcon, LogOut, BookOpen, LayoutDashboard, Layers, Video, Map, MessageCircle } from "lucide-react";
+import { Home, User as UserIcon, LogOut, BookOpen, LayoutDashboard, Layers, Video, Map, MessageCircle, Upload } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 /**
@@ -20,7 +20,7 @@ export default function Sidebar() {
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Reels Feed", href: "/reels", icon: Home },
     { name: "Classes", href: "/classes", icon: Video },
-    { name: "Flashcards", href: "/flashcards", icon: Layers },
+    { name: "Basics to Pro", href: "/flashcards", icon: Layers },
     { name: "Profile", href: "/profile", icon: UserIcon },
   ];
 

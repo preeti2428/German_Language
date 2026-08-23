@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Mic, Send, Volume2, VolumeX } from 'lucide-react';
+import { Mic, Send, Square, Volume2, VolumeX } from 'lucide-react';
 import api from '@/lib/api';
 import PageShell from '@/components/layout/PageShell';
 import { recordTutorTurn } from '@/lib/streak';
@@ -42,6 +42,7 @@ export default function TutorPage() {
   const [listening, setListening] = useState(false);
   const [recording, setRecording] = useState(false);
   const [transcribing, setTranscribing] = useState(false);
+  const [playingMsgId, setPlayingMsgId] = useState<string | null>(null);
   // Once Chrome's own recognition fails with 'network' (embedded browsers,
   // Brave, blocked networks), remember it and go straight to the recorder.
   const [useRecorder, setUseRecorder] = useState(false);
@@ -56,10 +57,27 @@ export default function TutorPage() {
 
   useEffect(() => () => cancelSpeech(), []);
 
+  const playVoice = useCallback(async (msgId: string, content: string) => {
+    cancelSpeech();
+    setPlayingMsgId(msgId);
+    const spoken = content.replace(/\([^)]*\)/g, '').trim() || content;
+    try {
+      await speakText(spoken, detectSpeechLang(spoken));
+    } finally {
+      setPlayingMsgId((curr) => (curr === msgId ? null : curr));
+    }
+  }, []);
+
+  const stopAllVoice = useCallback(() => {
+    cancelSpeech();
+    setPlayingMsgId(null);
+  }, []);
+
   const send = useCallback(
     async (text: string) => {
       const clean = text.trim();
       if (!clean || busy) return;
+      stopAllVoice();
       setError(null);
       setInput('');
       const mine: Msg = { id: `u${Date.now()}`, role: 'user', content: clean };
@@ -72,11 +90,10 @@ export default function TutorPage() {
         });
         const reply: string = res.data.reply;
         recordTutorTurn();
-        setMessages((m) => [...m, { id: `a${Date.now()}`, role: 'assistant', content: reply }]);
+        const assistantId = `a${Date.now()}`;
+        setMessages((m) => [...m, { id: assistantId, role: 'assistant', content: reply }]);
         if (speakReplies) {
-          // Strip bracketed translations, then speak in the reply's own language.
-          const spoken = reply.replace(/\([^)]*\)/g, '').trim() || reply;
-          void speakText(spoken, detectSpeechLang(spoken));
+          void playVoice(assistantId, reply);
         }
       } catch (e: unknown) {
         const msg =
@@ -89,7 +106,7 @@ export default function TutorPage() {
         setBusy(false);
       }
     },
-    [busy, messages, speakReplies]
+    [busy, messages, playVoice, speakReplies, stopAllVoice]
   );
 
   /** Record with MediaRecorder and transcribe on the backend (Groq Whisper). */
@@ -196,10 +213,20 @@ export default function TutorPage() {
           <div className="hidden items-center gap-2 rounded-[14px] border-2 border-b-4 border-[#FFE2C4] bg-[#FFF4E6] px-3.5 py-2 sm:flex">
             <span className="text-[11px] font-black uppercase tracking-[0.06em] text-[#FF9F43]">Turns: {turns}</span>
           </div>
+          {playingMsgId && (
+            <button
+              type="button"
+              onClick={stopAllVoice}
+              className="flex items-center gap-1.5 rounded-[14px] border-2 border-b-4 border-[#FF4757] bg-[#FFF0F0] px-3.5 py-2 text-[11px] font-black uppercase tracking-[0.06em] text-[#FF4757] animate-pulse hover:bg-[#FFE5E5] transition-all active:translate-y-0.5"
+              title="Stop voice playback"
+            >
+              <Square size={13} className="fill-[#FF4757]" /> Stop
+            </button>
+          )}
           <button
             type="button"
             onClick={() => {
-              cancelSpeech();
+              stopAllVoice();
               setSpeakReplies((v) => !v);
             }}
             className={`flex items-center gap-2 rounded-[14px] border-2 border-b-4 px-3.5 py-2 text-[11px] font-black uppercase tracking-[0.06em] transition-colors ${
@@ -233,14 +260,15 @@ export default function TutorPage() {
                 {m.role === 'assistant' && (
                   <button
                     type="button"
-                    onClick={() => {
-                      const spoken = m.content.replace(/\([^)]*\)/g, '').trim() || m.content;
-                      void speakText(spoken, detectSpeechLang(spoken));
-                    }}
-                    aria-label="Read aloud"
-                    className="ml-2 inline-flex align-middle text-gray-300 transition-colors hover:text-[#4361EE]"
+                    onClick={() => playVoice(m.id, m.content)}
+                    aria-label={playingMsgId === m.id ? "Stop voice" : "Read aloud"}
+                    className={`ml-2 inline-flex align-middle p-1 rounded-md transition-colors ${
+                      playingMsgId === m.id
+                        ? "text-[#FF4757] bg-[#FFF0F0]"
+                        : "text-gray-400 hover:text-[#4361EE] hover:bg-gray-100"
+                    }`}
                   >
-                    <Volume2 size={15} />
+                    {playingMsgId === m.id ? <Square size={13} className="fill-[#FF4757]" /> : <Volume2 size={15} />}
                   </button>
                 )}
               </div>
