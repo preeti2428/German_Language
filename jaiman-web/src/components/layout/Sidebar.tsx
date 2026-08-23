@@ -15,12 +15,12 @@ export default function Sidebar() {
   const { logout, user } = useAuth();
 
   const navLinks = [
-    { name: "Learn", href: "/learn", icon: Map },
-    { name: "AI Tutor", href: "/tutor", icon: MessageCircle },
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Learn", href: "/learn", icon: Map },
+    { name: "Basics to Pro", href: "/flashcards", icon: Layers },
+    { name: "AI Tutor", href: "/tutor", icon: MessageCircle },
     { name: "Reels Feed", href: "/reels", icon: Home },
     { name: "Classes", href: "/classes", icon: Video },
-    { name: "Basics to Pro", href: "/flashcards", icon: Layers },
     { name: "Profile", href: "/profile", icon: UserIcon },
   ];
 
