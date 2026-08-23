@@ -29,9 +29,11 @@ export default function SignupPage() {
       // Redirect to protected dashboard/reels
       router.push("/reels");
     } catch (err: any) {
-      setError(
-        err.response?.data?.message || "An error occurred during registration."
-      );
+      if (!err.response) {
+        setError("Could not connect to the backend server. If using Render, it may be waking up (wait 30s) or check NEXT_PUBLIC_API_URL in Vercel.");
+      } else {
+        setError(err.response?.data?.message || "An error occurred during registration.");
+      }
     } finally {
       setIsLoading(false);
     }
