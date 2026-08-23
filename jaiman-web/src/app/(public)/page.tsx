@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 /**
  * Landing page, ported from the "German with Jai · Landing" design canvas.
@@ -180,7 +181,15 @@ export default function LandingPage() {
 
               <div className="relative flex items-center justify-between px-5 pt-4">
                 <div className="flex items-center gap-2">
-                  <div className="grid h-7 w-7 place-items-center rounded-full border-[1.5px] border-[#E8A93A] bg-[#1B2FA8] text-sm">🦉</div>
+                  <div className="relative h-7 w-7 flex-none overflow-hidden rounded-full border-[1.5px] border-[#E8A93A] bg-[#1B2FA8]">
+                    <Image
+                      src="/teacher.png"
+                      alt="Teacher Jai"
+                      fill
+                      sizes="28px"
+                      className="object-cover object-top scale-105"
+                    />
+                  </div>
                   <span className="text-[13px] font-semibold text-white">@germanwithjai</span>
                 </div>
                 <div className="flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1">
@@ -223,8 +232,17 @@ export default function LandingPage() {
           {/* Mentor card */}
           <div className="relative flex max-w-[352px] items-center gap-4 rounded-[20px] border border-[#EAE6DF] bg-white py-3.5 pl-3.5 pr-5 shadow-[0_22px_44px_-26px_rgba(18,19,26,0.4)]">
             <div className="relative flex-none">
-              <div className="grid h-[68px] w-[68px] place-items-center rounded-[18px] bg-gradient-to-br from-[#2B44D4] to-[#1B2FA8] text-3xl">🦉</div>
-              <span className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-[2.5px] border-white bg-[#22A06B]" />
+              <div className="relative h-[68px] w-[68px] overflow-hidden rounded-[18px] border border-[#EAE6DF] bg-[#2B44D4] shadow-inner">
+                <Image
+                  src="/teacher.png"
+                  alt="Teacher Jai"
+                  fill
+                  sizes="68px"
+                  className="object-cover object-top scale-105"
+                  priority
+                />
+              </div>
+              <span className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-[2.5px] border-white bg-[#22A06B] shadow-sm" />
             </div>
             <div className="min-w-0">
               <div className="text-xs font-bold tracking-[0.08em] text-[#83858E]">YOUR MENTOR</div>

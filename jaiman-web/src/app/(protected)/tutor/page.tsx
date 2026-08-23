@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { Mic, Send, Square, Volume2, VolumeX } from 'lucide-react';
 import api from '@/lib/api';
 import PageShell from '@/components/layout/PageShell';
@@ -198,9 +199,18 @@ export default function TutorPage() {
       {/* In-card header, per the design canvas */}
       <div className="flex flex-none items-center justify-between gap-4 border-b-2 border-[#EEF1F5] px-7 py-5">
         <div className="flex items-center gap-3.5">
-          <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-[#D6DEFF] bg-[#EEF2FF] text-2xl">
-            🦉
-            <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white bg-[#20BF6B]" />
+          <div className="relative flex-none">
+            <div className="relative h-12 w-12 overflow-hidden rounded-2xl border-2 border-[#D6DEFF] bg-[#EEF2FF] shadow-sm">
+              <Image
+                src="/teacher.png"
+                alt="Jai · AI Tutor"
+                fill
+                sizes="48px"
+                className="object-cover object-top scale-105"
+                priority
+              />
+            </div>
+            <span className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-[#20BF6B] shadow-sm" />
           </div>
           <div>
             <p className="text-[17px] font-black text-[#1F2328]">Jai · AI Tutor</p>
