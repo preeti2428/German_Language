@@ -170,3 +170,174 @@ export const completeSession = async (req: Request, res: Response): Promise<void
     res.status(500).json({ message: error.message });
   }
 };
+
+// @desc    Generate a 5-minute daily quiz from all questions and vocab learned so far
+// @route   GET /api/progress/daily-quiz
+// @access  Private
+export const getDailyQuiz = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = (req as any).user._id;
+    const progress = await UserProgress.findOne({ userId });
+    
+    // Get all stages the user has interacted with, plus stage 1 & 2 as baseline
+    const stages = await Stage.find({ tier: 'A1' }).sort({ stageNumber: 1 });
+    
+    if (!stages || stages.length === 0) {
+      res.status(404).json({ message: 'No stages available' });
+      return;
+    }
+
+    // Collect all learned or active vocabulary
+    const allVocab: { word: string; translation: string; gender?: string; cityName?: string }[] = [];
+    const allExercises: any[] = [];
+
+    stages.forEach((st) => {
+      if (st.vocabSet && Array.isArray(st.vocabSet)) {
+        st.vocabSet.forEach((v) => {
+          if (v.word && v.translation) {
+            allVocab.push({
+              word: v.word,
+              translation: v.translation,
+              gender: v.gender,
+              cityName: st.cityNameDe || st.cityName,
+            });
+          }
+        });
+      }
+
+      if (st.sessions && Array.isArray(st.sessions)) {
+        st.sessions.forEach((s) => {
+          if (s.exercises && Array.isArray(s.exercises)) {
+            s.exercises.forEach((ex) => {
+              if (ex.prompt && ex.correctAnswer && Array.isArray(ex.options) && ex.options.length >= 2) {
+                allExercises.push({
+                  type: ex.type || 'multiple_choice',
+                  prompt: ex.prompt,
+                  options: ex.options,
+                  correctAnswer: ex.correctAnswer,
+                  points: ex.points || 10,
+                  context: `${st.cityNameDe} · ${s.title}`,
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+
+    const quizQuestions: any[] = [];
+
+    // 1. Generate vocab meaning questions
+    if (allVocab.length >= 4) {
+      const shuffledVocab = [...allVocab].sort(() => Math.random() - 0.5);
+      
+      shuffledVocab.slice(0, 4).forEach((v, idx) => {
+        // Find 3 incorrect translations
+        const otherTranslations = allVocab
+          .filter((ov) => ov.translation !== v.translation)
+          .map((ov) => ov.translation)
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 3);
+
+        if (otherTranslations.length >= 3) {
+          const options = [v.translation, ...otherTranslations].sort(() => Math.random() - 0.5);
+          quizQuestions.push({
+            id: `q-vocab-de-${idx}`,
+            type: 'translate_de_en',
+            prompt: `Was bedeutet "${v.word}" auf Englisch?`,
+            targetWord: v.word,
+            options,
+            correctAnswer: v.translation,
+            points: 10,
+            tip: `From ${v.cityName}`,
+          });
+        }
+
+        // Gender question if der/die/das
+        if (v.gender && ['der', 'die', 'das'].includes(v.gender)) {
+          quizQuestions.push({
+            id: `q-gender-${idx}`,
+            type: 'gender',
+            prompt: `Welcher Artikel gehört zu "${v.word}"?`,
+            targetWord: v.word,
+            options: ['der', 'die', 'das'],
+            correctAnswer: v.gender,
+            points: 10,
+            tip: `Gender in German (${v.translation})`,
+          });
+        }
+      });
+    }
+
+    // 2. Add real session exercises if available
+    if (allExercises.length > 0) {
+      const shuffledEx = [...allExercises].sort(() => Math.random() - 0.5);
+      shuffledEx.slice(0, 3).forEach((ex, idx) => {
+        quizQuestions.push({
+          id: `q-ex-${idx}`,
+          type: ex.type,
+          prompt: ex.prompt,
+          options: ex.options,
+          correctAnswer: ex.correctAnswer,
+          points: ex.points || 10,
+          tip: ex.context,
+        });
+      });
+    }
+
+    // Return all questions generated for continuous 5-minute practice
+    const finalQuestions = quizQuestions.sort(() => Math.random() - 0.5);
+
+    res.json({
+      questions: finalQuestions,
+      totalCount: finalQuestions.length,
+      durationSeconds: 300, // 5 minutes
+      xpReward: 40,
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Record completion of 5-minute daily quiz & award XP/time
+// @route   POST /api/progress/daily-quiz/complete
+// @access  Private
+export const completeDailyQuiz = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = (req as any).user._id;
+    const { xpEarned = 40, timeSpent = 300 } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    const today = new Date().toISOString().split('T')[0];
+    const secondsCompleted = Number(timeSpent) || 300;
+    const isGoalMet = secondsCompleted >= 300;
+
+    if (isGoalMet) {
+      user.streak.dailyQuizCompletedDate = today;
+      user.streak.dailyTimeSpent = 300;
+    } else {
+      user.streak.dailyTimeSpent = Math.min(300, (user.streak.dailyTimeSpent || 0) + secondsCompleted);
+    }
+    user.streak.lastActiveDate = new Date();
+
+    // Award XP
+    await recordDailyActivity(String(userId), Number(xpEarned) || 40);
+
+    res.json({
+      success: true,
+      message: '5-Minute Daily Practice completed!',
+      xpEarned: Number(xpEarned) || 40,
+      dailyTimeSpent: user.streak.dailyTimeSpent,
+      dailyQuizCompletedDate: user.streak.dailyQuizCompletedDate,
+      goalMet: isGoalMet,
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+

@@ -6,12 +6,12 @@ import { AuthProvider } from "@/context/AuthContext";
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
-  title: "German with Jai",
-  description: "Learn German with Jai",
+  title: "German with Jai — Learn German Online",
+  description: "Learn German with Jai — your AI-powered German tutor. Study at A1 to C2 with video classes, flashcards, DPP, and live AI conversation.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

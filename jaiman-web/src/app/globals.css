@@ -1,31 +1,62 @@
 @import "tailwindcss";
 
+/* ─── BRAND THEME: "German with Jai" — Red + White ─────────────────────────── */
 :root, .dark {
-  --background: #E8ECEF;
-  --foreground: #1F2328;
-  --card-bg: #ffffff;
-  --card-border: #e5e5e5;
-  --text-muted: #6b7280;
+  /* Layout */
+  --background: #F5F6FA;
+  --foreground: #1A1A2E;
+  --card-bg: #FFFFFF;
+  --card-border: #EAEAEA;
+  --card-border-bottom: #D8D8D8;
+  --text-muted: #6B7280;
+
+  /* Brand Palette */
+  --red:        #E53935;
+  --red-dark:   #C62828;
+  --red-light:  #FFEBEE;
+  --orange:     #FF6B35;
+  --orange-dark:#D94F1A;
+  --yellow:     #FFC107;
+  --yellow-dark:#F59800;
+  --green:      #43A047;
+  --green-dark: #2E7D32;
+  --green-light:#E8F5E9;
+  --blue:       #1565C0;
+  --blue-light: #E3F2FD;
+  --purple:     #6A1B9A;
+  --purple-light:#F3E5F5;
+
+  /* Sidebar */
+  --sidebar-bg:      #FFFFFF;
+  --sidebar-border:  #F0F0F0;
+  --sidebar-active:  #E53935;
+  --sidebar-active-text: #FFFFFF;
+  --sidebar-text:    #757575;
+  --sidebar-hover:   #FFF5F5;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
-  
+
   /* Custom Animations */
   --animate-flip: flip 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   --animate-float: float 6s ease-in-out infinite;
-  
+  --animate-pop: pop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+
   @keyframes flip {
     0% { transform: rotateY(0deg); }
     100% { transform: rotateY(180deg); }
   }
-  
   @keyframes float {
     0% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
     100% { transform: translateY(0px); }
+  }
+  @keyframes pop {
+    0% { transform: scale(0.9); }
+    100% { transform: scale(1); }
   }
 }
 
@@ -35,60 +66,53 @@ body {
   font-family: var(--font-sans);
 }
 
-/* 3D Transform Utilities */
-.preserve-3d {
-  transform-style: preserve-3d;
-}
-.backface-hidden {
-  backface-visibility: hidden;
-}
-.rotate-y-180 {
-  transform: rotateY(180deg);
-}
-.perspective-1000 {
-  perspective: 1000px;
-}
+/* ─── 3D Transform Utilities ────────────────────────────────────────────────── */
+.preserve-3d { transform-style: preserve-3d; }
+.backface-hidden { backface-visibility: hidden; }
+.rotate-y-180 { transform: rotateY(180deg); }
+.perspective-1000 { perspective: 1000px; }
 
-/* Hide scrollbar for reels feed */
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
+/* ─── Scrollbar Utilities ───────────────────────────────────────────────────── */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* --- DUOLINGO-INSPIRED GAMIFIED STYLES --- */
-
-/* Base Gamified Card — 32px radius + 5px base edge, per the design canvas */
+/* ═══════════════════════════════════════════════════════════════════════════════
+   CARD SYSTEM — White card with subtle bottom-edge shadow
+═══════════════════════════════════════════════════════════════════════════════ */
 .duo-card {
   background-color: var(--card-bg);
-  border: 2px solid var(--card-border);
-  border-bottom-width: 5px;
-  border-radius: 2rem;
-  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 1.5px solid var(--card-border);
+  border-bottom-width: 4px;
+  border-bottom-color: var(--card-border-bottom);
+  border-radius: 1.5rem;
+  transition: all 0.18s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   color: var(--foreground);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 .duo-card:hover {
   transform: translateY(-2px);
-  border-bottom-width: 6px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.09);
+  border-bottom-width: 5px;
 }
 .duo-card:active {
   transform: translateY(2px);
   border-bottom-width: 2px;
 }
 
-/* Base Gamified Button */
+/* ═══════════════════════════════════════════════════════════════════════════════
+   BUTTON SYSTEM
+═══════════════════════════════════════════════════════════════════════════════ */
 .duo-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  border-radius: 16px;
+  letter-spacing: 0.06em;
+  border-radius: 14px;
   transition: all 0.15s ease;
-  border-bottom-width: 5px;
+  border-bottom-width: 4px;
+  cursor: pointer;
 }
 .duo-btn:active:not(:disabled) {
   transform: translateY(4px);
@@ -103,74 +127,95 @@ body {
   margin-top: 4px;
 }
 
-/* Specific Button Colors */
-.duo-btn-blue {
-  background-color: #4361EE;
+/* Red — Primary action */
+.duo-btn-red, .duo-btn-blue {
+  background-color: var(--red);
   color: white;
-  border-color: #3046B2;
+  border-color: var(--red-dark);
 }
+.duo-btn-red:hover:not(:disabled),
 .duo-btn-blue:hover:not(:disabled) {
-  filter: brightness(1.1);
+  filter: brightness(1.08);
 }
 
+/* Green — Success / Continue */
 .duo-btn-green {
-  background-color: #20BF6B;
+  background-color: var(--green);
   color: white;
-  border-color: #178B4E;
+  border-color: var(--green-dark);
 }
-.duo-btn-green:hover:not(:disabled) {
-  filter: brightness(1.1);
-}
+.duo-btn-green:hover:not(:disabled) { filter: brightness(1.1); }
 
+/* Danger */
 .duo-btn-danger {
-  background-color: #FF4757;
+  background-color: #EF5350;
   color: white;
-  border-color: #CC3946;
+  border-color: #C62828;
 }
-.duo-btn-danger:hover:not(:disabled) {
-  filter: brightness(1.1);
-}
+.duo-btn-danger:hover:not(:disabled) { filter: brightness(1.1); }
 
+/* Outline */
 .duo-btn-outline {
   background-color: white;
-  color: #a0aec0;
-  border: 2px solid #e2e8f0;
+  color: #9AA6B4;
+  border: 2px solid #E8E8E8;
   border-bottom-width: 4px;
 }
 .duo-btn-outline:hover:not(:disabled) {
-  background-color: #f7fafc;
-  color: #718096;
+  background-color: #FAFAFA;
+  color: #6B7280;
+  border-color: #D8D8D8;
 }
 
-/* Gamified Stat Cards */
+/* Yellow/Gold */
+.duo-btn-yellow {
+  background-color: var(--yellow);
+  color: #1A1A2E;
+  border-color: var(--yellow-dark);
+}
+.duo-btn-yellow:hover:not(:disabled) { filter: brightness(1.05); }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   STAT CARDS (colored border bottom edge)
+═══════════════════════════════════════════════════════════════════════════════ */
 .stat-card-orange {
   background-color: white;
-  border: 2px solid #FF9F43;
-  border-bottom-width: 6px;
-  border-radius: 1.5rem;
+  border: 1.5px solid #FFCC80;
+  border-bottom-width: 5px;
+  border-bottom-color: #FF9F43;
+  border-radius: 1.25rem;
+  box-shadow: 0 2px 8px rgba(255,159,67,0.1);
 }
-.stat-card-blue {
+.stat-card-blue, .stat-card-red {
   background-color: white;
-  border: 2px solid #4361EE;
-  border-bottom-width: 6px;
-  border-radius: 1.5rem;
+  border: 1.5px solid #FFCDD2;
+  border-bottom-width: 5px;
+  border-bottom-color: var(--red);
+  border-radius: 1.25rem;
+  box-shadow: 0 2px 8px rgba(229,57,53,0.1);
 }
 .stat-card-gold {
   background-color: white;
-  border: 2px solid #F7B731;
-  border-bottom-width: 6px;
-  border-radius: 1.5rem;
+  border: 1.5px solid #FFE082;
+  border-bottom-width: 5px;
+  border-bottom-color: var(--yellow);
+  border-radius: 1.25rem;
+  box-shadow: 0 2px 8px rgba(255,193,7,0.1);
 }
 .stat-card-green {
   background-color: white;
-  border: 2px solid #20BF6B;
-  border-bottom-width: 6px;
-  border-radius: 1.5rem;
+  border: 1.5px solid #A5D6A7;
+  border-bottom-width: 5px;
+  border-bottom-color: var(--green);
+  border-radius: 1.25rem;
+  box-shadow: 0 2px 8px rgba(67,160,71,0.1);
 }
 
-/* Progress Bar Track */
+/* ═══════════════════════════════════════════════════════════════════════════════
+   PROGRESS BAR
+═══════════════════════════════════════════════════════════════════════════════ */
 .duo-progress-track {
-  background-color: #e2e8f0;
+  background-color: #F0F0F0;
   border-radius: 9999px;
   overflow: hidden;
 }
@@ -187,13 +232,13 @@ body {
   left: 5%;
   right: 5%;
   height: 25%;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.4);
   border-radius: 9999px;
 }
 
-
-/* --- DESIGN-CANVAS HEADER PRIMITIVES --- */
-
+/* ═══════════════════════════════════════════════════════════════════════════════
+   PAGE HEADER PRIMITIVES (dj-* = Design Jaiman)
+═══════════════════════════════════════════════════════════════════════════════ */
 .dj-crumb {
   font-size: 10px;
   font-weight: 900;
@@ -204,39 +249,40 @@ body {
 }
 
 .dj-title {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 900;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   color: var(--foreground);
   margin: 4px 0 0;
 }
 
-/* Stat chip: white pill with a tinted 2px border and thicker base edge */
+/* ─── Stat Chip ─────────────────────────────────────────────────────────────── */
 .dj-chip {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: var(--card-bg);
-  border: 2px solid #E4E9EF;
-  border-bottom-width: 4px;
-  border-radius: 16px;
-  padding: 9px 15px;
-  font-size: 16px;
+  gap: 7px;
+  background: white;
+  border: 1.5px solid #EAEAEA;
+  border-bottom-width: 3px;
+  border-radius: 14px;
+  padding: 8px 14px;
+  font-size: 15px;
   font-weight: 900;
   font-variant-numeric: tabular-nums;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
-.dj-chip-streak { border-color: #FFE2C4; color: #FF9F43; }
-.dj-chip-xp { border-color: #D6DEFF; color: #4361EE; }
-.dj-chip-gem { border-color: #FDE9BC; color: #F7B731; }
-.dj-chip-muted { color: #8A94A2; }
 
+/* Chip color variants */
+.dj-chip-streak { border-color: #FFCC80; border-bottom-color: #FF9F43; color: #FF6B35; }
+.dj-chip-xp     { border-color: #FFCDD2; border-bottom-color: var(--red); color: var(--red); }
+.dj-chip-gem    { border-color: #FFE082; border-bottom-color: var(--yellow); color: #E6A800; }
+.dj-chip-muted  { color: #8A94A2; }
+
+/* ─── Animations ─────────────────────────────────────────────────────────────── */
 @keyframes dj-bob {
   0%, 100% { transform: translateY(0) rotate(-2deg); }
   50% { transform: translateY(-6px) rotate(2deg); }
 }
-
-
-/* --- DESIGN-CANVAS ANIMATIONS --- */
 @keyframes pulsering {
   0% { transform: translateX(-50%) scale(1); opacity: 0.5; }
   100% { transform: translateX(-50%) scale(1.7); opacity: 0; }
@@ -248,4 +294,38 @@ body {
 @keyframes shine {
   0% { transform: translateX(-120%) skewX(-20deg); }
   60%, 100% { transform: translateX(320%) skewX(-20deg); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up { animation: slideUp 0.35s ease forwards; }
+
+/* ─── Red Mission Banner (hero section) ─────────────────────────────────────── */
+.mission-banner {
+  background: linear-gradient(135deg, var(--red) 0%, #EF5350 50%, #FF7043 100%);
+  border-radius: 1.75rem;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.mission-banner::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255,255,255,0.15), transparent 65%);
+  border-radius: 50%;
+}
+.mission-banner::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  left: -30px;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(255,193,7,0.2), transparent 65%);
+  border-radius: 50%;
 }

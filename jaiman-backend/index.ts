@@ -10,6 +10,10 @@ import stageRoutes from './src/routes/stage.routes';
 import progressRoutes from './src/routes/progress.routes';
 import chatRoutes from './src/routes/chat.routes';
 import classRoutes from './src/routes/class.routes';
+import batchRoutes from './src/routes/batch.routes';
+import moduleRoutes from './src/routes/module.routes';
+import bookingRoutes from './src/routes/booking.routes';
+import dailyUpdateRoutes from './src/routes/dailyUpdate.routes';
 
 dotenv.config();
 
@@ -30,6 +34,10 @@ app.use('/api/stages', stageRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/classes', classRoutes);
+app.use('/api/batches', batchRoutes);
+app.use('/api/modules', moduleRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/updates', dailyUpdateRoutes);
 
 // Health Check Endpoint
 app.get('/api/health', (req: Request, res: Response) => {

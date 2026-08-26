@@ -10,12 +10,16 @@ export interface IUser extends Document {
   nativeLanguage?: string;
   learningLanguage?: string;
   level?: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+  accountType?: 'individual' | 'college' | 'university';
+  institutionName?: string;
   xp: number;
   reelsWatched: number;
   streak: {
     current: number;
     longest: number;
     lastActiveDate: Date;
+    dailyTimeSpent: number; // seconds spent today
+    dailyQuizCompletedDate?: string; // YYYY-MM-DD when daily quiz was completed
   };
   activityHistory: {
     date: string;
@@ -23,6 +27,7 @@ export interface IUser extends Document {
     reelsWatched: number;
   }[];
   achievements: mongoose.Types.ObjectId[];
+  enrolledBatches: mongoose.Types.ObjectId[];
   preferences: {
     darkMode: boolean;
     notifications: Record<string, any>;
@@ -49,12 +54,20 @@ const userSchema = new mongoose.Schema({
     enum: ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'],
     default: 'A1'
   },
+  accountType: {
+    type: String,
+    enum: ['individual', 'college', 'university'],
+    default: 'individual',
+  },
+  institutionName: { type: String },
   xp: { type: Number, default: 0 },
   reelsWatched: { type: Number, default: 0 },
   streak: {
     current: { type: Number, default: 0 },
     longest: { type: Number, default: 0 },
-    lastActiveDate: { type: Date, default: Date.now }
+    lastActiveDate: { type: Date, default: Date.now },
+    dailyTimeSpent: { type: Number, default: 0 }, // seconds
+    dailyQuizCompletedDate: { type: String }, // YYYY-MM-DD
   },
   activityHistory: [{
     date: { type: String, required: true },
@@ -62,6 +75,7 @@ const userSchema = new mongoose.Schema({
     reelsWatched: { type: Number, default: 0 }
   }],
   achievements: [{ type: Schema.Types.ObjectId, ref: 'Achievement' }],
+  enrolledBatches: [{ type: Schema.Types.ObjectId, ref: 'Batch', default: [] }],
   preferences: {
     darkMode: { type: Boolean, default: true },
     notifications: { type: Object, default: {} }

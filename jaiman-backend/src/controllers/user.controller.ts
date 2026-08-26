@@ -41,6 +41,8 @@ export const updateUserProfile = async (req: AuthRequest, res: Response): Promis
       if (req.body.nativeLanguage !== undefined) user.nativeLanguage = req.body.nativeLanguage;
       if (req.body.learningLanguage !== undefined) user.learningLanguage = req.body.learningLanguage;
       if (req.body.level !== undefined) user.level = req.body.level;
+      if (req.body.accountType !== undefined) (user as any).accountType = req.body.accountType;
+      if (req.body.institutionName !== undefined) (user as any).institutionName = req.body.institutionName;
       if (req.body.preferences !== undefined) {
         if (req.body.preferences.darkMode !== undefined) {
           user.preferences.darkMode = req.body.preferences.darkMode;
@@ -124,5 +126,44 @@ export const watchReel = async (req: AuthRequest, res: Response): Promise<void> 
     }
   } else {
     res.status(404).json({ message: 'User not found' });
+  }
+};
+
+// @desc    Log daily time spent (in seconds)
+// @route   PATCH /api/users/time
+// @access  Private
+export const logDailyTime = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { seconds } = req.body;
+    if (!seconds || typeof seconds !== 'number' || seconds <= 0) {
+      res.status(400).json({ message: 'seconds must be a positive number.' }); return;
+    }
+
+    const today = new Date().toISOString().split('T')[0];
+    const user = await User.findById(req.user!._id);
+    if (!user) { res.status(404).json({ message: 'User not found.' }); return; }
+
+    // Reset daily time if lastActiveDate is not today
+    const lastDate = user.streak.lastActiveDate
+      ? new Date(user.streak.lastActiveDate).toISOString().split('T')[0]
+      : null;
+    if (lastDate !== today) {
+      user.streak.dailyTimeSpent = 0;
+    }
+
+    user.streak.dailyTimeSpent = (user.streak.dailyTimeSpent || 0) + seconds;
+    user.streak.lastActiveDate = new Date();
+    await user.save();
+
+    const FIVE_MINS = 300;
+    const goalMet = user.streak.dailyTimeSpent >= FIVE_MINS;
+
+    res.json({
+      dailyTimeSpent: user.streak.dailyTimeSpent,
+      goalMet,
+      goalSeconds: FIVE_MINS,
+    });
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
   }
 };

@@ -362,7 +362,6 @@ export default function LearnPage() {
 
           let status: NodeStatus = 'locked';
           if (isCompleted) status = 'completed';
-          else if (isAdmin) status = 'active';
           else if (!foundActive) {
             status = nextSession === 'boss' ? 'boss' : 'active';
             foundActive = true;

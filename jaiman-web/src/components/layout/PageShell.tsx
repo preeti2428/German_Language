@@ -34,7 +34,7 @@ export default function PageShell({
 
   return (
     <div className="min-h-full px-4 sm:px-6 pb-16 pt-4">
-      <header className="sticky top-0 z-40 mx-auto flex max-w-[1360px] items-center justify-between gap-4 bg-gradient-to-b from-[#E8ECEF] via-[#E8ECEF]/95 to-transparent px-1 pb-5 pt-2">
+      <header className="sticky top-0 z-40 mx-auto flex max-w-[1360px] items-center justify-between gap-4 bg-gradient-to-b from-[#F5F6FA] via-[#F5F6FA]/95 to-transparent px-1 pb-5 pt-2">
         <div>
           <p className="dj-crumb">{crumb}</p>
           <h1 className="dj-title">{title}</h1>
@@ -49,7 +49,7 @@ export default function PageShell({
             <span>{streak}</span>
           </div>
           <div className="dj-chip dj-chip-xp" title="Total XP">
-            <Zap size={18} className="fill-[#4361EE] text-[#4361EE]" />
+            <Zap size={18} className="fill-[#E53935] text-[#E53935]" />
             <span>{user?.xp ?? 0}</span>
           </div>
         </div>
