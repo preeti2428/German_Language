@@ -117,6 +117,7 @@ export default function DailyQuizModal({ isOpen, onClose, onComplete }: DailyQui
         totalQuestions: totalAnswered,
         timeSpent: timeSpentSecs,
         xpEarned: finalXp,
+        questionsSolved: correctCount,
       });
       recordActivity(finalXp);
       await refreshUser();

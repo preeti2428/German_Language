@@ -245,24 +245,31 @@ export default function BatchDetailPage() {
                       {isOpen && (
                         <div className="border-t-2 border-[#e5e5e5] divide-y-2 divide-[#f0f0f0]">
                           {/* Lectures */}
-                          {mod.lectures.map((lec, li) => (
-                            <div key={li} className="flex items-center gap-3 px-4 py-3">
-                              <div className="w-7 h-7 rounded-lg bg-[#EEF1FF] flex items-center justify-center flex-shrink-0">
-                                {lec.isFree || batch.isEnrolled ? (
-                                  <Play size={13} className="text-[#4361EE]" />
-                                ) : (
-                                  <Lock size={13} className="text-[#9AA6B4]" />
+                          {mod.lectures.map((lec, li) => {
+                            const canAccess = lec.isFree || batch.isEnrolled;
+                            return (
+                              <button 
+                                key={li} 
+                                onClick={() => { if (canAccess) router.push(`/learn/batch/${batch._id}`); }}
+                                className={`w-full text-left flex items-center gap-3 px-4 py-3 transition-colors ${canAccess ? "hover:bg-gray-50 cursor-pointer" : "cursor-default"}`}
+                              >
+                                <div className="w-7 h-7 rounded-lg bg-[#EEF1FF] flex items-center justify-center flex-shrink-0">
+                                  {canAccess ? (
+                                    <Play size={13} className="text-[#4361EE]" />
+                                  ) : (
+                                    <Lock size={13} className="text-[#9AA6B4]" />
+                                  )}
+                                </div>
+                                <span className={`text-sm font-semibold flex-1 ${!canAccess ? "text-[#9AA6B4]" : "text-[#1F2328]"}`}>
+                                  {lec.title}
+                                </span>
+                                {lec.isFree && !batch.isEnrolled && (
+                                  <span className="text-[10px] font-black text-[#20BF6B] bg-[#D1FAE5] px-2 py-0.5 rounded-lg">Preview</span>
                                 )}
-                              </div>
-                              <span className={`text-sm font-semibold flex-1 ${!lec.isFree && !batch.isEnrolled ? "text-[#9AA6B4]" : "text-[#1F2328]"}`}>
-                                {lec.title}
-                              </span>
-                              {lec.isFree && !batch.isEnrolled && (
-                                <span className="text-[10px] font-black text-[#20BF6B] bg-[#D1FAE5] px-2 py-0.5 rounded-lg">Preview</span>
-                              )}
-                              {lec.duration && <span className="text-[#9AA6B4] text-xs font-bold">{lec.duration}m</span>}
-                            </div>
-                          ))}
+                                {lec.duration && <span className="text-[#9AA6B4] text-xs font-bold">{lec.duration}m</span>}
+                              </button>
+                            );
+                          })}
                           {/* Notes */}
                           {mod.notes.map((note, ni) => (
                             <div key={ni} className="flex items-center gap-3 px-4 py-3">

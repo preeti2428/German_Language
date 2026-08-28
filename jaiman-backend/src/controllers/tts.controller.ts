@@ -16,14 +16,11 @@ import { Request, Response } from 'express';
 
 const MAX_TEXT = 600;
 
-/** Gemini models to try, newest first. Retired models fail over automatically. */
-const GEMINI_MODELS = [
-  process.env.GEMINI_TTS_MODEL,
-  'gemini-2.5-flash-preview-tts',
-  'gemini-2.5-pro-preview-tts',
-].filter((m): m is string => !!m);
-
-let workingGeminiModel: string | null = null;
+/**
+ * Gemini TTS is disabled — the current API key returns 403 PERMISSION_DENIED.
+ * msedge-tts is used directly as the primary engine.
+ * To re-enable Gemini TTS in future, set GEMINI_TTS_ENABLED=true in .env.
+ */
 
 /** Lesson words repeat constantly — cache synthesized clips (FIFO, ~300 entries). */
 const cache = new Map<string, { buf: Buffer; mime: string }>();
@@ -57,57 +54,7 @@ function pcmToWav(pcm: Buffer, sampleRate = 24000, channels = 1, bytesPerSample 
   return Buffer.concat([header, pcm]);
 }
 
-async function geminiSynthesize(text: string, slow: boolean): Promise<Buffer | null> {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) return null;
-
-  // Style is steered with a natural-language instruction; the instruction
-  // itself is not spoken. Language is detected from the text automatically.
-  const spoken = slow ? `Say this very slowly and clearly, for a language learner: ${text}` : text;
-
-  const models = workingGeminiModel ? [workingGeminiModel] : GEMINI_MODELS;
-  for (const model of models) {
-    try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-goog-api-key': apiKey,
-          },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: spoken }] }],
-            generationConfig: {
-              responseModalities: ['AUDIO'],
-              speechConfig: {
-                voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Kore' } },
-              },
-            },
-          }),
-        }
-      );
-
-      if (!res.ok) {
-        const detail = await res.text();
-        console.error(`Gemini TTS error on ${model}:`, res.status, detail.slice(0, 200));
-        if (res.status === 401 || res.status === 403) return null; // bad key — stop trying
-        continue; // retired model, quota, etc — try the next
-      }
-
-      const data = (await res.json()) as {
-        candidates?: { content?: { parts?: { inlineData?: { data?: string } }[] } }[];
-      };
-      const b64 = data.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-      if (!b64) continue;
-      workingGeminiModel = model;
-      return pcmToWav(Buffer.from(b64, 'base64'));
-    } catch (err) {
-      console.error(`Gemini TTS request failed on ${model}:`, (err as Error).message);
-    }
-  }
-  return null;
-}
+// Gemini TTS disabled — see comment above.
 
 const EDGE_VOICES: Record<string, string> = {
   de: 'de-DE-KatjaNeural',
@@ -158,18 +105,12 @@ export const textToSpeech = async (req: Request, res: Response): Promise<void> =
       return;
     }
 
-    let audio = await geminiSynthesize(text, slow);
-    let mime = 'audio/wav';
-    if (!audio) {
-      audio = await edgeSynthesize(text, lang, slow);
-      mime = 'audio/mpeg';
-    }
+    // Go straight to msedge-tts (Gemini TTS key has PERMISSION_DENIED).
+    const audio = await edgeSynthesize(text, lang, slow);
+    const mime = 'audio/mpeg';
 
     if (!audio || !audio.length) {
-      const hint = process.env.GEMINI_API_KEY
-        ? 'Both Gemini and Edge TTS failed — check the backend logs.'
-        : 'Add GEMINI_API_KEY to the backend .env (free key at aistudio.google.com/apikey) and restart.';
-      res.status(502).json({ message: hint });
+      res.status(502).json({ message: 'Edge TTS unavailable. Check backend logs or internet connection.' });
       return;
     }
 

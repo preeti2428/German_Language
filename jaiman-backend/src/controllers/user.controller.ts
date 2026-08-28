@@ -16,6 +16,7 @@ export const getUserProfile = async (req: AuthRequest, res: Response): Promise<v
       learningLanguage: req.user.learningLanguage,
       level: req.user.level,
       xp: req.user.xp,
+      totalQuestionsSolved: (req.user as any).totalQuestionsSolved || 0,
       reelsWatched: req.user.reelsWatched,
       streak: req.user.streak,
       activityHistory: req.user.activityHistory || [],
@@ -44,12 +45,10 @@ export const updateUserProfile = async (req: AuthRequest, res: Response): Promis
       if (req.body.accountType !== undefined) (user as any).accountType = req.body.accountType;
       if (req.body.institutionName !== undefined) (user as any).institutionName = req.body.institutionName;
       if (req.body.preferences !== undefined) {
-        if (req.body.preferences.darkMode !== undefined) {
-          user.preferences.darkMode = req.body.preferences.darkMode;
-        }
-        if (req.body.preferences.notifications !== undefined) {
-          user.preferences.notifications = req.body.preferences.notifications;
-        }
+        user.preferences = {
+          ...user.preferences,
+          ...req.body.preferences,
+        };
       }
       if (req.body.avatar !== undefined) user.avatar = req.body.avatar;
 
@@ -68,6 +67,7 @@ export const updateUserProfile = async (req: AuthRequest, res: Response): Promis
         learningLanguage: updatedUser.learningLanguage,
         level: updatedUser.level,
         xp: updatedUser.xp,
+        totalQuestionsSolved: updatedUser.totalQuestionsSolved || 0,
         reelsWatched: updatedUser.reelsWatched,
         streak: updatedUser.streak,
         activityHistory: updatedUser.activityHistory || [],

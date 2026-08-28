@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Map, GraduationCap, Layers, MessageCircle,
   Home, Video, User as UserIcon, LogOut, Settings,
-  Star, CalendarDays, Globe2, Shield, Megaphone,
+  Star, CalendarDays, Globe2, Shield, Megaphone, FlaskConical,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { calculateLevelInfo } from "@/lib/level";
@@ -28,8 +28,9 @@ export default function Sidebar() {
       label: "LEARN",
       links: [
         { name: "Home",     href: "/dashboard",  icon: Home },
-        { name: "Journey",  href: "/learn",       icon: Map },
-        { name: "Practice", href: "/flashcards",  icon: Layers },
+        { name: "Levels",  href: "/learn",       icon: Map },
+        { name: "Practice", href: "/practice",    icon: FlaskConical },
+        { name: "Flashcards", href: "/flashcards", icon: Layers },
         { name: "Batches",  href: "/courses",     icon: GraduationCap },
       ],
     },

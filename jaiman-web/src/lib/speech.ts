@@ -101,6 +101,12 @@ export function detectSpeechLang(text: string): string {
   return 'en-US';
 }
 
+export function isSoundEnabled(): boolean {
+  if (typeof window === 'undefined') return true;
+  const val = localStorage.getItem('soundEnabled');
+  return val !== 'false';
+}
+
 /**
  * Speak text in the given language. `rate` below 1 gives a "slow" replay.
  * Tries the backend's neural voices first (same quality for every user, no
@@ -108,6 +114,7 @@ export function detectSpeechLang(text: string): string {
  */
 export async function speakText(text: string, lang: string, rate = 1): Promise<void> {
   if (typeof window === 'undefined' || !text) return;
+  if (!isSoundEnabled()) return;
   cancelSpeech();
   if (await playServerTts(text, lang, rate)) return;
   return new Promise((resolve) => {
@@ -129,6 +136,7 @@ export async function speakText(text: string, lang: string, rate = 1): Promise<v
 
 /** Speak German text. Kept for the lesson components. */
 export function speakGerman(text: string, rate = 1.05): Promise<void> {
+  if (!isSoundEnabled()) return Promise.resolve();
   return speakText(text, 'de-DE', rate);
 }
 
@@ -142,6 +150,7 @@ export async function playAudioOrSpeak(
   fallbackText: string,
   rate = 1.05
 ): Promise<'file' | 'server' | 'tts' | 'none'> {
+  if (!isSoundEnabled()) return 'none';
   if (url) {
     const src = url.startsWith('/') || url.startsWith('http') ? url : '/' + url;
     const ok = await new Promise<boolean>((resolve) => {

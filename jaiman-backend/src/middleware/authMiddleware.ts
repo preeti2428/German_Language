@@ -35,6 +35,25 @@ export const protect = async (req: AuthRequest, res: Response, next: NextFunctio
   }
 };
 
+export const optionalProtect = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    try {
+      token = req.headers.authorization.split(' ')[1];
+      const secret = (process.env.JWT_SECRET || 'fallback_secret_for_dev') as string;
+      const decoded: any = jwt.verify(token as string, secret);
+      req.user = (await User.findById(decoded.id).select('-password')) || undefined;
+    } catch {
+      req.user = undefined;
+    }
+  }
+  next();
+};
+
 export const admin = (req: AuthRequest, res: Response, next: NextFunction): void => {
   if (req.user && req.user.role === 'admin') {
     next();
@@ -42,3 +61,4 @@ export const admin = (req: AuthRequest, res: Response, next: NextFunction): void
     res.status(403).json({ message: 'Not authorized as an admin' });
   }
 };
+

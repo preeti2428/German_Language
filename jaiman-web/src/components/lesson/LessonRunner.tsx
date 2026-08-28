@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Check, Flame, Heart, Volume2, VolumeX, X } from 'lucide-react';
 import { normalizeSession, type Exercise, type RawExercise } from '@/lib/lesson/normalize';
-import { isMuted, sfxCombo, sfxCorrect, sfxFail, sfxFanfare, sfxHeartLost, sfxWrong, toggleMute } from '@/lib/sfx';
+import { isMuted, sfxCombo, sfxCorrect, sfxWin, sfxFail, sfxFanfare, sfxHeartLost, sfxWrong, toggleMute } from '@/lib/sfx';
 import { cancelSpeech } from '@/lib/speech';
 import ExerciseRenderer from './ExerciseRenderer';
 
@@ -20,7 +20,16 @@ export interface LessonSummary {
   failed: boolean;
 }
 
-type Feedback = { correct: boolean; given: string; expected: string } | null;
+type Feedback = { correct: boolean; given: string; expected: string; message?: string } | null;
+
+const CELEBRATIONS = [
+  "🎉 SUPER!",
+  "🌟 EXCELLENT!",
+  "🔥 BRILLIANT!",
+  "✨ FANTASTIC!",
+  "🏆 OUTSTANDING!",
+  "🎯 SPOT ON!"
+];
 
 /**
  * The lesson shell: hearts, combo, XP, progress, feedback, and the review queue.
@@ -147,9 +156,10 @@ export default function LessonRunner({
       setXp(xpRef.current);
 
       if (nextCombo >= 3) sfxCombo(nextCombo);
-      else sfxCorrect();
+      else sfxWin();
 
-      setFeedback({ correct: true, given, expected: current.answer });
+      const randomMessage = CELEBRATIONS[Math.floor(Math.random() * CELEBRATIONS.length)];
+      setFeedback({ correct: true, given, expected: current.answer, message: randomMessage });
       advanceTimer.current = setTimeout(next, 850);
     } else {
       setCombo(0);
@@ -343,7 +353,7 @@ export default function LessonRunner({
               </div>
               <div className="min-w-0 flex-1">
                 <p className={`text-lg font-black ${feedback.correct ? 'text-[#178B4E]' : 'text-[#CC3946]'}`}>
-                  {feedback.correct ? 'Correct!' : 'Not quite'}
+                  {feedback.correct ? (feedback.message || 'Correct!') : 'Not quite'}
                 </p>
                 {!feedback.correct && feedback.expected && (
                   <p className="truncate text-sm font-semibold text-[#6B7684]">

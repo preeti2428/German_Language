@@ -16,6 +16,7 @@ const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
  */
 const MODEL_CANDIDATES = [
   process.env.GROQ_MODEL,
+  'qwen/qwen3.8-27b',
   'openai/gpt-oss-120b',
   'openai/gpt-oss-20b',
   'qwen/qwen3.6-27b',
@@ -76,7 +77,7 @@ export const chatWithTutor = async (req: Request, res: Response): Promise<void> 
         body: JSON.stringify({
           model,
           messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...history],
-          max_tokens: 300,
+          max_tokens: 600,
           temperature: 0.7,
         }),
       });
@@ -105,8 +106,9 @@ export const chatWithTutor = async (req: Request, res: Response): Promise<void> 
       return;
     }
 
-    const data = (await groqRes.json()) as { choices?: { message?: { content?: string } }[] };
-    const reply = data.choices?.[0]?.message?.content?.trim();
+    const data = (await groqRes.json()) as { choices?: { message?: { content?: string; reasoning?: string } }[] };
+    let reply = data.choices?.[0]?.message?.content || data.choices?.[0]?.message?.reasoning || '';
+    reply = reply.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
     if (!reply) {
       res.status(502).json({ message: 'The tutor gave an empty reply. Try again.' });
       return;

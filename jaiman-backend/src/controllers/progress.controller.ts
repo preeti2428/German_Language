@@ -21,7 +21,7 @@ function dayString(d: Date): string {
  * accumulates in activityHistory (which the dashboard's week strip and daily
  * goal ring read after login).
  */
-async function recordDailyActivity(userId: string, xpEarned: number): Promise<void> {
+async function recordDailyActivity(userId: string, xpEarned: number, questionsSolved: number = 0): Promise<void> {
   const user = await User.findById(userId);
   if (!user) return;
 
@@ -44,6 +44,7 @@ async function recordDailyActivity(userId: string, xpEarned: number): Promise<vo
   }
 
   user.xp = (user.xp || 0) + xpEarned;
+  user.totalQuestionsSolved = (user.totalQuestionsSolved || 0) + questionsSolved;
   await user.save();
 }
 
@@ -81,7 +82,7 @@ export const completeStage = async (req: Request, res: Response): Promise<void> 
   try {
     const userId = (req as any).user._id;
     const { stageId } = req.params;
-    const { xpEarned } = req.body;
+    const { xpEarned, questionsSolved = 0 } = req.body;
 
     const stage = await Stage.findById(stageId);
     if (!stage) {
@@ -108,7 +109,7 @@ export const completeStage = async (req: Request, res: Response): Promise<void> 
       progress.totalXp += Number(xpEarned) || 0;
 
       // XP + streak + daily activity, recorded on the account itself
-      await recordDailyActivity(String(userId), Number(xpEarned) || 0);
+      await recordDailyActivity(String(userId), Number(xpEarned) || 0, Number(questionsSolved) || 0);
 
       await progress.save();
     }
@@ -126,7 +127,7 @@ export const completeSession = async (req: Request, res: Response): Promise<void
   try {
     const userId = (req as any).user._id;
     const { stageId, sessionNumber } = req.params;
-    const { xpEarned } = req.body;
+    const { xpEarned, questionsSolved = 0 } = req.body;
 
     const stage = await Stage.findById(stageId);
     if (!stage) {
@@ -160,7 +161,7 @@ export const completeSession = async (req: Request, res: Response): Promise<void
       progress.totalXp += Number(xpEarned) || 0;
 
       // XP + streak + daily activity, recorded on the account itself
-      await recordDailyActivity(String(userId), Number(xpEarned) || 0);
+      await recordDailyActivity(String(userId), Number(xpEarned) || 0, Number(questionsSolved) || 0);
 
       await progress.save();
     }
@@ -305,7 +306,7 @@ export const getDailyQuiz = async (req: Request, res: Response): Promise<void> =
 export const completeDailyQuiz = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = (req as any).user._id;
-    const { xpEarned = 40, timeSpent = 300 } = req.body;
+    const { xpEarned = 40, timeSpent = 300, questionsSolved = 0 } = req.body;
 
     const user = await User.findById(userId);
     if (!user) {
@@ -325,8 +326,8 @@ export const completeDailyQuiz = async (req: Request, res: Response): Promise<vo
     }
     user.streak.lastActiveDate = new Date();
 
-    // Award XP
-    await recordDailyActivity(String(userId), Number(xpEarned) || 40);
+    // Award XP and Questions Solved
+    await recordDailyActivity(String(userId), Number(xpEarned) || 40, Number(questionsSolved) || 0);
 
     res.json({
       success: true,

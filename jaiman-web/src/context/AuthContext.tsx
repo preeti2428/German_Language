@@ -10,6 +10,7 @@ interface User {
   role: string;
   xp?: number;
   level?: string;
+  totalQuestionsSolved?: number;
   reelsWatched?: number;
   streak?: {
     current: number;

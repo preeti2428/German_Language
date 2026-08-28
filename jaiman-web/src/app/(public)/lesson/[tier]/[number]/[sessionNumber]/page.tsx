@@ -58,7 +58,7 @@ export default function LessonPage() {
           sessionNumber === 'boss'
             ? `/progress/stage/${session.stageId}/complete`
             : `/progress/stage/${session.stageId}/session/${sessionNumber}/complete`;
-        await api.post(path, { xpEarned: summary.xp });
+        await api.post(path, { xpEarned: summary.xp, questionsSolved: summary.correct });
       } catch {
         // Not signed in, or offline. The local streak still counted; don't
         // interrupt the celebration with an error the learner can't act on.

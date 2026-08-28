@@ -13,6 +13,7 @@ export interface IUser extends Document {
   accountType?: 'individual' | 'college' | 'university';
   institutionName?: string;
   xp: number;
+  totalQuestionsSolved: number;
   reelsWatched: number;
   streak: {
     current: number;
@@ -29,8 +30,12 @@ export interface IUser extends Document {
   achievements: mongoose.Types.ObjectId[];
   enrolledBatches: mongoose.Types.ObjectId[];
   preferences: {
-    darkMode: boolean;
-    notifications: Record<string, any>;
+    darkMode?: boolean;
+    soundEnabled?: boolean;
+    showProgressPublic?: boolean;
+    emailUpdates?: boolean;
+    practiceReminderTime?: string;
+    notifications?: Record<string, any>;
   };
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
@@ -61,6 +66,7 @@ const userSchema = new mongoose.Schema({
   },
   institutionName: { type: String },
   xp: { type: Number, default: 0 },
+  totalQuestionsSolved: { type: Number, default: 0 },
   reelsWatched: { type: Number, default: 0 },
   streak: {
     current: { type: Number, default: 0 },
@@ -78,6 +84,10 @@ const userSchema = new mongoose.Schema({
   enrolledBatches: [{ type: Schema.Types.ObjectId, ref: 'Batch', default: [] }],
   preferences: {
     darkMode: { type: Boolean, default: true },
+    soundEnabled: { type: Boolean, default: true },
+    showProgressPublic: { type: Boolean, default: true },
+    emailUpdates: { type: Boolean, default: false },
+    practiceReminderTime: { type: String, default: '09:00' },
     notifications: { type: Object, default: {} }
   },
   resetPasswordToken: { type: String },

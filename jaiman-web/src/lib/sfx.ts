@@ -97,6 +97,13 @@ export function sfxCorrect() {
   tone({ freq: 880, start: 0.07, dur: 0.16, type: 'triangle', gain: 0.14 });
 }
 
+/** Joyful winning chime for correct answers. */
+export function sfxWin() {
+  const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
+  notes.forEach((f, i) => tone({ freq: f, start: i * 0.08, dur: 0.2, type: 'triangle', gain: 0.15 }));
+  tone({ freq: 1046.5, start: 0.32, dur: 0.4, type: 'sine', gain: 0.12 });
+}
+
 /** Low descending buzz. Short, not punishing. */
 export function sfxWrong() {
   tone({ freq: 200, dur: 0.18, type: 'sawtooth', gain: 0.1, sweepTo: 120 });

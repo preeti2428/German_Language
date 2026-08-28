@@ -279,6 +279,14 @@ export default function DashboardPage() {
               <p className="text-[9px] font-bold text-[#BDBDBD] uppercase tracking-wide">Total XP</p>
             </div>
           </div>
+          {/* Questions Solved */}
+          <div className="flex items-center gap-2 bg-white border border-[#C5CAE9] border-b-[3px] border-b-[#3F51B5] rounded-2xl px-4 py-2.5">
+            <Target size={18} className="text-[#3F51B5]" />
+            <div>
+              <p className="text-[13px] font-black text-[#1A1A2E] leading-none">{(user?.totalQuestionsSolved || 0).toLocaleString()}</p>
+              <p className="text-[9px] font-bold text-[#BDBDBD] uppercase tracking-wide">Questions</p>
+            </div>
+          </div>
           {/* Level */}
           <div className="flex items-center gap-2 bg-white border border-[#FFE082] border-b-[3px] border-b-[#FFC107] rounded-2xl px-4 py-2.5">
             <span className="text-lg">🏅</span>
@@ -353,7 +361,7 @@ export default function DashboardPage() {
                 onClick={() => router.push('/learn')}
                 className="duo-btn duo-btn-red px-7 py-3.5 text-sm flex items-center gap-2 w-fit"
               >
-                Continue Lesson <ChevronRight size={16} />
+                Continue Level <ChevronRight size={16} />
               </button>
 
               <div className="mt-4 flex items-center gap-2">
@@ -400,7 +408,7 @@ export default function DashboardPage() {
                     borderBottomWidth: '4px',
                     borderBottomColor: m.color,
                   }}
-                  onClick={() => (m.id === 'speak' ? router.push('/tutor') : router.push('/learn'))}
+                  onClick={() => (m.id === 'speak' ? router.push('/practice/speaking') : m.id === 'practice' ? router.push('/practice') : router.push('/learn'))}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-2xl">{m.emoji}</span>

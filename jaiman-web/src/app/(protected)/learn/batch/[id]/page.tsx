@@ -39,17 +39,15 @@ export default function BatchLearnPage() {
       try {
         const res = await api.get(`/batches/${id}`);
         const data: Batch = res.data;
-        // Redirect if not enrolled
-        if (!data.isEnrolled && user?.role === "learner") {
-          router.replace(`/courses/${id}`);
-          return;
-        }
+        // Let non-enrolled users view free preview content
         setBatch(data);
-        // auto-open first module
+        
+        // Find first accessible content
         if (data.modules.length > 0) {
           setOpenMods(new Set([data.modules[0]._id]));
-          if (data.modules[0].lectures.length > 0) {
-            setActive({ type: "lecture", modIdx: 0, lecIdx: 0 });
+          const firstFreeLec = data.modules[0].lectures.findIndex(l => data.isEnrolled || l.isFree);
+          if (firstFreeLec !== -1) {
+            setActive({ type: "lecture", modIdx: 0, lecIdx: firstFreeLec });
           }
         }
       } catch {
@@ -137,16 +135,19 @@ export default function BatchLearnPage() {
                     {/* Lectures */}
                     {mod.lectures.map((lec, lecIdx) => {
                       const isActiveItem = active?.type === "lecture" && active.modIdx === modIdx && active.lecIdx === lecIdx;
+                      const isLocked = !batch.isEnrolled && !lec.isFree;
                       return (
                         <button
                           key={lecIdx}
+                          disabled={isLocked}
                           onClick={() => { setActive({ type: "lecture", modIdx, lecIdx }); setDppAnswers({}); setDppSubmitted(false); }}
-                          className={`w-full flex items-center gap-2.5 pl-10 pr-4 py-2.5 text-left transition-colors ${isActiveItem ? "bg-[#4361EE]/20 border-l-2 border-[#4361EE]" : "hover:bg-[#2A3F6C]/40 border-l-2 border-transparent"}`}
+                          className={`w-full flex items-center gap-2.5 pl-10 pr-4 py-2.5 text-left transition-colors ${isActiveItem ? "bg-[#4361EE]/20 border-l-2 border-[#4361EE]" : "border-l-2 border-transparent"} ${isLocked ? "opacity-50 cursor-not-allowed" : "hover:bg-[#2A3F6C]/40"}`}
                         >
-                          <Play size={12} className={isActiveItem ? "text-[#4361EE]" : "text-[#8E9FBE]"} />
+                          {isLocked ? <Lock size={12} className="text-[#8E9FBE]" /> : <Play size={12} className={isActiveItem ? "text-[#4361EE]" : "text-[#8E9FBE]"} />}
                           <span className={`text-xs font-semibold truncate flex-1 ${isActiveItem ? "text-[#4361EE]" : "text-[#8E9FBE] hover:text-white"}`}>
                             {lec.title}
                           </span>
+                          {!batch.isEnrolled && lec.isFree && <span className="text-[10px] font-black text-[#20BF6B] bg-[#20BF6B]/20 px-1.5 py-0.5 rounded">Preview</span>}
                           {lec.duration && <span className="text-[#8E9FBE] text-[10px] font-bold flex-shrink-0">{lec.duration}m</span>}
                         </button>
                       );
@@ -154,13 +155,15 @@ export default function BatchLearnPage() {
                     {/* Notes */}
                     {mod.notes.map((note, noteIdx) => {
                       const isActiveItem = active?.type === "note" && active.modIdx === modIdx && active.noteIdx === noteIdx;
+                      const isLocked = !batch.isEnrolled;
                       return (
                         <button
                           key={noteIdx}
+                          disabled={isLocked}
                           onClick={() => { setActive({ type: "note", modIdx, noteIdx }); setDppAnswers({}); setDppSubmitted(false); }}
-                          className={`w-full flex items-center gap-2.5 pl-10 pr-4 py-2.5 text-left transition-colors ${isActiveItem ? "bg-[#F7B731]/20 border-l-2 border-[#F7B731]" : "hover:bg-[#2A3F6C]/40 border-l-2 border-transparent"}`}
+                          className={`w-full flex items-center gap-2.5 pl-10 pr-4 py-2.5 text-left transition-colors ${isActiveItem ? "bg-[#F7B731]/20 border-l-2 border-[#F7B731]" : "border-l-2 border-transparent"} ${isLocked ? "opacity-50 cursor-not-allowed" : "hover:bg-[#2A3F6C]/40"}`}
                         >
-                          <FileText size={12} className={isActiveItem ? "text-[#F7B731]" : "text-[#8E9FBE]"} />
+                          {isLocked ? <Lock size={12} className="text-[#8E9FBE]" /> : <FileText size={12} className={isActiveItem ? "text-[#F7B731]" : "text-[#8E9FBE]"} />}
                           <span className={`text-xs font-semibold truncate flex-1 ${isActiveItem ? "text-[#F7B731]" : "text-[#8E9FBE] hover:text-white"}`}>
                             📄 {note.title}
                           </span>
@@ -168,17 +171,21 @@ export default function BatchLearnPage() {
                       );
                     })}
                     {/* DPP */}
-                    {mod.dpp.length > 0 && (
-                      <button
-                        onClick={() => { setActive({ type: "dpp", modIdx }); setDppAnswers({}); setDppSubmitted(false); }}
-                        className={`w-full flex items-center gap-2.5 pl-10 pr-4 py-2.5 text-left transition-colors ${active?.type === "dpp" && active.modIdx === modIdx ? "bg-[#FF4757]/20 border-l-2 border-[#FF4757]" : "hover:bg-[#2A3F6C]/40 border-l-2 border-transparent"}`}
-                      >
-                        <Dumbbell size={12} className={active?.type === "dpp" && active.modIdx === modIdx ? "text-[#FF4757]" : "text-[#8E9FBE]"} />
-                        <span className={`text-xs font-semibold truncate flex-1 ${active?.type === "dpp" && active.modIdx === modIdx ? "text-[#FF4757]" : "text-[#8E9FBE] hover:text-white"}`}>
-                          🏋️ DPP · {mod.dpp.length} Qs
-                        </span>
-                      </button>
-                    )}
+                    {mod.dpp.length > 0 && (() => {
+                      const isLocked = !batch.isEnrolled;
+                      return (
+                        <button
+                          disabled={isLocked}
+                          onClick={() => { setActive({ type: "dpp", modIdx }); setDppAnswers({}); setDppSubmitted(false); }}
+                          className={`w-full flex items-center gap-2.5 pl-10 pr-4 py-2.5 text-left transition-colors ${active?.type === "dpp" && active.modIdx === modIdx ? "bg-[#FF4757]/20 border-l-2 border-[#FF4757]" : "border-l-2 border-transparent"} ${isLocked ? "opacity-50 cursor-not-allowed" : "hover:bg-[#2A3F6C]/40"}`}
+                        >
+                          {isLocked ? <Lock size={12} className="text-[#8E9FBE]" /> : <Dumbbell size={12} className={active?.type === "dpp" && active.modIdx === modIdx ? "text-[#FF4757]" : "text-[#8E9FBE]"} />}
+                          <span className={`text-xs font-semibold truncate flex-1 ${active?.type === "dpp" && active.modIdx === modIdx ? "text-[#FF4757]" : "text-[#8E9FBE] hover:text-white"}`}>
+                            🏋️ DPP · {mod.dpp.length} Qs
+                          </span>
+                        </button>
+                      );
+                    })()}
                   </div>
                 )}
               </div>
