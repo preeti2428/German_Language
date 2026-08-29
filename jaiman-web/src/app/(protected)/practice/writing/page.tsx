@@ -401,7 +401,7 @@ function WritingLabContent() {
     setTimeout(() => textareaRef.current?.focus(), 50);
   };
 
-  const filteredTasks = tasks.filter(
+  const filteredTasks: WritingTask[] = tasks.filter(
     (t) =>
       (filterLevel === 'all' || t.level === filterLevel) &&
       (filterType === 'all' || t.taskType === filterType)
@@ -639,9 +639,9 @@ function WritingLabContent() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {filteredTasks.map((task) => {
+                {filteredTasks.map((task: any) => {
                   const lvl = LEVEL_COLORS[task.level] || LEVEL_COLORS.A1;
-                  const isSelected = selectedTask?._id === task._id;
+                  const isSelected = (selectedTask as any)?._id === task._id;
                   return (
                     <motion.div
                       key={task._id}

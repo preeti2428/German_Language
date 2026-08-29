@@ -8,6 +8,7 @@ interface User {
   name: string;
   email: string;
   role: string;
+  avatar?: string;
   xp?: number;
   level?: string;
   totalQuestionsSolved?: number;
