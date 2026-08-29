@@ -26,8 +26,8 @@ export default function SignupPage() {
       const { token, ...userData } = response.data;
       login(userData, token);
       
-      // Redirect to protected dashboard/reels
-      router.push("/reels");
+      // Redirect to practice page
+      router.push("/practice");
     } catch (err: any) {
       if (!err.response) {
         setError("Could not connect to the backend server. If using Render, it may be waking up (wait 30s) or check NEXT_PUBLIC_API_URL in Vercel.");
