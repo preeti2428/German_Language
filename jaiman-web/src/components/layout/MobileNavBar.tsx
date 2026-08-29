@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Map, MessageCircle, User as UserIcon, FlaskConical } from "lucide-react";
+import { Home, Video, MessageCircle, User as UserIcon, FlaskConical } from "lucide-react";
 
 export default function MobileNavBar() {
   const pathname = usePathname();
 
   const links = [
     { name: "Home", href: "/dashboard", icon: Home },
-    { name: "Levels", href: "/learn", icon: Map },
+    { name: "Reels", href: "/reels", icon: Video },
     { name: "Practice", href: "/practice", icon: FlaskConical },
     { name: "Speak", href: "/tutor", icon: MessageCircle },
     { name: "Profile", href: "/profile", icon: UserIcon },
