@@ -195,12 +195,12 @@ export default function TutorPage() {
 
   return (
     <PageShell crumb="AI Tutor" title="Chat with Jai 🦉">
-    <div className="flex h-[calc(100vh-165px)] min-h-[520px] w-full flex-col overflow-hidden rounded-[36px] border-2 border-b-[5px] border-[#e5e5e5] bg-white">
-      {/* In-card header, per the design canvas */}
-      <div className="flex flex-none items-center justify-between gap-4 border-b-2 border-[#EEF1F5] px-7 py-5">
-        <div className="flex items-center gap-3.5">
+    <div className="flex h-[calc(100dvh-140px)] min-h-[480px] w-full flex-col overflow-hidden rounded-[24px] sm:rounded-[36px] border-2 border-b-[5px] border-[#e5e5e5] bg-white">
+      {/* In-card header */}
+      <div className="flex flex-none items-center justify-between gap-2 border-b-2 border-[#EEF1F5] px-4 py-3 sm:px-7 sm:py-5">
+        <div className="flex items-center gap-2.5">
           <div className="relative flex-none">
-            <div className="relative h-12 w-12 overflow-hidden rounded-2xl border-2 border-[#D6DEFF] bg-[#EEF2FF] shadow-sm">
+            <div className="relative h-9 w-9 sm:h-12 sm:w-12 overflow-hidden rounded-xl sm:rounded-2xl border-2 border-[#D6DEFF] bg-[#EEF2FF] shadow-sm">
               <Image
                 src="/teacher.png"
                 alt="Jai · AI Tutor"
@@ -210,27 +210,27 @@ export default function TutorPage() {
                 priority
               />
             </div>
-            <span className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-[#20BF6B] shadow-sm" />
+            <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white bg-[#20BF6B] shadow-sm" />
           </div>
           <div>
-            <p className="text-[17px] font-black text-[#1F2328]">Jai · AI Tutor</p>
-            <p className="mt-0.5 text-[11px] font-extrabold uppercase tracking-[0.1em] text-[#20BF6B]">
+            <p className="text-[14px] sm:text-[17px] font-black text-[#1F2328]">Jai · AI Tutor</p>
+            <p className="mt-0.5 text-[9px] sm:text-[11px] font-extrabold uppercase tracking-[0.1em] text-[#20BF6B]">
               Online · replies instantly
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2.5">
-          <div className="hidden items-center gap-2 rounded-[14px] border-2 border-b-4 border-[#FFE2C4] bg-[#FFF4E6] px-3.5 py-2 sm:flex">
-            <span className="text-[11px] font-black uppercase tracking-[0.06em] text-[#FF9F43]">Turns: {turns}</span>
+        <div className="flex items-center gap-1.5 sm:gap-2.5">
+          <div className="hidden items-center gap-2 rounded-[14px] border-2 border-b-4 border-[#FFE2C4] bg-[#FFF4E6] px-3 py-1.5 sm:flex">
+            <span className="text-[10px] font-black uppercase tracking-[0.06em] text-[#FF9F43]">Turns: {turns}</span>
           </div>
           {playingMsgId && (
             <button
               type="button"
               onClick={stopAllVoice}
-              className="flex items-center gap-1.5 rounded-[14px] border-2 border-b-4 border-[#FF4757] bg-[#FFF0F0] px-3.5 py-2 text-[11px] font-black uppercase tracking-[0.06em] text-[#FF4757] animate-pulse hover:bg-[#FFE5E5] transition-all active:translate-y-0.5"
+              className="flex items-center gap-1 rounded-[12px] border-2 border-b-4 border-[#FF4757] bg-[#FFF0F0] px-2.5 py-1.5 text-[10px] font-black uppercase tracking-[0.06em] text-[#FF4757] animate-pulse hover:bg-[#FFE5E5] transition-all active:translate-y-0.5"
               title="Stop voice playback"
             >
-              <Square size={13} className="fill-[#FF4757]" /> Stop
+              <Square size={11} className="fill-[#FF4757]" /> Stop
             </button>
           )}
           <button
@@ -239,18 +239,18 @@ export default function TutorPage() {
               stopAllVoice();
               setSpeakReplies((v) => !v);
             }}
-            className={`flex items-center gap-2 rounded-[14px] border-2 border-b-4 px-3.5 py-2 text-[11px] font-black uppercase tracking-[0.06em] transition-colors ${
+            className={`flex items-center gap-1.5 rounded-[12px] border-2 border-b-4 px-2.5 py-1.5 text-[10px] font-black uppercase tracking-[0.06em] transition-colors ${
               speakReplies ? 'border-[#D6DEFF] bg-[#EEF2FF] text-[#4361EE]' : 'border-[#E4E9EF] bg-[#F8FAFB] text-[#A8B2BE]'
             }`}
           >
-            {speakReplies ? <Volume2 size={15} /> : <VolumeX size={15} />}
+            {speakReplies ? <Volume2 size={13} /> : <VolumeX size={13} />}
             {speakReplies ? 'Voice on' : 'Voice off'}
           </button>
         </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 space-y-4 overflow-y-auto px-6 py-6">
+      <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4 sm:px-6 sm:py-6">
         <AnimatePresence initial={false}>
           {messages.map((m) => (
             <motion.div
@@ -325,7 +325,7 @@ export default function TutorPage() {
       </div>
 
       {/* Composer */}
-      <div className="flex items-center gap-3 border-t-2 border-gray-100 px-6 py-4">
+      <div className="flex items-center gap-2 border-t-2 border-gray-100 px-3 py-3 sm:px-6 sm:py-4">
         <button
           type="button"
           onClick={talk}
