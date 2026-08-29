@@ -49,7 +49,7 @@ export const listModules = async (req: AuthRequest, res: Response): Promise<void
 
 export const createModule = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { batchId } = req.params;
+    const batchId = req.params.batchId as string;
     const ok = await canManageBatch(batchId, String(req.user!._id), req.user!.role);
     if (!ok) { res.status(403).json({ message: 'Not authorised.' }); return; }
 
@@ -66,7 +66,7 @@ export const createModule = async (req: AuthRequest, res: Response): Promise<voi
     });
 
     // Push module ref into batch
-    await Batch.findByIdAndUpdate(batchId, { $push: { modules: mod._id } });
+    await Batch.findByIdAndUpdate(batchId, { $push: { modules: (mod as any)._id } });
 
     res.status(201).json(mod);
   } catch (err: any) {

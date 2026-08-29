@@ -213,9 +213,9 @@ export const createBooking = async (req: AuthRequest, res: Response): Promise<vo
       paymentStatus: 'paid',
       status: 'confirmed',
       meetLink,
-    });
+    } as any);
 
-    const populated = await booking.populate('teacher', 'name avatar');
+    const populated = await (booking as any).populate('teacher', 'name avatar');
     res.status(201).json(populated);
   } catch (err: any) {
     if (err.code === 11000) {
