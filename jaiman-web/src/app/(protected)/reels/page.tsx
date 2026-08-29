@@ -233,7 +233,7 @@ export default function ReelsPage() {
                 }}
                 transition={{ type: "spring", stiffness: 280, damping: 28 }}
                 className={`absolute inset-x-0 mx-auto flex flex-col items-center justify-center ${isActive ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'}`}
-                style={{ width: 'min(90vw, 420px)', height: 'min(78vh, 680px)' }}
+                style={{ width: 'min(95vw, 460px)', height: 'min(82vh, 740px)' }}
                 drag={isActive ? "y" : false}
                 dragConstraints={{ top: 0, bottom: 0 }}
                 dragElastic={0.25}
@@ -346,14 +346,6 @@ export default function ReelsPage() {
         </div>
       </div>
 
-      {/* Bottom Hint Banner */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20 pointer-events-none">
-        <span className="text-xs font-black text-gray-400 flex items-center gap-1.5 bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-full border border-gray-200 shadow-sm">
-          <kbd className="bg-gray-100 px-2 py-0.5 rounded border-b-2 border-gray-200">Scroll Up / Down ↕</kbd>
-          <kbd className="bg-gray-100 px-1.5 py-0.5 rounded border-b-2 border-gray-200">Swipe ↕</kbd>
-          <kbd className="bg-gray-100 px-1.5 py-0.5 rounded border-b-2 border-gray-200">↑↓ Arrows</kbd>
-        </span>
-      </div>
     </div>
   );
 }
