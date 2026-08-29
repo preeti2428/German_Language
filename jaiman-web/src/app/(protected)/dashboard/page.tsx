@@ -304,32 +304,36 @@ export default function DashboardPage() {
       <div className="p-4 sm:p-6 flex flex-col xl:flex-row gap-5 max-w-[1400px] mx-auto">
         {/* ── LEFT COLUMN ─────────────────────────────────────────── */}
         <div className="flex-1 min-w-0 flex flex-col gap-5">
-          {/* --- GERMANY GUIDE BANNER (TOP) --- */}
-          <div className="bg-white rounded-[1.5rem] border border-[#EAEAEA] border-b-[4px] border-b-[#1565C0] p-4 sm:p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-2xl bg-[#E3F2FD] border border-[#90CAF9] flex items-center justify-center text-2xl flex-shrink-0 shadow-xs">
-                🇩🇪
+          {/* --- MY ENROLLED BATCHES --- */}
+          {myBatches.length > 0 && (
+            <div className="bg-white rounded-[1.5rem] border border-[#EAEAEA] border-b-[4px] border-b-[#D8D8D8] p-5">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-black text-[#1A1A2E] text-[15px] flex items-center gap-2">
+                  <GraduationCap size={18} className="text-[#E53935]" /> MY BATCHES
+                </h3>
+                <a href="/courses" className="text-xs font-black text-[#E53935] hover:underline flex items-center gap-1">
+                  Browse all <ChevronRight size={12} />
+                </a>
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="font-black text-[#1A1A2E] text-[15px]">GERMANY GUIDE & ROADMAP</h3>
-                  <span className="bg-[#E8F5E9] text-[#2E7D32] text-[10px] font-black px-2 py-0.5 rounded-full border border-[#A5D6A7]">
-                    STUDY & JOBS
-                  </span>
-                </div>
-                <p className="text-[#757575] text-xs font-medium mt-0.5">
-                  Complete roadmap for Public Universities, APS, Opportunity Card (Chancenkarte), and Visa checklists.
-                </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {myBatches.slice(0, 4).map((b) => (
+                  <a
+                    key={b._id}
+                    href={`/learn/batch/${b._id}`}
+                    className="flex items-center gap-3 p-3 rounded-[1rem] bg-[#FFF5F5] border border-[#FFCDD2] border-b-[3px] border-b-[#E53935] hover:brightness-95 transition-all group"
+                  >
+                    <div className="w-9 h-9 rounded-xl bg-[#E53935] text-white flex items-center justify-center font-black text-xs flex-shrink-0">
+                      {b.level}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-black text-[#1A1A2E] text-xs truncate group-hover:text-[#E53935]">{b.title}</p>
+                      <p className="text-[#BDBDBD] text-[10px] font-medium">{b.modules?.length ?? 0} modules</p>
+                    </div>
+                  </a>
+                ))}
               </div>
             </div>
-
-            <button
-              onClick={() => router.push('/germany-guide')}
-              className="duo-btn duo-btn-red px-5 py-2.5 text-xs font-black flex items-center justify-center gap-2 self-start sm:self-auto flex-shrink-0"
-            >
-              Open Germany Guide <ChevronRight size={14} />
-            </button>
-          </div>
+          )}
 
           {/* ── NEXT MISSION CARD (REAL USER STAGE & SESSION) ────────────────────────────── */}
           <div className="bg-white rounded-[1.5rem] border border-[#EAEAEA] border-b-[4px] border-b-[#D8D8D8] overflow-hidden relative">
@@ -437,6 +441,33 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          {/* --- GERMANY GUIDE BANNER (TOP) --- */}
+          <div className="bg-white rounded-[1.5rem] border border-[#EAEAEA] border-b-[4px] border-b-[#1565C0] p-4 sm:p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-[#E3F2FD] border border-[#90CAF9] flex items-center justify-center text-2xl flex-shrink-0 shadow-xs">
+                🇩🇪
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-black text-[#1A1A2E] text-[15px]">GERMANY GUIDE & ROADMAP</h3>
+                  <span className="bg-[#E8F5E9] text-[#2E7D32] text-[10px] font-black px-2 py-0.5 rounded-full border border-[#A5D6A7]">
+                    STUDY & JOBS
+                  </span>
+                </div>
+                <p className="text-[#757575] text-xs font-medium mt-0.5">
+                  Complete roadmap for Public Universities, APS, Opportunity Card (Chancenkarte), and Visa checklists.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => router.push('/germany-guide')}
+              className="duo-btn duo-btn-red px-5 py-2.5 text-xs font-black flex items-center justify-center gap-2 self-start sm:self-auto flex-shrink-0"
+            >
+              Open Germany Guide <ChevronRight size={14} />
+            </button>
+          </div>
+
           {/* ── GERMAN JOURNEY (DYNAMIC STAGES FROM API) ─────────────────────────────────── */}
           <div className="bg-white rounded-[1.5rem] border border-[#EAEAEA] border-b-[4px] border-b-[#D8D8D8] p-5">
             <div className="flex items-center justify-between mb-4">
@@ -488,36 +519,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* --- MY ENROLLED BATCHES --- */}
-          {myBatches.length > 0 && (
-            <div className="bg-white rounded-[1.5rem] border border-[#EAEAEA] border-b-[4px] border-b-[#D8D8D8] p-5">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-black text-[#1A1A2E] text-[15px] flex items-center gap-2">
-                  <GraduationCap size={18} className="text-[#E53935]" /> MY BATCHES
-                </h3>
-                <a href="/courses" className="text-xs font-black text-[#E53935] hover:underline flex items-center gap-1">
-                  Browse all <ChevronRight size={12} />
-                </a>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {myBatches.slice(0, 4).map((b) => (
-                  <a
-                    key={b._id}
-                    href={`/learn/batch/${b._id}`}
-                    className="flex items-center gap-3 p-3 rounded-[1rem] bg-[#FFF5F5] border border-[#FFCDD2] border-b-[3px] border-b-[#E53935] hover:brightness-95 transition-all group"
-                  >
-                    <div className="w-9 h-9 rounded-xl bg-[#E53935] text-white flex items-center justify-center font-black text-xs flex-shrink-0">
-                      {b.level}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="font-black text-[#1A1A2E] text-xs truncate group-hover:text-[#E53935]">{b.title}</p>
-                      <p className="text-[#BDBDBD] text-[10px] font-medium">{b.modules?.length ?? 0} modules</p>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
+
         </div>
 
         {/* ── RIGHT COLUMN ────────────────────────────────────────── */}
