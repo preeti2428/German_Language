@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import PageShell from '@/components/layout/PageShell';
 import { readStreak } from '@/lib/streak';
+import Link from 'next/link';
 
 /**
  * Profile, rebuilt to the design canvas: XP-ring avatar, real stat tiles,
@@ -299,6 +300,12 @@ export default function ProfilePage() {
               >
                 {saving ? 'Saving…' : 'Save Settings'}
               </button>
+
+              <Link href="/settings" className="w-full mt-2 block">
+                <button className="duo-btn duo-btn-blue py-2.5 text-xs w-full flex items-center justify-center gap-2">
+                  <span>⚙️</span> Full Account Settings
+                </button>
+              </Link>
             </div>
           </section>
         </div>

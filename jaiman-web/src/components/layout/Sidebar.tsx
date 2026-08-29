@@ -53,7 +53,7 @@ export default function Sidebar() {
       label: "ME",
       links: [
         { name: "Profile",  href: "/profile",  icon: UserIcon },
-        { name: "Settings", href: "/settings", icon: Settings },
+
         ...(isAdmin ? [
           { name: "Admin Profile", href: "/admin/profile", icon: Shield },
         ] : []),
