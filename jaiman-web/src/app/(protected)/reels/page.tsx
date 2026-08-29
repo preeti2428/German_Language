@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Heart, MessageCircle, Share2, Volume2, VolumeX, Play, Pause, Flame, Loader2, Upload } from "lucide-react";
+import { Volume2, VolumeX, Play, Pause, Flame, Loader2, Upload } from "lucide-react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
@@ -181,30 +181,31 @@ export default function ReelsPage() {
   }
 
   return (
-    <div className="h-screen w-full bg-transparent overflow-hidden relative flex flex-col items-center justify-center">
-      {/* Vertical TikTok Feed Container - Full Screen */}
-      <div className="relative w-full h-full max-w-xl mx-auto flex items-center justify-center z-10 perspective-[1200px]">
+    <div className="h-full w-full bg-transparent overflow-hidden relative flex flex-col items-center justify-center pb-8">
+      {/* Top Header Controls */}
+      <div className="absolute top-4 left-6 right-6 flex items-center justify-between z-30 pointer-events-none">
+        <div className="w-36 hidden md:block" />
+        <motion.div 
+          key={currentIndex}
+          initial={{ opacity: 0, y: -20, scale: 0.8 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl shadow-[0_4px_0_#e2e8f0] border-2 border-gray-100 flex items-center gap-2"
+        >
+          <Flame size={20} className="text-[#FF9F43] fill-[#FF9F43]" />
+          <span className="text-sm font-black text-[#FF9F43]">+20 XP Earned</span>
+          <span className="text-xs font-black text-gray-400 ml-1">({currentIndex + 1} / {reels.length})</span>
+        </motion.div>
+        <Link 
+          href="/admin/upload"
+          className="pointer-events-auto flex items-center gap-2 bg-[#20BF6B] hover:bg-[#1CA65D] text-white border-2 border-b-[4px] border-[#178B4E] px-4 py-2.5 rounded-2xl font-black text-xs uppercase tracking-wider shadow-[0_6px_16px_rgba(32,191,107,0.3)] active:translate-y-1 active:border-b-2 transition-all hover:scale-105"
+        >
+          <Upload size={16} strokeWidth={2.8} />
+          <span>Upload Reel</span>
+        </Link>
+      </div>
 
-        {/* Top Header Controls — overlaid on top of reels */}
-        <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-30 pointer-events-none">
-          <motion.div 
-            key={currentIndex}
-            initial={{ opacity: 0, y: -12, scale: 0.85 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            className="bg-white/85 backdrop-blur-md px-3 py-1.5 rounded-2xl shadow-md border border-gray-100 flex items-center gap-2"
-          >
-            <Flame size={16} className="text-[#FF9F43] fill-[#FF9F43]" />
-            <span className="text-xs font-black text-[#FF9F43]">+20 XP Earned</span>
-            <span className="text-[10px] font-black text-gray-400">({currentIndex + 1}/{reels.length})</span>
-          </motion.div>
-          <Link 
-            href="/admin/upload"
-            className="pointer-events-auto flex items-center gap-1.5 bg-[#20BF6B] hover:bg-[#1CA65D] text-white border border-b-[3px] border-[#178B4E] px-3 py-1.5 rounded-xl font-black text-[10px] uppercase tracking-wider shadow-md active:translate-y-0.5 transition-all"
-          >
-            <Upload size={13} strokeWidth={2.8} />
-            <span>Upload</span>
-          </Link>
-        </div>
+      {/* Vertical TikTok Feed Container */}
+      <div className="relative w-full h-[calc(100vh-60px)] min-h-[660px] max-w-xl mx-auto flex items-center justify-center z-10 perspective-[1200px]">
         <AnimatePresence initial={false} custom={currentIndex}>
           {reels.map((reel, index) => {
             const offset = index - currentIndex;
@@ -233,7 +234,7 @@ export default function ReelsPage() {
                 }}
                 transition={{ type: "spring", stiffness: 280, damping: 28 }}
                 className={`absolute inset-x-0 mx-auto flex flex-col items-center justify-center ${isActive ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'}`}
-                style={{ width: 'min(94vw, 470px)', height: 'min(95vh, 860px)' }}
+                style={{ width: 'min(94vw, 470px)', height: 'min(86vh, 760px)' }}
                 drag={isActive ? "y" : false}
                 dragConstraints={{ top: 0, bottom: 0 }}
                 dragElastic={0.25}
@@ -266,10 +267,7 @@ export default function ReelsPage() {
                   <div className="relative z-10 h-full p-6 flex flex-col justify-between text-white pointer-events-none">
                     
                     {/* Header */}
-                    <div className="flex justify-between items-center pointer-events-none">
-                      <div className="bg-white/90 backdrop-blur-sm text-gray-900 px-3 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase shadow-sm">
-                        Level {reel.level || 'A1'}
-                      </div>
+                    <div className="flex justify-end items-center pointer-events-none">
                       <button 
                         onClick={(e) => { e.stopPropagation(); setIsMuted(!isMuted); }}
                         className="bg-black/40 backdrop-blur-md p-2.5 rounded-full hover:bg-black/60 transition-colors pointer-events-auto shadow-md"
@@ -307,28 +305,11 @@ export default function ReelsPage() {
                       )}
                     </div>
 
-                    {/* Footer: Gamified Action */}
-                    <div className="w-full pointer-events-auto">
-                      <button className="duo-btn w-full bg-[#20BF6B] text-white border-[#178B4E] py-3 text-xs flex items-center justify-center gap-2 hover:bg-[#1ca65d] active:border-b-0 shadow-[0_4px_0_#178B4E]">
-                        <Play size={16} className="fill-white" /> Practice It
-                      </button>
-                    </div>
+
 
                   </div>
 
-                  {/* Right Side Floating Social Actions */}
-                  {isActive && (
-                    <motion.div 
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.15 }}
-                      className="absolute right-3 bottom-24 flex flex-col items-center space-y-3 z-20 pointer-events-auto"
-                    >
-                      <ActionBtn icon={<Heart size={20} className="fill-[#FF4757] text-[#FF4757]" />} label={reel.likes || 0} />
-                      <ActionBtn icon={<MessageCircle size={20} className="text-gray-700" />} label={reel.views || 0} />
-                      <ActionBtn icon={<Share2 size={20} className="text-gray-700" />} label="Share" />
-                    </motion.div>
-                  )}
+
                 </div>
               </motion.div>
             );
@@ -366,20 +347,18 @@ export default function ReelsPage() {
         </div>
       </div>
 
+      {/* Bottom Hint Banner */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20 pointer-events-none">
+        <span className="text-xs font-black text-gray-400 flex items-center gap-1.5 bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-full border border-gray-200 shadow-sm">
+          <kbd className="bg-gray-100 px-2 py-0.5 rounded border-b-2 border-gray-200">Scroll Up / Down ↕</kbd>
+          <kbd className="bg-gray-100 px-1.5 py-0.5 rounded border-b-2 border-gray-200">Swipe ↕</kbd>
+          <kbd className="bg-gray-100 px-1.5 py-0.5 rounded border-b-2 border-gray-200">↑↓ Arrows</kbd>
+        </span>
+      </div>
     </div>
   );
 }
 
-function ActionBtn({ icon, label }: { icon: React.ReactNode, label: string | number }) {
-  return (
-    <button className="group flex flex-col items-center transition-all hover:-translate-y-1 active:translate-y-0" onPointerDown={(e) => e.stopPropagation()}>
-      <div className="w-12 h-12 bg-white rounded-[1.25rem] flex items-center justify-center shadow-[0_4px_0_#e2e8f0] border-2 border-gray-100 group-hover:bg-gray-50 group-active:shadow-none group-active:border-t-[6px] transition-all">
-        {icon}
-      </div>
-      <span className="text-[10px] font-black text-gray-500 mt-2 bg-white px-2 py-0.5 rounded-md shadow-sm border border-gray-100">{label}</span>
-    </button>
-  );
-}
 
 // Sub-component to handle video playback programmatically
 function ReelVideo({ src, isMuted, isPlaying }: { src: string, isMuted: boolean, isPlaying: boolean }) {
