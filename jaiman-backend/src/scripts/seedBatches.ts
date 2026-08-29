@@ -352,7 +352,7 @@ const seedBatches = async () => {
 
       // Create batch
       const batch = await Batch.create({
-        ...batchFields,
+        ...(batchData as any),
         teacher: teacher._id,
         enrolledStudents: [],
         modules: [],
@@ -370,7 +370,7 @@ const seedBatches = async () => {
       for (const modData of modulesData) {
         const { lectures, notes, dpp, ...modFields } = modData;
         const mod = await ModuleModel.create({
-          batch: batch._id,
+          batch: (batch as any)._id,
           ...modFields,
           lectures,
           notes,
@@ -380,10 +380,10 @@ const seedBatches = async () => {
       }
 
       // Update batch with module refs
-      await Batch.findByIdAndUpdate(batch._id, { modules: moduleIds });
+      await Batch.findByIdAndUpdate((batch as any)._id, { modules: moduleIds });
 
       const icon = batchFields.price === 0 ? '🆓' : '💎';
-      console.log(`${icon} Created: "${batch.title}" [${batch.level}] — ${modulesData.length} modules, ${modulesData.reduce((a, m) => a + m.lectures.length, 0)} lectures`);
+      console.log(`${icon} Created: "${(batch as any).title}" [${(batch as any).level}] — ${modulesData.length} modules, ${modulesData.reduce((a, m) => a + m.lectures.length, 0)} lectures`);
     }
 
     console.log('\n✨ Seeding complete! 4 batches created:\n');

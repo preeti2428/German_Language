@@ -532,9 +532,9 @@ export const getTest = async (req: Request, res: Response): Promise<void> => {
     const sanitized = {
       ...paper.toObject(),
       sections: paper.sections.map((sec) => ({
-        ...(sec.toObject?.() ?? sec),
+        ...((sec as any).toObject?.() ?? sec),
         questions: sec.questions.map((q) => {
-          const qObj = q.toObject?.() ?? { ...q };
+          const qObj = (q as any).toObject?.() ?? { ...q };
           delete (qObj as any).correctAnswer;
           delete (qObj as any).explanation;
           return qObj;

@@ -371,14 +371,14 @@ export const getListeningExercises = async (req: Request, res: Response): Promis
     }
 
     // Pull listening sessions from existing Stage data
-    const stages = await Stage.find({ tier }).select('stageNumber theme cityName sessions vocabSet');
+    const stages = await Stage.find({ tier: tier as any }).select('stageNumber theme cityName sessions vocabSet');
     const exercises: any[] = [];
 
     for (const stage of stages) {
       for (const session of stage.sessions) {
         if (session.skillType !== 'listening') continue;
         for (const ex of session.exercises) {
-          const exObj = ex.toObject?.() ?? ex;
+          const exObj = (ex as any).toObject?.() ?? ex;
           exercises.push({
             stageId: stage._id,
             stageNumber: stage.stageNumber,
@@ -471,7 +471,7 @@ export const getSpeakingExercises = async (req: Request, res: Response): Promise
     const levelExercises = allExercises.filter((ex: any) => ex.level === tier);
 
     // Pull speaking sessions from existing Stage data
-    const stages = await Stage.find({ tier }).select('stageNumber theme cityName sessions vocabSet');
+    const stages = await Stage.find({ tier: tier as any }).select('stageNumber theme cityName sessions vocabSet');
     const exercises: any[] = [];
 
     // Add JSON exercises first (shuffle and pick 10)
@@ -500,7 +500,7 @@ export const getSpeakingExercises = async (req: Request, res: Response): Promise
       for (const session of stage.sessions) {
         if (session.skillType !== 'speaking') continue;
         for (const ex of session.exercises) {
-          const exObj = ex.toObject?.() ?? ex;
+          const exObj = (ex as any).toObject?.() ?? ex;
           exercises.push({
             stageId: stage._id,
             stageNumber: stage.stageNumber,

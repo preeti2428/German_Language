@@ -280,7 +280,7 @@ export const seedDefaultBatches = async (req: Request, res: Response): Promise<v
       const { modules: modulesData, ...batchFields } = batchData;
 
       const batch = await Batch.create({
-        ...batchFields,
+        ...(batchData as any),
         teacher: teacher._id,
         enrolledStudents: [],
         modules: [],
@@ -288,12 +288,12 @@ export const seedDefaultBatches = async (req: Request, res: Response): Promise<v
 
       const moduleIds = [];
       for (const modData of modulesData) {
-        const mod = await ModuleModel.create({ batch: batch._id, ...modData });
+        const mod = await ModuleModel.create({ batch: (batch as any)._id, ...modData });
         moduleIds.push(mod._id);
       }
 
-      await Batch.findByIdAndUpdate(batch._id, { modules: moduleIds });
-      results.push({ title: batch.title, level: batch.level, price: batch.price, modules: modulesData.length });
+      await Batch.findByIdAndUpdate((batch as any)._id, { modules: moduleIds });
+      results.push({ title: (batch as any).title, level: (batch as any).level, price: (batch as any).price, modules: modulesData.length });
     }
 
     res.status(201).json({

@@ -23,7 +23,7 @@ export const listModules = async (req: AuthRequest, res: Response): Promise<void
     const isEnrolled = batch.enrolledStudents.some((s) => String(s) === uid);
     const isOwner = String(batch.teacher) === uid || req.user?.role === 'admin';
 
-    const modules = await ModuleModel.find({ batch: batchId }).sort({ order: 1 });
+    const modules = await ModuleModel.find({ batch: String(batchId) }).sort({ order: 1 });
 
     // Non-enrolled users only get free lectures, notes hidden, DPP hidden
     if (!isEnrolled && !isOwner) {
