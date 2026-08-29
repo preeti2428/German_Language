@@ -181,23 +181,22 @@ export default function ReelsPage() {
   }
 
   return (
-    <div className="h-full w-full bg-transparent overflow-hidden relative flex flex-col items-center justify-center pb-8">
-      {/* Top Header Controls */}
-      <div className="absolute top-4 left-6 right-6 flex items-center justify-between z-30 pointer-events-none">
-        <div className="w-36 hidden md:block" />
+    <div className="h-full w-full bg-transparent overflow-hidden flex flex-col items-center">
+      {/* Top Header Controls — above the reel box */}
+      <div className="w-full max-w-xl mx-auto flex items-center justify-between px-4 pt-3 pb-2 z-30">
         <motion.div 
           key={currentIndex}
-          initial={{ opacity: 0, y: -20, scale: 0.8 }}
+          initial={{ opacity: 0, y: -10, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl shadow-[0_4px_0_#e2e8f0] border-2 border-gray-100 flex items-center gap-2"
+          className="bg-white px-4 py-2 rounded-2xl shadow-[0_4px_0_#e2e8f0] border-2 border-gray-100 flex items-center gap-2"
         >
-          <Flame size={20} className="text-[#FF9F43] fill-[#FF9F43]" />
+          <Flame size={18} className="text-[#FF9F43] fill-[#FF9F43]" />
           <span className="text-sm font-black text-[#FF9F43]">+20 XP Earned</span>
           <span className="text-xs font-black text-gray-400 ml-1">({currentIndex + 1} / {reels.length})</span>
         </motion.div>
         <Link 
           href="/admin/upload"
-          className="pointer-events-auto flex items-center gap-2 bg-[#20BF6B] hover:bg-[#1CA65D] text-white border-2 border-b-[4px] border-[#178B4E] px-4 py-2.5 rounded-2xl font-black text-xs uppercase tracking-wider shadow-[0_6px_16px_rgba(32,191,107,0.3)] active:translate-y-1 active:border-b-2 transition-all hover:scale-105"
+          className="flex items-center gap-2 bg-[#20BF6B] hover:bg-[#1CA65D] text-white border-2 border-b-[4px] border-[#178B4E] px-4 py-2.5 rounded-2xl font-black text-xs uppercase tracking-wider shadow-[0_6px_16px_rgba(32,191,107,0.3)] active:translate-y-1 active:border-b-2 transition-all hover:scale-105"
         >
           <Upload size={16} strokeWidth={2.8} />
           <span>Upload Reel</span>
@@ -205,7 +204,7 @@ export default function ReelsPage() {
       </div>
 
       {/* Vertical TikTok Feed Container */}
-      <div className="relative w-full h-[calc(100vh-60px)] min-h-[660px] max-w-xl mx-auto flex items-center justify-center z-10 perspective-[1200px]">
+      <div className="relative w-full flex-1 max-w-xl mx-auto flex items-center justify-center z-10 perspective-[1200px] pb-4">
         <AnimatePresence initial={false} custom={currentIndex}>
           {reels.map((reel, index) => {
             const offset = index - currentIndex;
@@ -234,7 +233,7 @@ export default function ReelsPage() {
                 }}
                 transition={{ type: "spring", stiffness: 280, damping: 28 }}
                 className={`absolute inset-x-0 mx-auto flex flex-col items-center justify-center ${isActive ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'}`}
-                style={{ width: 'min(94vw, 470px)', height: 'min(86vh, 760px)' }}
+                style={{ width: 'min(90vw, 420px)', height: 'min(78vh, 680px)' }}
                 drag={isActive ? "y" : false}
                 dragConstraints={{ top: 0, bottom: 0 }}
                 dragElastic={0.25}
