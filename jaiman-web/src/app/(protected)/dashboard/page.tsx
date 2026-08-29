@@ -408,7 +408,7 @@ export default function DashboardPage() {
                     borderBottomWidth: '4px',
                     borderBottomColor: m.color,
                   }}
-                  onClick={() => (m.id === 'speak' ? router.push('/practice/speaking') : m.id === 'practice' ? router.push('/practice') : router.push('/learn'))}
+                  onClick={() => router.push('/practice/level-test')}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-2xl">{m.emoji}</span>
