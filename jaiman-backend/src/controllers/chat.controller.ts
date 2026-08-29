@@ -147,8 +147,9 @@ export const transcribeAudio = async (req: Request, res: Response): Promise<void
       'speech.webm'
     );
     form.append('model', 'whisper-large-v3-turbo');
-    // No language pin: the learner may speak Hindi, English, or German —
-    // Whisper detects which and transcribes in that language's script.
+    // Force German language detection for the speaking lab to prevent hallucinations
+    // (like returning Russian for short utterances or background noise).
+    form.append('language', 'de');
     form.append('temperature', '0');
 
     const groqRes = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {

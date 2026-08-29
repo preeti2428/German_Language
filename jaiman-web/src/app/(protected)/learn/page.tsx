@@ -99,8 +99,8 @@ function DriftingClouds() {
   );
 }
 
-function CityNode({ city, onClick }: { city: City; onClick: () => void }) {
-  const locked = city.status === 'locked';
+function CityNode({ city, isAdmin, onClick }: { city: City; isAdmin?: boolean; onClick: () => void }) {
+  const locked = !isAdmin && city.status === 'locked';
   const active = city.status === 'active' || city.status === 'boss';
   const done = city.status === 'completed';
 
@@ -467,7 +467,7 @@ export default function LearnPage() {
         </svg>
 
         {cities.map((city) => (
-          <CityNode key={city.id} city={city} onClick={() => setPendingCity(city)} />
+          <CityNode key={city.id} city={city} isAdmin={isAdmin} onClick={() => setPendingCity(city)} />
         ))}
 
         {activeCity && !pendingCity && (

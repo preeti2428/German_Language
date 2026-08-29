@@ -9,7 +9,7 @@ import {
 import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
-import { hasSpeechRecognition, listenGerman } from '@/lib/speech';
+import { hasSpeechRecognition, listenGerman, startRecording } from '@/lib/speech';
 import { gradeKeywords, normalizeText, tokenize } from '@/lib/lesson/grade';
 
 interface SpeakingExercise {
@@ -116,6 +116,7 @@ export default function SpeakingLabPage() {
   const [praiseIndex, setPraiseIndex] = useState(0);
   const [done, setDone] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const recorderRef = useRef<any>(null);
 
   const tierStyle = TIER_COLORS[selectedTier] ?? TIER_COLORS.A1;
 
@@ -161,20 +162,15 @@ export default function SpeakingLabPage() {
     }
   };
 
-  const handleRecord = async () => {
-    if (recordState !== 'idle') return;
-    const ex = exercises[current];
-    const targetWords = tokenize(ex.prompt);
-
-    setRecordState('listening');
-    const { transcript, supported: ok } = await listenGerman();
-    setRecordState('scoring');
-    
+  const processTranscript = (transcript: string, ok: boolean) => {
     if (!ok) {
       setRecordState('idle');
       return;
     }
     
+    const ex = exercises[current];
+    const targetWords = tokenize(ex.prompt);
+
     setHeard(transcript);
     const scoreVal = targetWords.length ? gradeKeywords(transcript, targetWords) : transcript ? 1 : 0;
     setRatio(scoreVal);
@@ -197,6 +193,48 @@ export default function SpeakingLabPage() {
     setRecordState('done');
   };
 
+  const toggleRecording = async () => {
+    if (recordState === 'listening') {
+      if (recorderRef.current) {
+        recorderRef.current.stop();
+      }
+      return;
+    }
+    if (recordState !== 'idle') return;
+
+    setRecordState('listening');
+    const recorder = await startRecording(10000);
+    if (!recorder) {
+      // Fallback if MediaRecorder isn't supported/fails
+      const { transcript, supported: ok } = await listenGerman();
+      setRecordState('scoring');
+      processTranscript(transcript, ok);
+      return;
+    }
+
+    recorderRef.current = recorder;
+    const blob = await recorder.done;
+    recorderRef.current = null;
+
+    setRecordState('scoring');
+    if (!blob) {
+      processTranscript('', true);
+      return;
+    }
+
+    try {
+      const form = new FormData();
+      form.append('audio', blob, 'audio.webm');
+      const res = await api.post('/chat/transcribe', form, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      processTranscript(res.data.text || '', true);
+    } catch (err) {
+      console.error('Transcription failed:', err);
+      processTranscript('', true);
+    }
+  };
+
   const handleSelfReport = () => {
     setHeard('(self-reported)');
     setRatio(1);
@@ -206,7 +244,16 @@ export default function SpeakingLabPage() {
     setRecordState('done');
   };
 
-  const handleNext = () => {
+  const handlePrev = () => {
+    if (current > 0) {
+      setRecordState('idle');
+      setHeard('');
+      setRatio(0);
+      setCurrent((c) => c - 1);
+    }
+  };
+
+  const handleNextSkip = () => {
     if (current + 1 >= exercises.length) {
       setDone(true);
     } else {
@@ -217,6 +264,12 @@ export default function SpeakingLabPage() {
     }
   };
 
+  const handleRetry = () => {
+    setRecordState('idle');
+    setHeard('');
+    setRatio(0);
+  };
+
   const ex = exercises[current];
   const progress = exercises.length > 0 ? (current / exercises.length) * 100 : 0;
   const currentPraise = PRAISE_MESSAGES[praiseIndex];
@@ -224,7 +277,7 @@ export default function SpeakingLabPage() {
   const isCurrentCorrect = ratio >= 0.6;
 
   return (
-    <div className="min-h-screen bg-[#F5F6FA] p-4 md:p-8">
+    <div className="min-h-screen bg-[#F5F6FA] p-4 md:p-8 pb-24">
       <audio ref={audioRef} className="hidden" />
 
       {/* Header */}
@@ -354,7 +407,7 @@ export default function SpeakingLabPage() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -15 }}
-                className="bg-white rounded-3xl p-6 md:p-8 shadow-[0_6px_25px_rgba(0,0,0,0.06)] border-2 border-[#EAEAEA] space-y-6"
+                className="bg-white rounded-3xl p-6 md:p-8 shadow-[0_6px_25px_rgba(0,0,0,0.06)] border-2 border-[#EAEAEA] flex flex-col gap-6"
               >
                 {/* Audio Player Button */}
                 <div className="flex items-center gap-3">
@@ -395,8 +448,8 @@ export default function SpeakingLabPage() {
                    <motion.div key="mic" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center gap-3 py-6">
                     <motion.button
                       type="button"
-                      onClick={handleRecord}
-                      disabled={recordState !== 'idle'}
+                      onClick={toggleRecording}
+                      disabled={recordState !== 'idle' && recordState !== 'listening'}
                       whileTap={{ scale: 0.94 }}
                       className={`flex h-24 w-24 items-center justify-center rounded-full border-b-4 text-white shadow-lg transition-colors ${
                         recordState === 'listening'
@@ -407,7 +460,7 @@ export default function SpeakingLabPage() {
                       {recordState === 'listening' ? <Square size={32} className="fill-current" /> : <Mic size={38} />}
                     </motion.button>
                     <p className="text-sm font-bold text-[#757575]">
-                      {recordState === 'listening' ? 'Listening...' : recordState === 'scoring' ? 'Scoring...' : 'Tap to speak'}
+                      {recordState === 'listening' ? 'Listening... (Tap to stop)' : recordState === 'scoring' ? 'Scoring...' : 'Tap to speak'}
                     </p>
 
                     {!supported && (
@@ -424,6 +477,25 @@ export default function SpeakingLabPage() {
                         </button>
                       </div>
                     )}
+                    
+                    {/* Navigation Controls (when not done) */}
+                    <div className="w-full flex justify-between mt-4 pt-4 border-t-2 border-dashed border-gray-100">
+                      <button
+                        onClick={handlePrev}
+                        disabled={current === 0 || recordState !== 'idle'}
+                        className={`text-sm font-bold ${current === 0 ? 'text-gray-300' : 'text-[#757575] hover:text-[#1A1A2E]'}`}
+                      >
+                        ← Previous
+                      </button>
+                      <button
+                        onClick={handleNextSkip}
+                        disabled={recordState !== 'idle'}
+                        className="text-sm font-bold text-[#757575] hover:text-[#1A1A2E]"
+                      >
+                        {current + 1 >= exercises.length ? 'Finish →' : 'Skip →'}
+                      </button>
+                    </div>
+
                   </motion.div>
                 ) : (
                   <motion.div key="score" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 py-4">
@@ -476,17 +548,38 @@ export default function SpeakingLabPage() {
                       </div>
                     )}
 
-                    {/* Next Button */}
-                    <button
-                      onClick={handleNext}
-                      className="w-full mt-4 py-4 rounded-2xl font-black text-sm text-white transition-all shadow-[0_3px_0_rgba(0,0,0,0.15)] hover:shadow-[0_1px_0_rgba(0,0,0,0.15)] hover:translate-y-[2px] flex items-center justify-center gap-2"
-                      style={{
-                        background: '#D81B60',
-                        boxShadow: `0 3px 0 #AD1457`,
-                      }}
-                    >
-                      {current + 1 >= exercises.length ? 'See Results 🏅' : 'Continue to Next Sentence →'}
-                    </button>
+                    {/* Next / Retry Buttons */}
+                    <div className="flex flex-col gap-3 mt-4">
+                      <button
+                        onClick={handleNextSkip}
+                        className="w-full py-4 rounded-2xl font-black text-sm text-white transition-all shadow-[0_3px_0_rgba(0,0,0,0.15)] hover:translate-y-[1px] hover:shadow-[0_2px_0_rgba(0,0,0,0.15)] flex items-center justify-center gap-2"
+                        style={{
+                          background: '#D81B60',
+                          boxShadow: `0 3px 0 #AD1457`,
+                        }}
+                      >
+                        {current + 1 >= exercises.length ? 'See Results 🏅' : 'Continue to Next Sentence →'}
+                      </button>
+
+                      <button
+                        onClick={handleRetry}
+                        className="w-full py-3.5 rounded-2xl font-bold text-sm bg-[#F5F6FA] text-[#757575] border-2 border-[#EAEAEA] hover:bg-[#EBEBEB] transition-colors"
+                      >
+                        🎤 Speak Again
+                      </button>
+                    </div>
+
+                    {/* Navigation Controls (when done) */}
+                    <div className="w-full flex justify-between mt-2 pt-2 border-t-2 border-dashed border-gray-100">
+                      <button
+                        onClick={handlePrev}
+                        disabled={current === 0}
+                        className={`text-sm font-bold ${current === 0 ? 'text-gray-300' : 'text-[#757575] hover:text-[#1A1A2E]'}`}
+                      >
+                        ← Previous
+                      </button>
+                    </div>
+
                   </motion.div>
                 )}
               </motion.div>

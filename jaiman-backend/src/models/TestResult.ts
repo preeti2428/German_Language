@@ -1,38 +1,43 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
-export interface ISectionScore {
-  sectionType: 'listening' | 'reading' | 'writing' | 'speaking';
-  earned: number;
-  total: number;
-  writingFeedback?: string;  // AI feedback for writing sections
+export interface IQuestionResult {
+  questionNumber: number;
+  userAnswer: string;
+  correctAnswer: string;
+  isCorrect: boolean;
+  pointsEarned: number;
+  maxPoints: number;
+  explanation?: string;
+}
+
+export interface ISectionResult {
+  sectionType: string;
+  score: number;
+  maxScore: number;
+  questionResults: IQuestionResult[];
 }
 
 export interface ITestResult extends Document {
   userId: mongoose.Types.ObjectId;
   testPaperId: mongoose.Types.ObjectId;
-  answers: Record<string, string | string[]>;  // questionNumber -> answer
-  sectionScores: ISectionScore[];
-  totalEarned: number;
-  totalMarks: number;
+  score: number;
+  maxScore: number;
+  percentage: number;
   passed: boolean;
-  timeTaken: number;   // minutes
+  timeSpent: number;
+  sectionResults: ISectionResult[];
   completedAt: Date;
 }
 
 const testResultSchema = new Schema<ITestResult>({
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   testPaperId: { type: Schema.Types.ObjectId, ref: 'TestPaper', required: true },
-  answers: { type: Schema.Types.Mixed, default: {} },
-  sectionScores: [{
-    sectionType: { type: String, enum: ['listening', 'reading', 'writing', 'speaking'] },
-    earned: { type: Number, default: 0 },
-    total: { type: Number, default: 0 },
-    writingFeedback: { type: String },
-  }],
-  totalEarned: { type: Number, default: 0 },
-  totalMarks: { type: Number, default: 0 },
+  score: { type: Number, default: 0 },
+  maxScore: { type: Number, default: 0 },
+  percentage: { type: Number, default: 0 },
   passed: { type: Boolean, default: false },
-  timeTaken: { type: Number, default: 0 },
+  timeSpent: { type: Number, default: 0 },
+  sectionResults: { type: Schema.Types.Mixed, default: [] },
   completedAt: { type: Date, default: Date.now },
 }, { timestamps: true });
 

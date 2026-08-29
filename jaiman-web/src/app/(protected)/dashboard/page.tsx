@@ -255,14 +255,14 @@ export default function DashboardPage() {
       {/* ══════════════════════════════════════════════════════════════
           TOP HEADER — Greeting + Real User Stats
       ══════════════════════════════════════════════════════════════ */}
-      <header className="bg-white border-b border-[#F0F0F0] px-6 py-4 flex items-center justify-between sticky top-0 z-40">
+      <header className="bg-white border-b border-[#F0F0F0] px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sticky top-0 z-40">
         <div>
           <h1 className="text-[22px] font-black text-[#1A1A2E]">
             {greeting()}, <span className="text-[#E53935]">{user?.name?.split(' ')[0] ?? 'Learner'}!</span> 👋
           </h1>
           <p className="text-sm font-medium text-[#9E9E9E] mt-0.5">Ready for your next German mission?</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           {/* Day Streak */}
           <div className="flex items-center gap-2 bg-white border border-[#FFE0B2] border-b-[3px] border-b-[#FF9F43] rounded-2xl px-4 py-2.5">
             <Flame size={18} className={streakCount > 0 ? 'fill-[#FF9F43] text-[#FF9F43]' : 'text-[#DDD]'} />
@@ -301,7 +301,7 @@ export default function DashboardPage() {
       {/* ══════════════════════════════════════════════════════════════
           MAIN CONTENT — Two Columns
       ══════════════════════════════════════════════════════════════ */}
-      <div className="p-6 flex gap-5 max-w-[1400px] mx-auto">
+      <div className="p-4 sm:p-6 flex flex-col xl:flex-row gap-5 max-w-[1400px] mx-auto">
         {/* ── LEFT COLUMN ─────────────────────────────────────────── */}
         <div className="flex-1 min-w-0 flex flex-col gap-5">
           {/* --- GERMANY GUIDE BANNER (TOP) --- */}
@@ -333,7 +333,7 @@ export default function DashboardPage() {
 
           {/* ── NEXT MISSION CARD (REAL USER STAGE & SESSION) ────────────────────────────── */}
           <div className="bg-white rounded-[1.5rem] border border-[#EAEAEA] border-b-[4px] border-b-[#D8D8D8] overflow-hidden relative">
-            <div className="p-6 pr-[260px]">
+            <div className="p-5 sm:p-6 sm:pr-[260px] relative z-10">
               <div className="inline-flex items-center gap-1.5 bg-[#FFF3CD] text-[#E6A800] text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full mb-3">
                 <Star size={11} className="fill-[#FFC107] text-[#FFC107]" /> YOUR NEXT MISSION
               </div>
@@ -345,7 +345,7 @@ export default function DashboardPage() {
               </p>
 
               {/* Meta chips */}
-              <div className="flex items-center gap-3 mb-5">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-5">
                 <span className="flex items-center gap-1.5 text-xs font-bold text-[#43A047] bg-[#E8F5E9] px-3 py-1.5 rounded-xl">
                   <BarChart3 size={12} /> {activeMission.level} Level
                 </span>
@@ -372,7 +372,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Mascot / Illustration area */}
-            <div className="absolute right-0 top-0 bottom-0 w-[240px] flex flex-col items-center justify-end overflow-hidden bg-gradient-to-l from-[#FFF8F8] to-transparent">
+            <div className="hidden sm:flex absolute right-0 top-0 bottom-0 w-[240px] flex-col items-center justify-end overflow-hidden bg-gradient-to-l from-[#FFF8F8] to-transparent">
               <div
                 className="text-[120px] leading-none mb-2 select-none"
                 style={{ filter: 'drop-shadow(0 4px 16px rgba(229,57,53,0.15))' }}
@@ -397,7 +397,7 @@ export default function DashboardPage() {
               </span>
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {missions.map((m) => (
                 <div
                   key={m.id}
@@ -452,7 +452,7 @@ export default function DashboardPage() {
               </button>
             </div>
 
-            <div className="flex items-center gap-0">
+            <div className="flex items-center gap-0 overflow-x-auto hide-scrollbar pb-2">
               {journeyCities.map((city, i) => (
                 <div key={city.name} className="flex items-center flex-1">
                   <div className="flex flex-col items-center flex-1">
@@ -499,7 +499,7 @@ export default function DashboardPage() {
                   Browse all <ChevronRight size={12} />
                 </a>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {myBatches.slice(0, 4).map((b) => (
                   <a
                     key={b._id}
@@ -521,7 +521,7 @@ export default function DashboardPage() {
         </div>
 
         {/* ── RIGHT COLUMN ────────────────────────────────────────── */}
-        <div className="w-[300px] flex-shrink-0 flex flex-col gap-4">
+        <div className="w-full xl:w-[300px] flex-shrink-0 flex flex-col gap-4">
           {/* TODAY'S GOAL */}
           <div className="bg-white rounded-[1.5rem] border border-[#EAEAEA] border-b-[4px] border-b-[#D8D8D8] p-5">
             <div className="flex items-center justify-between mb-4">

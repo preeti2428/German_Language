@@ -13,4 +13,7 @@ router.post('/level-test/submit', protect, submitLevelTest);
 // GET  /api/quiz/listening?tier=A1 → listening exercises for the lab
 router.get('/listening', protect, getListeningExercises);
 
+// GET  /api/quiz/speaking?tier=A1 → speaking exercises for the lab
+router.get('/speaking', protect, getSpeakingExercises);
+
 export default router;

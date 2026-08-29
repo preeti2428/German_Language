@@ -1,0 +1,1816 @@
+{
+  "meta": {
+    "title": "Speaking Lab - German Exercise Bank",
+    "language": "de",
+    "levels": [
+      "A1",
+      "A2",
+      "B1",
+      "B2"
+    ],
+    "total_exercises": 120,
+    "instructions_for_app": "For each exercise, play or show 'prompt_de'. The user listens (for repeat_after_me) or reads/responds (for other types), then speaks. Compare the recorded speech to 'prompt_de' (for repeat_after_me/read_aloud/tongue_twister) using speech-to-text + similarity/pronunciation scoring. For open-ended types (answer_question, opinion, roleplay, describe, story_starter, idiom, debate) score on: did they respond in German, relevance to the prompt, and rough fluency/length, since there's no single correct answer. Award 0 to max_points based on the scoring weights. To avoid boredom: shuffle exercise order within a level, mix types every 2-3 questions, don't repeat an id in the same session, and randomly select a subset (e.g. 10 per session) rather than showing all 30."
+  },
+  "exercises": [
+    {
+      "id": "a1-001",
+      "level": "A1",
+      "type": "repeat_after_me",
+      "icon": "🎧",
+      "instruction": "Listen to the audio, then repeat the phrase exactly as you heard it.",
+      "prompt_de": "Hallo, wie geht es dir?",
+      "prompt_en": "Hello, how are you?",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-002",
+      "level": "A1",
+      "type": "repeat_after_me",
+      "icon": "🎧",
+      "instruction": "Listen to the audio, then repeat the phrase exactly as you heard it.",
+      "prompt_de": "Ich heiße Anna.",
+      "prompt_en": "My name is Anna.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-003",
+      "level": "A1",
+      "type": "repeat_after_me",
+      "icon": "🎧",
+      "instruction": "Listen to the audio, then repeat the phrase exactly as you heard it.",
+      "prompt_de": "Guten Morgen!",
+      "prompt_en": "Good morning!",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-004",
+      "level": "A1",
+      "type": "repeat_after_me",
+      "icon": "🎧",
+      "instruction": "Listen to the audio, then repeat the phrase exactly as you heard it.",
+      "prompt_de": "Danke schön.",
+      "prompt_en": "Thank you very much.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-005",
+      "level": "A1",
+      "type": "repeat_after_me",
+      "icon": "🎧",
+      "instruction": "Listen to the audio, then repeat the phrase exactly as you heard it.",
+      "prompt_de": "Bitte schön.",
+      "prompt_en": "You're welcome.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-006",
+      "level": "A1",
+      "type": "read_aloud",
+      "icon": "📖",
+      "instruction": "Read this sentence aloud, clearly and at a natural pace.",
+      "prompt_de": "Ich bin zwanzig Jahre alt.",
+      "prompt_en": "I am twenty years old.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-007",
+      "level": "A1",
+      "type": "read_aloud",
+      "icon": "📖",
+      "instruction": "Read this sentence aloud, clearly and at a natural pace.",
+      "prompt_de": "Das ist mein Bruder.",
+      "prompt_en": "This is my brother.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-008",
+      "level": "A1",
+      "type": "read_aloud",
+      "icon": "📖",
+      "instruction": "Read this sentence aloud, clearly and at a natural pace.",
+      "prompt_de": "Ich wohne in Berlin.",
+      "prompt_en": "I live in Berlin.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-009",
+      "level": "A1",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Wie heißt du?",
+      "prompt_en": "What is your name?",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-010",
+      "level": "A1",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Woher kommst du?",
+      "prompt_en": "Where are you from?",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-011",
+      "level": "A1",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Wie alt bist du?",
+      "prompt_en": "How old are you?",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-012",
+      "level": "A1",
+      "type": "repeat_after_me",
+      "icon": "🎧",
+      "instruction": "Listen to the audio, then repeat the phrase exactly as you heard it.",
+      "prompt_de": "Ich habe einen Hund.",
+      "prompt_en": "I have a dog.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-013",
+      "level": "A1",
+      "type": "repeat_after_me",
+      "icon": "🎧",
+      "instruction": "Listen to the audio, then repeat the phrase exactly as you heard it.",
+      "prompt_de": "Die Sonne scheint heute.",
+      "prompt_en": "The sun is shining today.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-014",
+      "level": "A1",
+      "type": "read_aloud",
+      "icon": "📖",
+      "instruction": "Read this sentence aloud, clearly and at a natural pace.",
+      "prompt_de": "Meine Lieblingsfarbe ist blau.",
+      "prompt_en": "My favorite color is blue.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-015",
+      "level": "A1",
+      "type": "repeat_after_me",
+      "icon": "🎧",
+      "instruction": "Listen to the audio, then repeat the phrase exactly as you heard it.",
+      "prompt_de": "Es ist ein Uhr.",
+      "prompt_en": "It's one o'clock.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-016",
+      "level": "A1",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Was isst du gern?",
+      "prompt_en": "What do you like to eat?",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-017",
+      "level": "A1",
+      "type": "repeat_after_me",
+      "icon": "🎧",
+      "instruction": "Listen to the audio, then repeat the phrase exactly as you heard it.",
+      "prompt_de": "Ich trinke gern Kaffee.",
+      "prompt_en": "I like to drink coffee.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-018",
+      "level": "A1",
+      "type": "read_aloud",
+      "icon": "📖",
+      "instruction": "Read this sentence aloud, clearly and at a natural pace.",
+      "prompt_de": "Heute ist Montag.",
+      "prompt_en": "Today is Monday.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-019",
+      "level": "A1",
+      "type": "repeat_after_me",
+      "icon": "🎧",
+      "instruction": "Listen to the audio, then repeat the phrase exactly as you heard it.",
+      "prompt_de": "Auf Wiedersehen!",
+      "prompt_en": "Goodbye!",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-020",
+      "level": "A1",
+      "type": "read_aloud",
+      "icon": "📖",
+      "instruction": "Read this sentence aloud, clearly and at a natural pace.",
+      "prompt_de": "Ich habe zwei Schwestern.",
+      "prompt_en": "I have two sisters.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-021",
+      "level": "A1",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Wo wohnst du?",
+      "prompt_en": "Where do you live?",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-022",
+      "level": "A1",
+      "type": "repeat_after_me",
+      "icon": "🎧",
+      "instruction": "Listen to the audio, then repeat the phrase exactly as you heard it.",
+      "prompt_de": "Das Wetter ist schön.",
+      "prompt_en": "The weather is nice.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-023",
+      "level": "A1",
+      "type": "read_aloud",
+      "icon": "📖",
+      "instruction": "Read this sentence aloud, clearly and at a natural pace.",
+      "prompt_de": "Ich gehe zur Schule.",
+      "prompt_en": "I go to school.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-024",
+      "level": "A1",
+      "type": "repeat_after_me",
+      "icon": "🎧",
+      "instruction": "Listen to the audio, then repeat the phrase exactly as you heard it.",
+      "prompt_de": "Wie viel Uhr ist es?",
+      "prompt_en": "What time is it?",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-025",
+      "level": "A1",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Was ist dein Lieblingsessen?",
+      "prompt_en": "What is your favorite food?",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-026",
+      "level": "A1",
+      "type": "repeat_after_me",
+      "icon": "🎧",
+      "instruction": "Listen to the audio, then repeat the phrase exactly as you heard it.",
+      "prompt_de": "Ich mag Musik.",
+      "prompt_en": "I like music.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-027",
+      "level": "A1",
+      "type": "read_aloud",
+      "icon": "📖",
+      "instruction": "Read this sentence aloud, clearly and at a natural pace.",
+      "prompt_de": "Meine Familie ist groß.",
+      "prompt_en": "My family is big.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-028",
+      "level": "A1",
+      "type": "repeat_after_me",
+      "icon": "🎧",
+      "instruction": "Listen to the audio, then repeat the phrase exactly as you heard it.",
+      "prompt_de": "Entschuldigung, wo ist die Toilette?",
+      "prompt_en": "Excuse me, where is the toilet?",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-029",
+      "level": "A1",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Hast du Geschwister?",
+      "prompt_en": "Do you have siblings?",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a1-030",
+      "level": "A1",
+      "type": "repeat_after_me",
+      "icon": "🎧",
+      "instruction": "Listen to the audio, then repeat the phrase exactly as you heard it.",
+      "prompt_de": "Ich freue mich, dich kennenzulernen.",
+      "prompt_en": "Nice to meet you.",
+      "max_points": 5,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-031",
+      "level": "A2",
+      "type": "roleplay",
+      "icon": "🎭",
+      "instruction": "Imagine you're in this real-life situation. Say your line out loud.",
+      "prompt_de": "Ich möchte einen Kaffee und ein Stück Kuchen, bitte.",
+      "prompt_en": "Ordering at a café.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-032",
+      "level": "A2",
+      "type": "describe",
+      "icon": "🖼️",
+      "instruction": "Describe this out loud in 2-3 sentences.",
+      "prompt_de": "Beschreibe deinen typischen Tagesablauf.",
+      "prompt_en": "Describe your daily routine.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-033",
+      "level": "A2",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Was machst du normalerweise am Wochenende?",
+      "prompt_en": "What do you usually do on weekends?",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-034",
+      "level": "A2",
+      "type": "read_aloud",
+      "icon": "📖",
+      "instruction": "Read this sentence aloud, clearly and at a natural pace.",
+      "prompt_de": "Letztes Jahr bin ich nach Italien gereist.",
+      "prompt_en": "Last year I traveled to Italy.",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-035",
+      "level": "A2",
+      "type": "roleplay",
+      "icon": "🎭",
+      "instruction": "Imagine you're in this real-life situation. Say your line out loud.",
+      "prompt_de": "Entschuldigung, wie komme ich zum Bahnhof?",
+      "prompt_en": "Asking for directions to the station.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-036",
+      "level": "A2",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Was ist dein Hobby?",
+      "prompt_en": "What is your hobby?",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-037",
+      "level": "A2",
+      "type": "describe",
+      "icon": "🖼️",
+      "instruction": "Describe this out loud in 2-3 sentences.",
+      "prompt_de": "Beschreibe deinen besten Freund oder deine beste Freundin.",
+      "prompt_en": "Describe your best friend.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-038",
+      "level": "A2",
+      "type": "read_aloud",
+      "icon": "📖",
+      "instruction": "Read this sentence aloud, clearly and at a natural pace.",
+      "prompt_de": "Ich arbeite von Montag bis Freitag.",
+      "prompt_en": "I work from Monday to Friday.",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-039",
+      "level": "A2",
+      "type": "roleplay",
+      "icon": "🎭",
+      "instruction": "Imagine you're in this real-life situation. Say your line out loud.",
+      "prompt_de": "Können wir die Rechnung bitte haben?",
+      "prompt_en": "Asking for the bill at a restaurant.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-040",
+      "level": "A2",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Wie oft gehst du einkaufen?",
+      "prompt_en": "How often do you go shopping?",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-041",
+      "level": "A2",
+      "type": "read_aloud",
+      "icon": "📖",
+      "instruction": "Read this sentence aloud, clearly and at a natural pace.",
+      "prompt_de": "Am Wochenende spiele ich oft Fußball.",
+      "prompt_en": "On weekends I often play football.",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-042",
+      "level": "A2",
+      "type": "describe",
+      "icon": "🖼️",
+      "instruction": "Describe this out loud in 2-3 sentences.",
+      "prompt_de": "Beschreibe dein Zuhause.",
+      "prompt_en": "Describe your home.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-043",
+      "level": "A2",
+      "type": "roleplay",
+      "icon": "🎭",
+      "instruction": "Imagine you're in this real-life situation. Say your line out loud.",
+      "prompt_de": "Möchtest du am Samstag ins Kino gehen?",
+      "prompt_en": "Suggesting a plan to a friend.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-044",
+      "level": "A2",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Was hast du gestern gemacht?",
+      "prompt_en": "What did you do yesterday?",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-045",
+      "level": "A2",
+      "type": "read_aloud",
+      "icon": "📖",
+      "instruction": "Read this sentence aloud, clearly and at a natural pace.",
+      "prompt_de": "Ich lerne seit zwei Jahren Deutsch.",
+      "prompt_en": "I've been learning German for two years.",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-046",
+      "level": "A2",
+      "type": "roleplay",
+      "icon": "🎭",
+      "instruction": "Imagine you're in this real-life situation. Say your line out loud.",
+      "prompt_de": "Ich habe seit gestern Kopfschmerzen.",
+      "prompt_en": "Describing symptoms to a doctor.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-047",
+      "level": "A2",
+      "type": "describe",
+      "icon": "🖼️",
+      "instruction": "Describe this out loud in 2-3 sentences.",
+      "prompt_de": "Beschreibe das Wetter heute.",
+      "prompt_en": "Describe today's weather.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-048",
+      "level": "A2",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Welches Land möchtest du besuchen?",
+      "prompt_en": "Which country would you like to visit?",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-049",
+      "level": "A2",
+      "type": "read_aloud",
+      "icon": "📖",
+      "instruction": "Read this sentence aloud, clearly and at a natural pace.",
+      "prompt_de": "Meine Schwester studiert Medizin.",
+      "prompt_en": "My sister studies medicine.",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-050",
+      "level": "A2",
+      "type": "roleplay",
+      "icon": "🎭",
+      "instruction": "Imagine you're in this real-life situation. Say your line out loud.",
+      "prompt_de": "Wie viel kostet dieses Hemd?",
+      "prompt_en": "Asking the price while shopping.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-051",
+      "level": "A2",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Was isst du normalerweise zum Frühstück?",
+      "prompt_en": "What do you usually eat for breakfast?",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-052",
+      "level": "A2",
+      "type": "describe",
+      "icon": "🖼️",
+      "instruction": "Describe this out loud in 2-3 sentences.",
+      "prompt_de": "Beschreibe deinen typischen Morgen.",
+      "prompt_en": "Describe a typical morning routine.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-053",
+      "level": "A2",
+      "type": "read_aloud",
+      "icon": "📖",
+      "instruction": "Read this sentence aloud, clearly and at a natural pace.",
+      "prompt_de": "Nächste Woche fahre ich in den Urlaub.",
+      "prompt_en": "Next week I'm going on vacation.",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-054",
+      "level": "A2",
+      "type": "roleplay",
+      "icon": "🎭",
+      "instruction": "Imagine you're in this real-life situation. Say your line out loud.",
+      "prompt_de": "Kann ich bitte mit Herrn Müller sprechen?",
+      "prompt_en": "A phone call, asking for someone.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-055",
+      "level": "A2",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Was machst du gern in deiner Freizeit?",
+      "prompt_en": "What do you like doing in your free time?",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-056",
+      "level": "A2",
+      "type": "read_aloud",
+      "icon": "📖",
+      "instruction": "Read this sentence aloud, clearly and at a natural pace.",
+      "prompt_de": "Ich habe drei Jahre in Spanien gelebt.",
+      "prompt_en": "I lived in Spain for three years.",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-057",
+      "level": "A2",
+      "type": "describe",
+      "icon": "🖼️",
+      "instruction": "Describe this out loud in 2-3 sentences.",
+      "prompt_de": "Beschreibe deine Lieblingsjahreszeit und warum.",
+      "prompt_en": "Describe your favorite season and why.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-058",
+      "level": "A2",
+      "type": "roleplay",
+      "icon": "🎭",
+      "instruction": "Imagine you're in this real-life situation. Say your line out loud.",
+      "prompt_de": "Ich habe ein Zimmer für zwei Nächte reserviert.",
+      "prompt_en": "Checking in at a hotel.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-059",
+      "level": "A2",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Wie kommst du zur Arbeit oder zur Schule?",
+      "prompt_en": "How do you get to work or school?",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "a2-060",
+      "level": "A2",
+      "type": "read_aloud",
+      "icon": "📖",
+      "instruction": "Read this sentence aloud, clearly and at a natural pace.",
+      "prompt_de": "Am Abend lese ich gern ein Buch.",
+      "prompt_en": "In the evening I like to read a book.",
+      "max_points": 10,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-061",
+      "level": "B1",
+      "type": "opinion",
+      "icon": "💭",
+      "instruction": "Give your opinion out loud and explain why in at least 2 sentences.",
+      "prompt_de": "Was denkst du über soziale Medien?",
+      "prompt_en": "What do you think about social media?",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-062",
+      "level": "B1",
+      "type": "story_starter",
+      "icon": "📚",
+      "instruction": "Respond with a short spoken story or continuation (3+ sentences).",
+      "prompt_de": "Erzähle von einem Erlebnis, das dein Leben verändert hat.",
+      "prompt_en": "Tell about an experience that changed your life.",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-063",
+      "level": "B1",
+      "type": "tongue_twister",
+      "icon": "🌀",
+      "instruction": "Say this tongue twister three times, as fast and clearly as you can.",
+      "prompt_de": "Fischers Fritz fischt frische Fische.",
+      "prompt_en": "Fisherman Fritz fishes fresh fish.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-064",
+      "level": "B1",
+      "type": "roleplay",
+      "icon": "🎭",
+      "instruction": "Imagine you're in this real-life situation. Say your line out loud.",
+      "prompt_de": "Warum möchten Sie bei uns arbeiten?",
+      "prompt_en": "A job interview question.",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-065",
+      "level": "B1",
+      "type": "opinion",
+      "icon": "💭",
+      "instruction": "Give your opinion out loud and explain why in at least 2 sentences.",
+      "prompt_de": "Sollte man in der Schule eine Uniform tragen?",
+      "prompt_en": "Should students wear uniforms at school?",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-066",
+      "level": "B1",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Wie hat sich dein Leben in den letzten fünf Jahren verändert?",
+      "prompt_en": "How has your life changed in the last five years?",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-067",
+      "level": "B1",
+      "type": "story_starter",
+      "icon": "📚",
+      "instruction": "Respond with a short spoken story or continuation (3+ sentences).",
+      "prompt_de": "Beschreibe deinen aufregendsten Urlaub.",
+      "prompt_en": "Describe your most exciting vacation.",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-068",
+      "level": "B1",
+      "type": "tongue_twister",
+      "icon": "🌀",
+      "instruction": "Say this tongue twister three times, as fast and clearly as you can.",
+      "prompt_de": "Zwischen zwei Zwetschgenzweigen sitzen zwei zwitschernde Schwalben.",
+      "prompt_en": "Between two plum branches sit two chirping swallows.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-069",
+      "level": "B1",
+      "type": "opinion",
+      "icon": "💭",
+      "instruction": "Give your opinion out loud and explain why in at least 2 sentences.",
+      "prompt_de": "Ist es besser, in der Stadt oder auf dem Land zu leben?",
+      "prompt_en": "Is it better to live in the city or countryside?",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-070",
+      "level": "B1",
+      "type": "roleplay",
+      "icon": "🎭",
+      "instruction": "Imagine you're in this real-life situation. Say your line out loud.",
+      "prompt_de": "Ich möchte mich über den schlechten Service beschweren.",
+      "prompt_en": "Making a complaint about bad service.",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-071",
+      "level": "B1",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Was würdest du tun, wenn du eine Million Euro gewinnen würdest?",
+      "prompt_en": "What would you do if you won a million euros?",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-072",
+      "level": "B1",
+      "type": "story_starter",
+      "icon": "📚",
+      "instruction": "Respond with a short spoken story or continuation (3+ sentences).",
+      "prompt_de": "Erzähle eine Geschichte über einen unerwarteten Besucher.",
+      "prompt_en": "Tell a story about an unexpected visitor.",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-073",
+      "level": "B1",
+      "type": "opinion",
+      "icon": "💭",
+      "instruction": "Give your opinion out loud and explain why in at least 2 sentences.",
+      "prompt_de": "Sollte man Tiere im Zoo halten?",
+      "prompt_en": "Should animals be kept in zoos?",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-074",
+      "level": "B1",
+      "type": "roleplay",
+      "icon": "🎭",
+      "instruction": "Imagine you're in this real-life situation. Say your line out loud.",
+      "prompt_de": "Können Sie mir einen besseren Preis machen?",
+      "prompt_en": "Negotiating a price.",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-075",
+      "level": "B1",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Welche Fähigkeit würdest du gerne lernen und warum?",
+      "prompt_en": "What skill would you like to learn and why?",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-076",
+      "level": "B1",
+      "type": "tongue_twister",
+      "icon": "🌀",
+      "instruction": "Say this tongue twister three times, as fast and clearly as you can.",
+      "prompt_de": "Blaukraut bleibt Blaukraut und Brautkleid bleibt Brautkleid.",
+      "prompt_en": "Red cabbage stays red cabbage, and a wedding dress stays a wedding dress.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-077",
+      "level": "B1",
+      "type": "opinion",
+      "icon": "💭",
+      "instruction": "Give your opinion out loud and explain why in at least 2 sentences.",
+      "prompt_de": "Wie wichtig ist Technologie in unserem Leben?",
+      "prompt_en": "How important is technology in our lives?",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-078",
+      "level": "B1",
+      "type": "story_starter",
+      "icon": "📚",
+      "instruction": "Respond with a short spoken story or continuation (3+ sentences).",
+      "prompt_de": "Beschreibe einen Tag, an dem alles schiefgelaufen ist.",
+      "prompt_en": "Describe a day when everything went wrong.",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-079",
+      "level": "B1",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Was sind die Vor- und Nachteile des Home-Office?",
+      "prompt_en": "What are the pros and cons of working from home?",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-080",
+      "level": "B1",
+      "type": "roleplay",
+      "icon": "🎭",
+      "instruction": "Imagine you're in this real-life situation. Say your line out loud.",
+      "prompt_de": "Ich würde dir empfehlen, früher schlafen zu gehen.",
+      "prompt_en": "Giving advice to a friend.",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-081",
+      "level": "B1",
+      "type": "opinion",
+      "icon": "💭",
+      "instruction": "Give your opinion out loud and explain why in at least 2 sentences.",
+      "prompt_de": "Ist es wichtig, mehrere Sprachen zu sprechen?",
+      "prompt_en": "Is it important to speak multiple languages?",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-082",
+      "level": "B1",
+      "type": "story_starter",
+      "icon": "📚",
+      "instruction": "Respond with a short spoken story or continuation (3+ sentences).",
+      "prompt_de": "Erzähle von einer Person, die dich inspiriert hat.",
+      "prompt_en": "Tell about a person who inspired you.",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-083",
+      "level": "B1",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Wie stellst du dir dein Leben in zehn Jahren vor?",
+      "prompt_en": "How do you imagine your life in ten years?",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-084",
+      "level": "B1",
+      "type": "tongue_twister",
+      "icon": "🌀",
+      "instruction": "Say this tongue twister three times, as fast and clearly as you can.",
+      "prompt_de": "Der Cottbuser Postkutscher putzt den Cottbuser Postkutschkasten.",
+      "prompt_en": "The Cottbus mail coachman cleans the Cottbus mail coach box.",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-085",
+      "level": "B1",
+      "type": "opinion",
+      "icon": "💭",
+      "instruction": "Give your opinion out loud and explain why in at least 2 sentences.",
+      "prompt_de": "Sollten Kinder ein eigenes Smartphone haben?",
+      "prompt_en": "Should children have their own smartphone?",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-086",
+      "level": "B1",
+      "type": "roleplay",
+      "icon": "🎭",
+      "instruction": "Imagine you're in this real-life situation. Say your line out loud.",
+      "prompt_de": "Es tut mir leid, dass ich zu spät bin.",
+      "prompt_en": "Apologizing for being late.",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-087",
+      "level": "B1",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Was ist der größte Unterschied zwischen deiner Kultur und einer anderen?",
+      "prompt_en": "What's the biggest difference between your culture and another?",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-088",
+      "level": "B1",
+      "type": "story_starter",
+      "icon": "📚",
+      "instruction": "Respond with a short spoken story or continuation (3+ sentences).",
+      "prompt_de": "Beschreibe einen Traum, an den du dich noch erinnerst.",
+      "prompt_en": "Describe a dream you still remember.",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-089",
+      "level": "B1",
+      "type": "opinion",
+      "icon": "💭",
+      "instruction": "Give your opinion out loud and explain why in at least 2 sentences.",
+      "prompt_de": "Sind soziale Netzwerke gut oder schlecht für die Gesellschaft?",
+      "prompt_en": "Are social networks good or bad for society?",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b1-090",
+      "level": "B1",
+      "type": "answer_question",
+      "icon": "❓",
+      "instruction": "Answer the question aloud in your own words (1-2 sentences).",
+      "prompt_de": "Was würdest du an deiner Stadt verändern?",
+      "prompt_en": "What would you change about your city?",
+      "max_points": 15,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-091",
+      "level": "B2",
+      "type": "debate",
+      "icon": "⚖️",
+      "instruction": "Argue your position out loud, using at least two supporting reasons.",
+      "prompt_de": "Sollte Plastik komplett verboten werden?",
+      "prompt_en": "Should plastic be completely banned?",
+      "max_points": 25,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-092",
+      "level": "B2",
+      "type": "idiom",
+      "icon": "🧩",
+      "instruction": "Explain what this idiom means, then use it in your own sentence.",
+      "prompt_de": "Erkläre die Redewendung 'die Katze im Sack kaufen'.",
+      "prompt_en": "Explain the idiom 'to buy a cat in a sack' (to buy blind).",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-093",
+      "level": "B2",
+      "type": "opinion",
+      "icon": "💭",
+      "instruction": "Give your opinion out loud and explain why in at least 2 sentences.",
+      "prompt_de": "Wie beeinflusst künstliche Intelligenz die Arbeitswelt?",
+      "prompt_en": "How does AI influence the world of work?",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-094",
+      "level": "B2",
+      "type": "roleplay",
+      "icon": "🎭",
+      "instruction": "Imagine you're in this real-life situation. Say your line out loud.",
+      "prompt_de": "Ich bin der Meinung, dass wir das Projekt überdenken sollten.",
+      "prompt_en": "Formal debate opening line.",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-095",
+      "level": "B2",
+      "type": "idiom",
+      "icon": "🧩",
+      "instruction": "Explain what this idiom means, then use it in your own sentence.",
+      "prompt_de": "Was bedeutet 'ins Fettnäpfchen treten'? Gib ein Beispiel.",
+      "prompt_en": "Explain 'to put your foot in it' (to say something tactless).",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-096",
+      "level": "B2",
+      "type": "debate",
+      "icon": "⚖️",
+      "instruction": "Argue your position out loud, using at least two supporting reasons.",
+      "prompt_de": "Ist Globalisierung eher ein Vor- oder Nachteil für kleine Länder?",
+      "prompt_en": "Is globalization more of an advantage or disadvantage for small countries?",
+      "max_points": 25,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-097",
+      "level": "B2",
+      "type": "opinion",
+      "icon": "💭",
+      "instruction": "Give your opinion out loud and explain why in at least 2 sentences.",
+      "prompt_de": "Welche Rolle sollte der Staat beim Klimaschutz spielen?",
+      "prompt_en": "What role should the state play in fighting climate change?",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-098",
+      "level": "B2",
+      "type": "story_starter",
+      "icon": "📚",
+      "instruction": "Respond with a short spoken story or continuation (3+ sentences).",
+      "prompt_de": "Erzähle eine Geschichte über einen moralischen Konflikt.",
+      "prompt_en": "Tell a story involving a moral conflict.",
+      "max_points": 25,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-099",
+      "level": "B2",
+      "type": "idiom",
+      "icon": "🧩",
+      "instruction": "Explain what this idiom means, then use it in your own sentence.",
+      "prompt_de": "Erkläre 'den Nagel auf den Kopf treffen' mit einem eigenen Beispiel.",
+      "prompt_en": "Explain 'to hit the nail on the head'.",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-100",
+      "level": "B2",
+      "type": "debate",
+      "icon": "⚖️",
+      "instruction": "Argue your position out loud, using at least two supporting reasons.",
+      "prompt_de": "Sollten Universitäten kostenlos sein?",
+      "prompt_en": "Should universities be free?",
+      "max_points": 25,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-101",
+      "level": "B2",
+      "type": "opinion",
+      "icon": "💭",
+      "instruction": "Give your opinion out loud and explain why in at least 2 sentences.",
+      "prompt_de": "Wie verändert sich Privatsphäre im digitalen Zeitalter?",
+      "prompt_en": "How is privacy changing in the digital age?",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-102",
+      "level": "B2",
+      "type": "roleplay",
+      "icon": "🎭",
+      "instruction": "Imagine you're in this real-life situation. Say your line out loud.",
+      "prompt_de": "Überzeuge mich, warum wir in erneuerbare Energien investieren sollten.",
+      "prompt_en": "Persuade someone to invest in renewable energy.",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-103",
+      "level": "B2",
+      "type": "idiom",
+      "icon": "🧩",
+      "instruction": "Explain what this idiom means, then use it in your own sentence.",
+      "prompt_de": "Was bedeutet 'auf dem Holzweg sein'?",
+      "prompt_en": "Explain 'to be on the wrong track'.",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-104",
+      "level": "B2",
+      "type": "debate",
+      "icon": "⚖️",
+      "instruction": "Argue your position out loud, using at least two supporting reasons.",
+      "prompt_de": "Ist es ethisch vertretbar, Tiere für Forschung zu verwenden?",
+      "prompt_en": "Is it ethical to use animals for research?",
+      "max_points": 25,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-105",
+      "level": "B2",
+      "type": "opinion",
+      "icon": "💭",
+      "instruction": "Give your opinion out loud and explain why in at least 2 sentences.",
+      "prompt_de": "Wie wichtig ist Kreativität in der Bildung?",
+      "prompt_en": "How important is creativity in education?",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-106",
+      "level": "B2",
+      "type": "story_starter",
+      "icon": "📚",
+      "instruction": "Respond with a short spoken story or continuation (3+ sentences).",
+      "prompt_de": "Beschreibe ein Dilemma zwischen Erfolg und Familienleben.",
+      "prompt_en": "Describe a dilemma between career success and family life.",
+      "max_points": 25,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-107",
+      "level": "B2",
+      "type": "idiom",
+      "icon": "🧩",
+      "instruction": "Explain what this idiom means, then use it in your own sentence.",
+      "prompt_de": "Erkläre 'die Nase voll haben' mit einem Beispiel.",
+      "prompt_en": "Explain 'to be fed up' (literally: nose full).",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-108",
+      "level": "B2",
+      "type": "debate",
+      "icon": "⚖️",
+      "instruction": "Argue your position out loud, using at least two supporting reasons.",
+      "prompt_de": "Sollten Politiker ein Höchstalter haben?",
+      "prompt_en": "Should politicians have a maximum age limit?",
+      "max_points": 25,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-109",
+      "level": "B2",
+      "type": "opinion",
+      "icon": "💭",
+      "instruction": "Give your opinion out loud and explain why in at least 2 sentences.",
+      "prompt_de": "Welche Auswirkungen hat Digitalisierung auf Beziehungen?",
+      "prompt_en": "What effect does digitalization have on relationships?",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-110",
+      "level": "B2",
+      "type": "roleplay",
+      "icon": "🎭",
+      "instruction": "Imagine you're in this real-life situation. Say your line out loud.",
+      "prompt_de": "Ich denke, mein Gehalt sollte angepasst werden, weil...",
+      "prompt_en": "Negotiating a salary raise.",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-111",
+      "level": "B2",
+      "type": "idiom",
+      "icon": "🧩",
+      "instruction": "Explain what this idiom means, then use it in your own sentence.",
+      "prompt_de": "Was bedeutet 'Schwein haben'? Gib ein Beispiel.",
+      "prompt_en": "Explain 'to have a pig' (to be lucky).",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-112",
+      "level": "B2",
+      "type": "debate",
+      "icon": "⚖️",
+      "instruction": "Argue your position out loud, using at least two supporting reasons.",
+      "prompt_de": "Ist es gerechtfertigt, dass Prominente so viel verdienen?",
+      "prompt_en": "Is it justified that celebrities earn so much?",
+      "max_points": 25,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-113",
+      "level": "B2",
+      "type": "opinion",
+      "icon": "💭",
+      "instruction": "Give your opinion out loud and explain why in at least 2 sentences.",
+      "prompt_de": "Wie sollte man mit Fake News im Internet umgehen?",
+      "prompt_en": "How should we deal with fake news online?",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-114",
+      "level": "B2",
+      "type": "story_starter",
+      "icon": "📚",
+      "instruction": "Respond with a short spoken story or continuation (3+ sentences).",
+      "prompt_de": "Erzähle von einer schwierigen Entscheidung, die du treffen musstest.",
+      "prompt_en": "Tell about a difficult decision you had to make.",
+      "max_points": 25,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-115",
+      "level": "B2",
+      "type": "idiom",
+      "icon": "🧩",
+      "instruction": "Explain what this idiom means, then use it in your own sentence.",
+      "prompt_de": "Erkläre 'jemandem einen Bären aufbinden'.",
+      "prompt_en": "Explain 'to tie a bear on someone' (to trick them).",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-116",
+      "level": "B2",
+      "type": "debate",
+      "icon": "⚖️",
+      "instruction": "Argue your position out loud, using at least two supporting reasons.",
+      "prompt_de": "Sollte man das Wahlrecht ab 16 Jahren einführen?",
+      "prompt_en": "Should voting age be lowered to 16?",
+      "max_points": 25,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-117",
+      "level": "B2",
+      "type": "opinion",
+      "icon": "💭",
+      "instruction": "Give your opinion out loud and explain why in at least 2 sentences.",
+      "prompt_de": "Welche Verantwortung tragen Unternehmen für den Umweltschutz?",
+      "prompt_en": "What responsibility do companies have for environmental protection?",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-118",
+      "level": "B2",
+      "type": "roleplay",
+      "icon": "🎭",
+      "instruction": "Imagine you're in this real-life situation. Say your line out loud.",
+      "prompt_de": "Lass uns eine Lösung finden, die für beide Seiten fair ist.",
+      "prompt_en": "Resolving a conflict fairly.",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-119",
+      "level": "B2",
+      "type": "idiom",
+      "icon": "🧩",
+      "instruction": "Explain what this idiom means, then use it in your own sentence.",
+      "prompt_de": "Was bedeutet 'auf großem Fuß leben'?",
+      "prompt_en": "Explain 'to live on a big foot' (to live extravagantly).",
+      "max_points": 20,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    },
+    {
+      "id": "b2-120",
+      "level": "B2",
+      "type": "debate",
+      "icon": "⚖️",
+      "instruction": "Argue your position out loud, using at least two supporting reasons.",
+      "prompt_de": "Ist lebenslanges Lernen notwendig, um im Arbeitsmarkt erfolgreich zu sein?",
+      "prompt_en": "Is lifelong learning necessary to succeed in the job market?",
+      "max_points": 25,
+      "scoring": {
+        "pronunciation_weight": 0.5,
+        "fluency_weight": 0.3,
+        "accuracy_weight": 0.2
+      }
+    }
+  ]
+}

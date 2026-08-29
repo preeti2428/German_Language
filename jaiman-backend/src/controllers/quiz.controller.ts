@@ -446,6 +446,9 @@ export const getListeningExercises = async (req: Request, res: Response): Promis
 
 // ── Speaking Lab ─────────────────────────────────────────────────────────────
 
+import fs from 'fs';
+import path from 'path';
+
 export const getSpeakingExercises = async (req: Request, res: Response): Promise<void> => {
   try {
     const tier = (req.query.tier as string) || 'A1';
@@ -455,10 +458,44 @@ export const getSpeakingExercises = async (req: Request, res: Response): Promise
       return;
     }
 
+    // Load exercises from JSON
+    const dataPath = path.join(__dirname, '../data/speaking_exercises.json');
+    let allExercises = [];
+    if (fs.existsSync(dataPath)) {
+      const fileData = fs.readFileSync(dataPath, 'utf8');
+      const parsedData = JSON.parse(fileData);
+      allExercises = parsedData.exercises || [];
+    }
+
+    // Filter by level
+    const levelExercises = allExercises.filter((ex: any) => ex.level === tier);
+
     // Pull speaking sessions from existing Stage data
     const stages = await Stage.find({ tier }).select('stageNumber theme cityName sessions vocabSet');
     const exercises: any[] = [];
 
+    // Add JSON exercises first (shuffle and pick 10)
+    const shuffledJsonExercises = levelExercises.sort(() => 0.5 - Math.random());
+    const selectedJsonExercises = shuffledJsonExercises.slice(0, 10);
+    
+    for (const ex of selectedJsonExercises) {
+      exercises.push({
+        _id: ex.id,
+        type: ex.type,
+        icon: ex.icon,
+        instruction: ex.instruction,
+        prompt: ex.prompt_de,
+        promptEn: ex.prompt_en,
+        audioText: ex.prompt_de,
+        correctAnswer: ex.prompt_de,
+        explanation: ex.instruction,
+        maxPoints: ex.max_points,
+        scoring: ex.scoring,
+        points: ex.max_points || 10
+      });
+    }
+
+    // Then add from stages if needed
     for (const stage of stages) {
       for (const session of stage.sessions) {
         if (session.skillType !== 'speaking') continue;
@@ -482,19 +519,17 @@ export const getSpeakingExercises = async (req: Request, res: Response): Promise
       }
     }
 
-    // If stages don't have enough speaking content yet, supplement with
-    // built-in vocab phrases
-    if (exercises.length < 5) {
+    // If still not enough, add vocab
+    if (exercises.length === 0) {
       for (const stage of stages) {
         for (const word of stage.vocabSet || []) {
-          // Only pick phrases or longer words for speaking practice to make it interesting
           if (word.word.length > 5 || word.word.includes(' ')) {
             exercises.push({
               stageId: stage._id,
               theme: stage.theme,
               cityName: stage.cityName,
               type: 'speaking',
-              prompt: word.word, // The sentence to repeat
+              prompt: word.word,
               promptEn: `Translate and speak: "${word.translation}"`,
               audioText: word.word,
               correctAnswer: word.word,

@@ -117,8 +117,8 @@ export default function TestPaperPage({ params }: { params: Promise<{ testId: st
     setPhase('submitting');
     const timeTaken = paper.totalTime - Math.floor(timeLeft / 60);
     try {
-      const { data } = await api.post(`/tests/${paper._id}/submit`, { answers, timeTaken });
-      router.push(`/practice/test-series/${paper._id}/results?score=${data.totalEarned}&max=${data.totalMarks}&passed=${data.passed}&pct=${data.percentage}`);
+      const { data } = await api.post(`/tests/${paper._id}/submit`, { answers, timeSpent: timeTaken });
+      router.push(`/practice/test-series/${paper._id}/results?score=${data.score}&max=${data.maxScore}&passed=${data.passed}&pct=${data.percentage}&resultId=${data.resultId}`);
     } catch {
       router.push(`/practice/test-series`);
     }

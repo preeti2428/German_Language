@@ -49,8 +49,8 @@ export default function PageShell({
   };
 
   return (
-    <div className="min-h-full px-4 sm:px-6 pb-16 pt-4">
-      <header className="sticky top-0 z-40 mx-auto flex max-w-[1360px] items-center justify-between gap-4 bg-gradient-to-b from-[#F5F6FA] via-[#F5F6FA]/95 to-transparent px-1 pb-5 pt-2">
+    <div className="min-h-full px-4 sm:px-6 pb-6 pt-4">
+      <header className="sticky top-0 z-40 mx-auto flex flex-col sm:flex-row max-w-[1360px] sm:items-center justify-between gap-3 sm:gap-4 bg-gradient-to-b from-[#F5F6FA] via-[#F5F6FA]/95 to-transparent px-1 pb-4 pt-2">
         <div className="flex items-center gap-3">
           {(backHref || onBack) && (
             <button
@@ -66,16 +66,16 @@ export default function PageShell({
             <h1 className="dj-title">{title}</h1>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto hide-scrollbar pb-1 sm:pb-0">
           {actions}
           <div
-            className="dj-chip dj-chip-streak"
+            className="dj-chip dj-chip-streak flex-shrink-0"
             title={atRisk ? 'Practise today to keep your streak' : `${streak}-day streak`}
           >
             <Flame size={19} className={streak > 0 ? 'fill-[#FF9F43] text-[#FF9F43]' : 'text-gray-300'} />
             <span>{streak}</span>
           </div>
-          <div className="dj-chip dj-chip-xp" title="Total XP">
+          <div className="dj-chip dj-chip-xp flex-shrink-0" title="Total XP">
             <Zap size={18} className="fill-[#E53935] text-[#E53935]" />
             <span>{user?.xp ?? 0}</span>
           </div>
