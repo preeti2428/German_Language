@@ -450,6 +450,33 @@ export default function DashboardPage() {
             )}
           </div>
 
+          {/* --- FLASHCARDS EXPLORE --- */}
+          <div className="bg-white rounded-[1.5rem] border border-[#EAEAEA] border-b-[4px] border-b-[#FF9800] p-4 sm:p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-[#FFF3E0] border border-[#FFCC80] flex items-center justify-center text-2xl flex-shrink-0 shadow-xs">
+                🗂️
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-black text-[#1A1A2E] text-[15px]">VOCAB FLASHCARDS</h3>
+                  <span className="bg-[#FFF8E1] text-[#F57F17] text-[10px] font-black px-2 py-0.5 rounded-full border border-[#FFE082]">
+                    SPACED REPETITION
+                  </span>
+                </div>
+                <p className="text-[#757575] text-xs font-medium mt-0.5">
+                  Master German vocabulary with smart spaced repetition and deck unlocks.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => router.push('/flashcards')}
+              className="duo-btn duo-btn-yellow px-5 py-2.5 text-xs font-black flex items-center justify-center gap-2 self-start sm:self-auto flex-shrink-0"
+            >
+              Explore Flashcards <ChevronRight size={14} />
+            </button>
+          </div>
+
           {/* --- GERMANY GUIDE BANNER (TOP) --- */}
           <div className="bg-white rounded-[1.5rem] border border-[#EAEAEA] border-b-[4px] border-b-[#1565C0] p-4 sm:p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3.5">
