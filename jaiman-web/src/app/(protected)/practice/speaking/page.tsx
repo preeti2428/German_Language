@@ -127,7 +127,7 @@ export default function SpeakingLabPage() {
     setScore({ correct: 0, total: 0 });
     setRecordState('idle');
     try {
-      const { data } = await api.get(`/quiz/speaking?tier=${tier}`);
+      const { data } = await api.get(`/quiz/speaking?tier=${tier}&t=${Date.now()}`);
       setExercises(data.exercises ?? []);
     } catch {
       setExercises([]);

@@ -540,7 +540,8 @@ export const getSpeakingExercises = async (req: Request, res: Response): Promise
         }
       }
     }
-
+    // Shuffle the final mixed array before slicing
+    exercises.sort(() => 0.5 - Math.random());
     res.json({ tier, exercises: exercises.slice(0, 20), total: exercises.length });
   } catch (err) {
     console.error('getSpeakingExercises error:', err);
