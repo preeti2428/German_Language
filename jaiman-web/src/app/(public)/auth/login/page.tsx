@@ -47,6 +47,11 @@ export default function LoginPage() {
         <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-[#26408B] rounded-full blur-[100px] opacity-15"></div>
 
         <div className="relative z-10">
+          <div className="flex justify-center mb-6">
+            <div className="h-24 w-24 rounded-2xl overflow-hidden shadow-sm border border-gray-100 bg-white flex items-center justify-center">
+              <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-cover" />
+            </div>
+          </div>
           <h1 className="text-3xl font-extrabold mb-2 text-center text-[#26408B]">
             Welcome Back
           </h1>

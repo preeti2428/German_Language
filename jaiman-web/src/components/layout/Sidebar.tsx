@@ -70,8 +70,8 @@ export default function Sidebar() {
       {/* ── Logo + Mascot ── */}
       <div className="flex items-center gap-2.5 px-5 py-4 border-b border-[#F5F5F5]">
         {/* Mascot avatar */}
-        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#E53935] to-[#FF7043] flex items-center justify-center text-xl shadow-[0_3px_0_#C62828] flex-shrink-0">
-          🇩🇪
+        <div className="w-20 h-20 rounded-2xl overflow-hidden flex items-center justify-center shadow-[0_3px_0_#C62828] flex-shrink-0">
+          <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-cover" />
         </div>
         <div>
           <p className="text-[13px] font-black text-[#1A1A2E] leading-tight">German</p>

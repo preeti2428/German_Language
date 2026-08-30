@@ -75,7 +75,9 @@ export default function LandingPage() {
       {/* ── Header ─────────────────────────────────────────────────── */}
       <header className="mx-auto flex w-full max-w-[1680px] items-center justify-between gap-6 px-6 py-5 sm:px-10 lg:px-16 xl:px-20">
         <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#2B44D4] text-lg font-extrabold text-white">J</div>
+          <div className="h-20 w-20 rounded-xl overflow-hidden shadow-sm border border-gray-100 bg-white">
+            <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-cover" />
+          </div>
           <span className="text-[21px] font-bold tracking-[-0.02em]">German with Jai</span>
         </div>
         <nav className="hidden gap-8 text-base font-medium text-[#4A4C57] md:flex">
