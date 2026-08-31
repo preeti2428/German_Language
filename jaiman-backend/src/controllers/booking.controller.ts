@@ -197,10 +197,6 @@ export const createBooking = async (req: AuthRequest, res: Response): Promise<vo
       return;
     }
 
-    const letters = 'abcdefghijklmnopqrstuvwxyz';
-    const randStr = (n: number) => Array.from({ length: n }, () => letters[Math.floor(Math.random() * letters.length)]).join('');
-    const meetLink = `https://meet.google.com/${randStr(3)}-${randStr(4)}-${randStr(3)}`;
-
     const booking = await Booking.create({
       student: req.user!._id,
       teacher: teacherId,
@@ -210,9 +206,8 @@ export const createBooking = async (req: AuthRequest, res: Response): Promise<vo
       topic: topic || 'Free German Conversation',
       notes: notes || '',
       price: 1000,
-      paymentStatus: 'paid',
-      status: 'confirmed',
-      meetLink,
+      paymentStatus: 'pending',
+      status: 'pending',
     } as any);
 
     const populated = await (booking as any).populate('teacher', 'name avatar');

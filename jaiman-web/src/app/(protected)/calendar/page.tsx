@@ -123,12 +123,23 @@ export default function CalendarPage() {
       .finally(() => setSlotLoading(false));
   }, [teacher, selectedDate]);
 
+  const loadRazorpay = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
   const book = useCallback(async () => {
     if (!selectedSlot) return;
     setLoading(true);
     setError('');
     try {
-      await api.post('/bookings', {
+      // 1. Create pending booking
+      const bookingRes = await api.post('/bookings', {
         teacherId: teacher?._id || 'default',
         date: selectedDate,
         timeSlot: selectedSlot,
@@ -136,20 +147,71 @@ export default function CalendarPage() {
         topic: selectedTopic,
         notes,
       });
-      setSuccess(true);
-      setSelectedSlot(null);
-      setNotes('');
-      fetchMyBookings();
-      // Re-fetch slots
-      const teacherId = teacher?._id || 'default';
-      api.get(`/bookings/slots?teacherId=${teacherId}&date=${selectedDate}`).then((r) => setSlots(r.data));
-      setTimeout(() => setSuccess(false), 4000);
+      
+      const bookingId = bookingRes.data._id;
+      
+      // 2. Create Razorpay order
+      const orderRes = await api.post('/payments/create-order', { bookingId });
+      const orderData = orderRes.data;
+
+      // 3. Load Razorpay script
+      const res = await loadRazorpay();
+      if (!res) {
+        setError('Razorpay SDK failed to load. Are you online?');
+        setLoading(false);
+        return;
+      }
+
+      // 4. Open Razorpay checkout
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_placeholder',
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: 'German Language Coaching',
+        description: 'Live 1-on-1 Session with Jai',
+        order_id: orderData.orderId,
+        handler: async function (response: any) {
+          try {
+            await api.post('/payments/verify', {
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+              bookingId,
+            });
+            setSuccess(true);
+            setSelectedSlot(null);
+            setNotes('');
+            fetchMyBookings();
+            const tId = teacher?._id || 'default';
+            api.get(`/bookings/slots?teacherId=${tId}&date=${selectedDate}`).then((r) => setSlots(r.data));
+            setTimeout(() => setSuccess(false), 4000);
+          } catch (verifyError: any) {
+            setError(verifyError.response?.data?.message || 'Payment verification failed.');
+          }
+        },
+        prefill: {
+          name: user?.name || '',
+          email: user?.email || '',
+        },
+        theme: {
+          color: '#E53935',
+        },
+      };
+
+      const paymentObject = new (window as any).Razorpay(options);
+      paymentObject.open();
+      
+      // Handle when modal is closed without paying
+      paymentObject.on('payment.failed', function (response: any) {
+        setError('Payment failed or was cancelled.');
+      });
+
     } catch (e: any) {
       setError(e.response?.data?.message || 'Booking failed. Please try again.');
     } finally {
       setLoading(false);
     }
-  }, [selectedSlot, teacher, selectedDate, selectedTopic, notes]);
+  }, [selectedSlot, teacher, selectedDate, selectedTopic, notes, user]);
 
   const cancelBooking = async (id: string) => {
     if (!confirm('Are you sure you want to cancel this session?')) return;

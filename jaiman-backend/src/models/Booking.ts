@@ -12,6 +12,7 @@ export interface IBooking extends Document {
   meetLink?: string;
   cancelledBy?: mongoose.Types.ObjectId;
   cancelReason?: string;
+  paymentOrderId?: string;
 }
 
 const bookingSchema = new mongoose.Schema(
@@ -24,11 +25,12 @@ const bookingSchema = new mongoose.Schema(
     topic: { type: String },
     notes: { type: String },
     price: { type: Number, default: 1000 },
-    paymentStatus: { type: String, enum: ['pending', 'paid', 'refunded'], default: 'paid' },
+    paymentOrderId: { type: String },
+    paymentStatus: { type: String, enum: ['pending', 'paid', 'refunded', 'failed'], default: 'pending' },
     status: {
       type: String,
       enum: ['pending', 'confirmed', 'cancelled', 'completed'],
-      default: 'confirmed',
+      default: 'pending',
     },
     meetLink: { type: String },
     cancelledBy: { type: Schema.Types.ObjectId, ref: 'User' },
