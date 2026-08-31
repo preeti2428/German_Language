@@ -524,22 +524,20 @@ export default function DashboardPage() {
                 <div key={city.name} className="flex items-center flex-1">
                   <div className="flex flex-col items-center flex-1">
                     <button
-                      onClick={() => (city.done || city.current ? router.push('/learn') : undefined)}
+                      onClick={() => router.push('/learn')}
                       className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl transition-all border-2 border-b-[4px] mb-2 ${
                         city.current
                           ? 'bg-white border-[#E53935] border-b-[#C62828] shadow-[0_4px_16px_rgba(229,57,53,0.25)] scale-110'
-                          : city.done
-                          ? 'bg-[#E8F5E9] border-[#A5D6A7] border-b-[#43A047]'
-                          : 'bg-[#F5F5F5] border-[#E0E0E0] border-b-[#BDBDBD] opacity-50'
+                          : 'bg-[#E8F5E9] border-[#A5D6A7] border-b-[#43A047]'
                       }`}
                     >
-                      {city.done && !city.current ? '✅' : city.current ? city.emoji : <Lock size={20} className="text-[#BDBDBD]" />}
+                      {city.done && !city.current ? '✅' : city.emoji}
                     </button>
                     <p className={`text-[11px] font-black ${city.current ? 'text-[#E53935]' : 'text-[#9E9E9E]'}`}>
                       {city.name}
                     </p>
                     <p className="text-[9px] font-medium text-[#BDBDBD]">
-                      {city.current ? 'Current' : city.done ? 'Done' : 'Locked'}
+                      {city.current ? 'Current' : city.done ? 'Done' : 'Unlocked'}
                     </p>
                   </div>
                   {i < journeyCities.length - 1 && (
