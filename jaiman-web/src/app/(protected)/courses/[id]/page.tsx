@@ -372,18 +372,11 @@ export default function BatchDetailPage() {
                   </div>
                 ) : (
                   <button
-                    onClick={handleEnroll}
-                    disabled={enrolling}
-                    className="duo-btn duo-btn-blue w-full py-3 text-sm flex items-center justify-center gap-2 disabled:opacity-60"
+                    disabled={true}
+                    className="duo-btn duo-btn-blue w-full py-3 text-sm flex items-center justify-center gap-2 opacity-60 cursor-not-allowed"
                   >
-                    {enrolling ? (
-                      <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                    ) : (
-                      <>
-                        <GraduationCap size={16} />
-                        {isPaid ? "Request Enrollment" : "Enroll for Free"}
-                      </>
-                    )}
+                    <GraduationCap size={16} />
+                    Coming Soon ⏳
                   </button>
                 )}
 

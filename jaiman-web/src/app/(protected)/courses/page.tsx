@@ -224,8 +224,8 @@ export default function CoursesPage() {
                     </span>
                   </div>
 
-                  <div className="inline-flex items-center gap-2 bg-[#E53935] text-white text-sm font-black px-6 py-3 rounded-2xl shadow-[0_4px_0_#C62828] group-hover:shadow-[0_2px_0_#C62828] group-hover:translate-y-[2px] transition-all">
-                    {featured.level === "A1" ? "Try Free Preview & Enroll" : "Enroll Now"} <ChevronRight size={16} />
+                  <div className="inline-flex items-center gap-2 bg-[#E53935] text-white text-sm font-black px-6 py-3 rounded-2xl shadow-[0_4px_0_#C62828] group-hover:shadow-[0_2px_0_#C62828] group-hover:translate-y-[2px] transition-all opacity-80 cursor-not-allowed">
+                    Coming Soon ⏳
                   </div>
                 </div>
 
@@ -323,8 +323,8 @@ export default function CoursesPage() {
                         <span className="text-[11px] font-bold text-[#BDBDBD]">
                           {batch.startDate ? `Starts ${new Date(batch.startDate).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}` : "Self-paced"}
                         </span>
-                        <span className="flex items-center gap-1 text-xs font-black text-[#E53935] group-hover:gap-2 transition-all">
-                          {isA1 ? "Free Trial & Enroll" : "View Batch"} <ChevronRight size={13} />
+                        <span className="flex items-center gap-1 text-xs font-black text-[#E53935] opacity-80">
+                          Coming Soon ⏳
                         </span>
                       </div>
                     </div>
