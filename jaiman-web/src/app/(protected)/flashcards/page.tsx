@@ -103,9 +103,7 @@ export default function FlashcardsPage() {
 
   /** Foundation deck i unlocks once deck i-1 is UNLOCK_PCT% learned, or always for admin. */
   const isUnlocked = (idx: number) => {
-    if (isAdmin || idx === 0) return true;
-    const prev = foundationDecks[idx - 1];
-    return stats(prev).seenPct >= UNLOCK_PCT;
+    return true;
   };
 
   function open(deck: Deck) {
