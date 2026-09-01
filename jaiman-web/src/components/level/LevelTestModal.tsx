@@ -207,20 +207,13 @@ export default function LevelTestModal() {
     setPhase('intro');
   };
 
-  const handleDismissReturning = () => {
+  const handleCloseModal = () => {
     if (user) {
       const todayStr = new Date().toISOString().split('T')[0];
       sessionStorage.setItem(`jaiman.level_modal_dismissed_${user.id || (user as any)._id}_${todayStr}`, 'true');
     }
     setIsOpen(false);
   };
-
-  if (!isOpen) return null;
-
-  const totalQCount = mode === 'placement' ? 30 : 10;
-  const progressPct = questions.length > 0 ? ((current + 1) / questions.length) * 100 : 0;
-  const currentPraise = PRAISE_MESSAGES[praiseIndex];
-  const tierColor = currentQ ? TIER_COLORS[currentQ.tier] || '#4361EE' : '#4361EE';
 
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fade-in">
@@ -229,11 +222,11 @@ export default function LevelTestModal() {
         <div className="flex items-center justify-between px-6 pt-5 pb-3 border-b border-[#F0F0F0] bg-white">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-[#EEF2FF] flex items-center justify-center text-base shadow-[0_2px_0_#3046B2]">
-              {mode === 'placement' ? '🎯' : '⚡'}
+              🎯
             </div>
             <div>
               <p className="text-xs font-black text-[#1A1A2E]">
-                {mode === 'placement' ? 'Initial Placement Test' : 'Daily Level Check'}
+                Level Test
               </p>
               <p className="text-[10px] font-bold text-[#757575]">
                 {mode === 'placement' ? '30 Questions · A1 to B2' : '10 Quick Practice Questions'}
@@ -250,19 +243,17 @@ export default function LevelTestModal() {
                 border: `1px solid ${mode === 'placement' ? '#FFCDD2' : '#A5D6A7'}`,
               }}
             >
-              {mode === 'placement' ? 'First-Time Setup' : 'Returning User'}
+              {mode === 'placement' ? 'Placement Test' : 'Quick Check'}
             </span>
 
-            {/* If returning user, allow dismissing to dashboard if needed */}
-            {mode === 'check' && phase === 'intro' && (
-              <button
-                onClick={handleDismissReturning}
-                className="w-7 h-7 rounded-full bg-[#F5F5F5] hover:bg-[#FFCDD2] hover:text-[#E53935] flex items-center justify-center text-[#9E9E9E] transition-colors"
-                title="Practice Later"
-              >
-                <X size={15} />
-              </button>
-            )}
+            {/* Persistent Close / Cross button */}
+            <button
+              onClick={handleCloseModal}
+              className="w-8 h-8 rounded-full bg-[#F5F5F5] hover:bg-[#FFCDD2] hover:text-[#E53935] flex items-center justify-center text-[#9E9E9E] transition-all cursor-pointer shadow-xs"
+              title="Close Test"
+            >
+              <X size={16} />
+            </button>
           </div>
         </div>
 
@@ -326,17 +317,15 @@ export default function LevelTestModal() {
                 disabled={loading}
                 className="w-full py-4 rounded-2xl bg-[#4361EE] text-white font-black text-sm shadow-[0_4px_0_#3046B2] hover:shadow-[0_2px_0_#3046B2] hover:translate-y-[2px] transition-all disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
               >
-                {loading ? 'Preparing Questions...' : mode === 'placement' ? 'Start 30-Question Placement Test 🚀' : 'Start 10-Question Level Check ⚡'}
+                {loading ? 'Preparing Questions...' : mode === 'placement' ? 'Start 30-Question Level Test 🚀' : 'Start 10-Question Level Test ⚡'}
               </button>
 
-              {mode === 'check' && (
-                <button
-                  onClick={handleDismissReturning}
-                  className="mt-3 text-xs font-bold text-[#9E9E9E] hover:text-[#1A1A2E] transition-colors"
-                >
-                  Skip & Explore Platform Directly →
-                </button>
-              )}
+              <button
+                onClick={handleCloseModal}
+                className="mt-3 text-xs font-bold text-[#9E9E9E] hover:text-[#1A1A2E] transition-colors cursor-pointer"
+              >
+                Skip for now & Explore Platform →
+              </button>
             </motion.div>
           )}
 
