@@ -108,18 +108,36 @@ export default function LevelTestModal() {
     const sessionDismissedKey = `jaiman.level_modal_dismissed_${user.id || (user as any)._id}_${todayStr}`;
     const wasDismissedToday = sessionStorage.getItem(sessionDismissedKey);
 
-    // Condition 1: First time user (has NOT completed initial 30-question placement test)
-    if (!user.hasCompletedPlacementTest) {
+    // Identify if this is an existing / returning user:
+    // 1. Explicitly completed placement test
+    // 2. Has XP > 0 or has solved questions
+    // 3. Has activity history or reels watched
+    // 4. Has existing level or previously visited mark
+    const visitedKey = `jaiman.user_first_visited_${user.id || (user as any)._id}`;
+    const hasVisitedBefore = localStorage.getItem(visitedKey) === 'true';
+
+    const isReturningUser =
+      Boolean(user.hasCompletedPlacementTest) ||
+      Boolean(user.lastLevelCheckDate) ||
+      (user.xp !== undefined && user.xp > 0) ||
+      (user.totalQuestionsSolved !== undefined && user.totalQuestionsSolved > 0) ||
+      (user.activityHistory && user.activityHistory.length > 0) ||
+      (user.reelsWatched !== undefined && user.reelsWatched > 0) ||
+      hasVisitedBefore;
+
+    // Mark user as visited for subsequent logins/sessions
+    localStorage.setItem(visitedKey, 'true');
+
+    if (!isReturningUser) {
+      // Truly first-time new user -> 30 Questions
       setMode('placement');
       setIsOpen(true);
-      return;
-    }
-
-    // Condition 2: Returning user (already completed placement test)
-    // Show 10-question daily level check if not completed today and not dismissed in this session
-    if (user.lastLevelCheckDate !== todayStr && !wasDismissedToday) {
+    } else {
+      // Returning / Existing user -> 10 Questions
       setMode('check');
-      setIsOpen(true);
+      if (user.lastLevelCheckDate !== todayStr && !wasDismissedToday) {
+        setIsOpen(true);
+      }
     }
   }, [user]);
 
