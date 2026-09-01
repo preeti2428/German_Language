@@ -297,10 +297,22 @@ function scoreToLevel(score: number, max: number): string {
   return 'A1';
 }
 
-export const getLevelTest = async (_req: Request, res: Response): Promise<void> => {
+export const getLevelTest = async (req: Request, res: Response): Promise<void> => {
   try {
-    // Return all 30 questions with English prompts and explanations
-    const questions = LEVEL_QUESTIONS.map((q) => ({
+    const mode = (req.query.mode as string) || (req.query.count === '10' ? 'check' : 'placement');
+
+    let selectedQuestions = LEVEL_QUESTIONS;
+
+    if (mode === 'check' || req.query.count === '10') {
+      // Pick 10 balanced questions (3 A1, 3 A2, 2 B1, 2 B2)
+      const a1 = LEVEL_QUESTIONS.filter((q) => q.tier === 'A1').slice(0, 3);
+      const a2 = LEVEL_QUESTIONS.filter((q) => q.tier === 'A2').slice(0, 3);
+      const b1 = LEVEL_QUESTIONS.filter((q) => q.tier === 'B1').slice(0, 2);
+      const b2 = LEVEL_QUESTIONS.filter((q) => q.tier === 'B2').slice(0, 2);
+      selectedQuestions = [...a1, ...a2, ...b1, ...b2];
+    }
+
+    const questions = selectedQuestions.map((q) => ({
       id: q.id,
       tier: q.tier,
       skillType: q.skillType,
@@ -311,7 +323,12 @@ export const getLevelTest = async (_req: Request, res: Response): Promise<void> 
       explanation: q.explanation,
       points: q.points,
     }));
-    res.json({ questions, total: questions.length });
+
+    res.json({
+      mode: mode === 'check' ? 'check' : 'placement',
+      questions,
+      total: questions.length
+    });
   } catch (err) {
     res.status(500).json({ message: 'Failed to load level test.' });
   }
@@ -320,18 +337,29 @@ export const getLevelTest = async (_req: Request, res: Response): Promise<void> 
 export const submitLevelTest = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = (req as any).user?._id;
-    const { answers } = req.body as { answers: Record<number, string> };
+    const { answers, questionIds, mode } = req.body as {
+      answers: Record<number, string>;
+      questionIds?: number[];
+      mode?: 'placement' | 'check';
+    };
 
     if (!answers || typeof answers !== 'object') {
       res.status(400).json({ message: 'answers object required.' });
       return;
     }
 
+    // Filter questions evaluated
+    const activeQuestions = questionIds && questionIds.length > 0
+      ? LEVEL_QUESTIONS.filter((q) => questionIds.includes(q.id))
+      : Object.keys(answers).length <= 12
+      ? LEVEL_QUESTIONS.filter((q) => answers[q.id] !== undefined)
+      : LEVEL_QUESTIONS;
+
     let earned = 0;
     let maxScore = 0;
     const breakdown: { id: number; correct: boolean; tier: string }[] = [];
 
-    for (const q of LEVEL_QUESTIONS) {
+    for (const q of activeQuestions) {
       maxScore += q.points;
       const userAnswer = answers[q.id];
       const isCorrect = userAnswer?.trim() === q.correct;
@@ -339,11 +367,22 @@ export const submitLevelTest = async (req: Request, res: Response): Promise<void
       breakdown.push({ id: q.id, correct: isCorrect, tier: q.tier });
     }
 
+    if (maxScore === 0) maxScore = 1;
     const detectedLevel = scoreToLevel(earned, maxScore);
+    const xpBonus = mode === 'check' ? 25 : 50;
+    const todayStr = new Date().toISOString().split('T')[0];
 
     // Persist to user profile if authenticated
     if (userId) {
-      await User.findByIdAndUpdate(userId, { level: detectedLevel });
+      const user = await User.findById(userId);
+      if (user) {
+        user.level = detectedLevel as any;
+        user.hasCompletedPlacementTest = true;
+        user.lastLevelCheckDate = todayStr;
+        user.xp = (user.xp || 0) + xpBonus;
+        user.totalQuestionsSolved = (user.totalQuestionsSolved || 0) + breakdown.length;
+        await user.save();
+      }
     }
 
     res.json({
@@ -352,6 +391,8 @@ export const submitLevelTest = async (req: Request, res: Response): Promise<void
       percentage: Math.round((earned / maxScore) * 100),
       detectedLevel,
       breakdown,
+      xpEarned: xpBonus,
+      mode: mode || (activeQuestions.length > 15 ? 'placement' : 'check')
     });
   } catch (err) {
     console.error('submitLevelTest error:', err);

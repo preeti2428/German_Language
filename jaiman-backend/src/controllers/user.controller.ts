@@ -20,6 +20,8 @@ export const getUserProfile = async (req: AuthRequest, res: Response): Promise<v
       reelsWatched: req.user.reelsWatched,
       streak: req.user.streak,
       activityHistory: req.user.activityHistory || [],
+      hasCompletedPlacementTest: (req.user as any).hasCompletedPlacementTest || false,
+      lastLevelCheckDate: (req.user as any).lastLevelCheckDate,
       preferences: req.user.preferences,
       avatar: req.user.avatar,
     });

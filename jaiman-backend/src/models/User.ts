@@ -29,6 +29,8 @@ export interface IUser extends Document {
   }[];
   achievements: mongoose.Types.ObjectId[];
   enrolledBatches: mongoose.Types.ObjectId[];
+  hasCompletedPlacementTest?: boolean;
+  lastLevelCheckDate?: string;
   preferences: {
     darkMode?: boolean;
     soundEnabled?: boolean;
@@ -82,6 +84,8 @@ const userSchema = new mongoose.Schema({
   }],
   achievements: [{ type: Schema.Types.ObjectId, ref: 'Achievement' }],
   enrolledBatches: [{ type: Schema.Types.ObjectId, ref: 'Batch', default: [] }],
+  hasCompletedPlacementTest: { type: Boolean, default: false },
+  lastLevelCheckDate: { type: String },
   preferences: {
     darkMode: { type: Boolean, default: true },
     soundEnabled: { type: Boolean, default: true },

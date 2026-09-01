@@ -1,6 +1,7 @@
 import AuthGuard from "@/components/auth/AuthGuard";
 import Sidebar from "@/components/layout/Sidebar";
 import MobileNavBar from "@/components/layout/MobileNavBar";
+import LevelTestModal from "@/components/level/LevelTestModal";
 
 export default function ProtectedLayout({
   children,
@@ -30,6 +31,7 @@ export default function ProtectedLayout({
           {children}
         </main>
         <MobileNavBar />
+        <LevelTestModal />
       </div>
     </AuthGuard>
   );

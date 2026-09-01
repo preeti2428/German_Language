@@ -22,6 +22,8 @@ interface User {
     xpEarned: number;
     reelsWatched: number;
   }[];
+  hasCompletedPlacementTest?: boolean;
+  lastLevelCheckDate?: string;
   preferences?: {
     darkMode?: boolean;
     [key: string]: any;
