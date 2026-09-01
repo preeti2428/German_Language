@@ -215,6 +215,13 @@ export default function LevelTestModal() {
     setIsOpen(false);
   };
 
+  if (!isOpen) return null;
+
+  const totalQCount = mode === 'placement' ? 30 : 10;
+  const progressPct = questions.length > 0 ? ((current + 1) / questions.length) * 100 : 0;
+  const currentPraise = PRAISE_MESSAGES[praiseIndex] || PRAISE_MESSAGES[0];
+  const tierColor = currentQ ? TIER_COLORS[currentQ.tier] || '#4361EE' : '#4361EE';
+
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fade-in">
       <div className="relative w-full max-w-lg bg-white rounded-[2rem] border-2 border-b-[6px] border-[#EAEAEA] border-b-[#4361EE] shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
