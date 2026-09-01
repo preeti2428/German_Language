@@ -171,6 +171,8 @@ export default function LevelTestPage() {
       const { data } = await api.post('/quiz/level-test/submit', { answers: finalAnswers });
       setResult(data);
       setPhase('result');
+      localStorage.setItem('jaiman.level_test_completed', 'true');
+      localStorage.setItem('jaiman.has_taken_placement', 'true');
     } catch {
       alert('Failed to submit test. Please try again.');
     } finally {

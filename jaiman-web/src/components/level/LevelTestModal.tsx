@@ -108,36 +108,29 @@ export default function LevelTestModal() {
     const sessionDismissedKey = `jaiman.level_modal_dismissed_${user.id || (user as any)._id}_${todayStr}`;
     const wasDismissedToday = sessionStorage.getItem(sessionDismissedKey);
 
-    // Identify if this is an existing / returning user:
-    // 1. Explicitly completed placement test
-    // 2. Has XP > 0 or has solved questions
-    // 3. Has activity history or reels watched
-    // 4. Has existing level or previously visited mark
-    const visitedKey = `jaiman.user_first_visited_${user.id || (user as any)._id}`;
-    const hasVisitedBefore = localStorage.getItem(visitedKey) === 'true';
-
-    const isReturningUser =
+    // Identify if user has ever completed/taken the test or visited before:
+    const userTestedKey = `jaiman.user_tested_${user.id || (user as any)._id}`;
+    const hasTakenBefore =
+      localStorage.getItem('jaiman.level_test_completed') === 'true' ||
+      localStorage.getItem('jaiman.has_taken_placement') === 'true' ||
+      localStorage.getItem(userTestedKey) === 'true' ||
       Boolean(user.hasCompletedPlacementTest) ||
       Boolean(user.lastLevelCheckDate) ||
       (user.xp !== undefined && user.xp > 0) ||
       (user.totalQuestionsSolved !== undefined && user.totalQuestionsSolved > 0) ||
       (user.activityHistory && user.activityHistory.length > 0) ||
-      (user.reelsWatched !== undefined && user.reelsWatched > 0) ||
-      hasVisitedBefore;
+      (user.reelsWatched !== undefined && user.reelsWatched > 0);
 
-    // Mark user as visited for subsequent logins/sessions
-    localStorage.setItem(visitedKey, 'true');
-
-    if (!isReturningUser) {
-      // Truly first-time new user -> 30 Questions
-      setMode('placement');
-      setIsOpen(true);
-    } else {
-      // Returning / Existing user -> 10 Questions
+    if (hasTakenBefore) {
+      // User has taken the test before -> strictly 10 Questions!
       setMode('check');
       if (user.lastLevelCheckDate !== todayStr && !wasDismissedToday) {
         setIsOpen(true);
       }
+    } else {
+      // First-time placement test setup -> 30 Questions
+      setMode('placement');
+      setIsOpen(true);
     }
   }, [user]);
 
@@ -206,6 +199,11 @@ export default function LevelTestModal() {
       setPhase('result');
       if (data.xpEarned) {
         recordActivity(data.xpEarned);
+      }
+      localStorage.setItem('jaiman.level_test_completed', 'true');
+      localStorage.setItem('jaiman.has_taken_placement', 'true');
+      if (user) {
+        localStorage.setItem(`jaiman.user_tested_${user.id || (user as any)._id}`, 'true');
       }
       await refreshUser();
     } catch (err) {
@@ -309,30 +307,46 @@ export default function LevelTestModal() {
                 {mode === 'placement' ? '🎯' : '⚡'}
               </div>
 
-              <h2 className="text-2xl font-black text-[#1A1A2E] mb-2">
-                {mode === 'placement' ? 'Find Your German Level!' : 'Daily 10-Question Checkup!'}
-              </h2>
-
-              <p className="text-xs md:text-sm text-[#757575] font-medium leading-relaxed mb-6 max-w-sm">
-                {mode === 'placement'
-                  ? 'Welcome! Complete this 30-question diagnostic test to assess your German level (A1–B2) and personalize your Germany Journey roadmap before exploring.'
-                  : 'Welcome back! Test your memory with 10 adaptive questions to maintain your level, warm up your German, and earn bonus XP!'}
-              </p>
+              {/* Mode Toggle pills */}
+              <div className="flex items-center gap-2 p-1 bg-[#F0F2F9] rounded-2xl mb-5 w-full">
+                <button
+                  type="button"
+                  onClick={() => setMode('check')}
+                  className={`flex-1 py-2 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                    mode === 'check'
+                      ? 'bg-white text-[#4361EE] shadow-sm'
+                      : 'text-[#757575] hover:text-[#1A1A2E]'
+                  }`}
+                >
+                  ⚡ 10 Questions (Quick)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode('placement')}
+                  className={`flex-1 py-2 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                    mode === 'placement'
+                      ? 'bg-white text-[#4361EE] shadow-sm'
+                      : 'text-[#757575] hover:text-[#1A1A2E]'
+                  }`}
+                >
+                  🎯 30 Questions (Full)
+                </button>
+              </div>
 
               {/* Stats badges */}
               <div className="grid grid-cols-2 gap-3 w-full mb-6">
                 <div className="bg-[#F8F9FF] rounded-2xl p-3.5 border border-[#EAEAEA]">
-                  <p className="text-xl font-black text-[#4361EE]">{totalQCount} Questions</p>
+                  <p className="text-xl font-black text-[#4361EE]">{mode === 'check' ? '10 Questions' : '30 Questions'}</p>
                   <p className="text-[10px] font-bold text-[#9E9E9E] uppercase tracking-wide">
-                    {mode === 'placement' ? 'Comprehensive' : 'Quick Check'}
+                    {mode === 'check' ? 'Quick Practice' : 'Comprehensive'}
                   </p>
                 </div>
                 <div className="bg-[#F8F9FF] rounded-2xl p-3.5 border border-[#EAEAEA]">
                   <p className="text-xl font-black text-[#20BF6B]">
-                    {mode === 'placement' ? 'A1 → B2' : '+25 XP'}
+                    {mode === 'check' ? '+25 XP' : 'A1 → B2'}
                   </p>
                   <p className="text-[10px] font-bold text-[#9E9E9E] uppercase tracking-wide">
-                    {mode === 'placement' ? 'Levels Evaluated' : 'Daily Reward'}
+                    {mode === 'check' ? 'Daily Reward' : 'Levels Evaluated'}
                   </p>
                 </div>
               </div>
@@ -342,7 +356,7 @@ export default function LevelTestModal() {
                 disabled={loading}
                 className="w-full py-4 rounded-2xl bg-[#4361EE] text-white font-black text-sm shadow-[0_4px_0_#3046B2] hover:shadow-[0_2px_0_#3046B2] hover:translate-y-[2px] transition-all disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
               >
-                {loading ? 'Preparing Questions...' : mode === 'placement' ? 'Start 30-Question Level Test 🚀' : 'Start 10-Question Level Test ⚡'}
+                {loading ? 'Preparing Questions...' : mode === 'check' ? 'Start 10-Question Level Test ⚡' : 'Start 30-Question Level Test 🚀'}
               </button>
 
               <button
